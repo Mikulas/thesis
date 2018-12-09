@@ -594,9 +594,10 @@ of works or by adapting the Work (including translation), and at the same time m
 	\if@abstractcsdefined
 		\cleardoublepage
 		\thispagestyle{empty}
-		~
-		\vfill
-		\chapterstyletitle{Abstrakt}\theabstractcs
+		%~
+		%\vfill
+		\pdfbookmark[0]{Abstrakt}{abstract}
+	    \chapterstyletitle{Abstrakt}\theabstractcs
 	\else
 		\ClassError{FITthesis}{Abstract in Czech unspecified}{Specify abstract in Czech language using the \abstractCS command.}
 	\fi
@@ -608,10 +609,10 @@ of works or by adapting the Work (including translation), and at the same time m
 	\fi
 
 	\if@abstractendefined
-		\cleardoublepage
-		\thispagestyle{empty}
-		~
-		\vfill
+		%\cleardoublepage
+		%\thispagestyle{empty}
+		%~
+		%\vfill
 		\chapterstyletitle{Abstract}\theabstracten
 	\else
 		\ClassError{FITthesis}{Abstract in English unspecified}{Specify abstract in English using the \abstractEN command.}
@@ -643,19 +644,20 @@ of works or by adapting the Work (including translation), and at the same time m
 
 	\cleardoublepage
 	\pagestyle{plain}
+	\pagenumbering{gobble}
 	\tableofcontents*
 
-	\cleardoublepage
-	\listoflistingscond
+	%\cleardoublepage
+	%\listoflistingscond
 
 	%\cleardoublepage
 	%\listofdirfigurescond
 
-	\cleardoublepage
-	\listoftablescond
+	%\cleardoublepage
+	%\listoftablescond
 
-	\cleardoublepage
-	\listoffigurescond
+	%\cleardoublepage
+	%\listoffigurescond
 
 	\pagestyle{ruled}
 }

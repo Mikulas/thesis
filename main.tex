@@ -22,7 +22,7 @@
 \floatstyle{plaintop}
 \restylefloat{table}
 
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{1}
 
 % from https://www.herout.net/blog/2017/03/pomalu-uz-pojdme-psat/
 \usepackage{xcolor}
@@ -85,10 +85,14 @@
 
 \input{meta.tex}
 \begin{document}
+\pagenumbering{gobble}
 
-\listoftodos
+\addtocontents{toc}{\protect{\pdfbookmark[0]{\contentsname}{toc}}}
+
+%\listoftodos
 
 \begin{introduction}
+    \pagenumbering{arabic}
     \input{"chapters/0-uvod.tex"}
 \end{introduction}
 
@@ -102,10 +106,10 @@
 
 \printbibliography[]
 
-
+\pagenumbering{gobble}
 \appendix
 
-\chapter{List of Acronyms}
+\chapter{Použité zkratky}
 \printglossary[type=\acronymtype,style=acronyms]
 
 \input{medium.tex}
