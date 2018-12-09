@@ -244,7 +244,7 @@
 
 % adjust settings for minted if used
 \AtBeginDocument {%
-	\renewcommand*{\today}{16th of May, 2017} % FIXME
+	\renewcommand*{\today}{20. března, 2019} % FIXME
 	\@ifpackageloaded {minted} {%
 		% use smaller font in code listings
 		\AtBeginEnvironment {minted} { \singlespacing \fontsize{11}{11} \selectfont }
@@ -477,7 +477,7 @@ of works or by adapting the Work (including translation), and at the same time m
 						Faculty of Information Technology
 					}\fi
 					
-					\vspace{4mm}
+					\vspace{5mm}
 					
 					\if@departmentdefined
 						\thedepartment

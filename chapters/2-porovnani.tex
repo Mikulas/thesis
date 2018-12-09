@@ -1,0 +1,57 @@
+\newcommand{\todoPorovani}[1]{
+    \subsection{Architektura #1, možnosti konfigurace}
+        \todo{Jaké má #1 části, jak se to deployuje, externí závislosti\ldots}\blind[4]
+    \subsection{Rozšiřitelnost}
+        \todo{Má #1 nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
+    \subsection{Zabezpečení}
+        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
+    \subsection{Dostupnost}
+        \todo{Může #1 běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+    \subsection{Integrace}
+        \todo{Integrace #1, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
+        \todo{Možnosti deploy z #1 do cílového systému; k8s, sftp, openstack, \ldots}\blind[5]
+    \subsection{Praktické nasazení projektů}
+        \subsubsection{Projekt 1}
+            \todo{Popsat deploy projektu 1 z #1}\blind[2]
+        \subsubsection{Projekt 2}
+            \todo{Popsat deploy projektu 2 z #1}\blind[2]
+        \subsubsection{Projekt 3}
+            \todo{Popsat deploy projektu 3 z #1}\blind[2]
+}
+
+\chapter{Porovnání}
+    \todo{Jakou metodou jsem vybral CI/CD systémy}
+    \blind[1]
+
+    \section{Metodika porovnávání}
+        \todo{Co se pro každý systém bude dělat (nastavovat, nasazovat).}
+        \blind[4]
+        \todo{Na jakých typových projektech tohle budu zkoušet.}
+        \subsection{Projekt 1}
+            \todo{Popsat projekt 1}\blind[1]
+        \subsection{Projekt 2}
+            \todo{Popsat projekt 2}\blind[1]
+        \subsection{Projekt 3}
+            \todo{Popsat projekt 3}\blind[1]
+
+    \section{Jenkins}
+        \todoPorovani{Jenkins}
+    \section{Concourse}
+        \todoPorovani{Concourse}
+    \section{Drone.io}
+        \todoPorovani{Drone.io}
+    \section{GitLab}
+        \todoPorovani{GitLab}
+
+    \section{CircleCI, Semaphore, TravisCI}
+        \todo{tohle asi spojit do jednoho jako velmi podobné PaaS, možná ověřit jestli je v tom nějaký velký rozdíl ve feature setu}
+        \todoPorovani{TravisCI+PaaS}
+
+    \section{možná Phabricator?}
+        \todo{prozkoumat Phabricator}
+    \section{-další-}
+        \todo{pokud malo dlouhe, prozkoumat další možnosti CI/CD}
+
+    \section{nejake vlastni scriptiky}
+        \todo{pokud malo dlouhe, porovnat nejake vlastni scriptiky}
+        \blind{4}

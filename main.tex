@@ -10,9 +10,9 @@
 % arara: biber
 % arara: xelatex: { shell: yes }
 % arara: xelatex: { shell: yes }
-\documentclass[thesis=B,english,hidelinks]{template/FITthesisXE}
+\documentclass[thesis=M,czech,hidelinks]{template/FITthesisXE}
 
-\bibliography{library.bib}
+\bibliography{library}
 
 \usepackage{import}
 \usepackage{booktabs}
@@ -25,14 +25,16 @@
 \setcounter{tocdepth}{2}
 
 % from https://www.herout.net/blog/2017/03/pomalu-uz-pojdme-psat/
-\usepackage{xcolor} 
-\newcommand{\todo}[1]{
-    %\textcolor{red}{\textbf{[[#1]]}}
+\usepackage{xcolor}
+\usepackage{todonotes}
+\let\oldtodo\todo
+\renewcommand{\todo}[1]{
+    \textcolor{red}{\oldtodo[noline]{#1}\textbf{[[#1]]}}
 }
 
 \usepackage{blindtext}
 \newcommand{\blind}[1][1]{
-
+    \textcolor{gray}{\Blindtext[#1][1]}
 }
 
 \newcommand{\importsvg}[1]{
@@ -84,19 +86,18 @@
 \input{meta.tex}
 \begin{document}
 
+\listoftodos
+
 \begin{introduction}
-    \input{"chapters/0-introduction.tex"}
+    \input{"chapters/0-uvod.tex"}
 \end{introduction}
 
-\input{"chapters/1-research.tex"}
-\input{"chapters/2-specification.tex"}
-\input{"chapters/3-possible-solutions.tex"}
-\input{"chapters/4-raspi-solution.tex"}
-\input{"chapters/5-usb-mass-storage.tex"}
-\input{"chapters/6-fedorator-tiny.tex"}
+\input{"chapters/1-reserse.tex"}
+\input{"chapters/2-porovnani.tex"}
+\input{"chapters/3-nasazeni.tex"}
 
 \begin{conclusion}
-    \input{"chapters/9-conclusion.tex"}
+    \input{"chapters/9-zaver.tex"}
 \end{conclusion}
 
 \printbibliography[]

@@ -17,6 +17,7 @@
 *.lot
 *.out
 *.run.xml
+*.tdo
 *.toc
 
 /media/svg/*.pdf

@@ -9,6 +9,9 @@ MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs))
 	arara main
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 
+skim:
+	open -a /Applications/Skim.app MT_Dite_Mikulas_2019.pdf
+
 clean:
 	git clean -Xf
 
