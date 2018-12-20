@@ -27,8 +27,20 @@
         \todo{Co se pro každý systém bude dělat (nastavovat, nasazovat).}
         \blind[4]
         \todo{Na jakých typových projektech tohle budu zkoušet.}
-        \subsection{Projekt 1}
-            \todo{Popsat projekt 1}\blind[1]
+        \subsection{P1: Jednoduchá aplikace bez externích závislostí}
+            Tato kategorie pokrývá vesměs pouze statické weby. Aplikace může obsahovat dynamické části jako je například kontaktní formulář, ale samotné zpracování se děje mimo statickou aplikaci -- cílem formulářů může být například Google Form \cite{mccoy-google-form}, nebo jiné aplikace (ať už třetích stran nebo vlastní).
+
+            Při CI/CD se typicky v repozitáři uchovávají pouze zdrojová data. Pro generátory statických webů to mohou být například soubory ve formátu Markdown a specifikace HTML šablon, ze kterých se. Z těch se pak v rámci buildu na CI/CD pipeline vygenerují výsledné HTML soubory. Je vhodné, aby statické zdroje (JavaScripty, kaskádové styly, \ldots) byly vygenerovány do unikátní složky, například podle verze buildu nebo podle času. Samotné nasazení na produkční server pak lze udělat bez výpadku takto: nejprve je nutné nasadit nové statické zdroje. Ty mají unikátní názvy (nejlépe jsou v unikátně pojmenovanné složce), takže jejich nasazení nepřepíše současné soubory. Následně se přepíší HTML soubory. Uživatelé kteří ještě načetli starou verzi načtou staré zdroje. HTML soubory neexistující v nové verzi lze po uvážení z produkčního serveru odstranit. Není potřeba invalidovat cache, protože nové zdroje jsou pojmenované jinak než ty staré. Po uplynutí vhodného času lze staré zdrojové soubory ze serveru smazat.
+            \todo{popsat jak se tohle udělá s containerem? Protože to neni easy. Možná popsat jak se to dá vyřešit s víc než jednou replikou (easy, staci udelat vsechny uploads assetu a pak synchronizovat a az pote prepsat html)}
+
+            \todo{obrázek jak se dělá statický deploy když to chci mít bez výpadku, časový diagram}
+
+            \todo{následující texty přesunout mimo P1}
+            Uchovávání knihoven třetích stran (například JavaScriptové NPM \todo{abbr} moduly) je kontroverzní: Copes rozvážně nepreferuje ani jednu variantu \cite{copes-commit-npm} \todo{přidat další}.
+
+            \todo{citace} Nevýhodou přidání závislostí do repozitáře je zvětšení repozitáře, což má negativní dopad na rychlost mnoha operací a podle druhu CI/CD pipeline přímý dopad na rychlost nasazování. Další problém je znepřehlednění rozdílů mezi jednotlivými verzemi v systému a při nevhodném použití verzovacího systému to může velmi komplikovat merge operace.
+
+            \todo{citace} Výhody verzování externích závislostí jsou mnohé. Při buildu CI/CD pipeline nemusí stahovat zdroje mimo samostatného repozitáře, což zvyšuje dostupnost při výpadku cizí služby (klasické závislosti jsou GitHub, JavaScript balíčky NPM, pro Javu Maven central repository). Aplikace se vždy buildí s předem známými a neměnnými verzemi závislostí, takže i při nezamknutí verze balíčku se při vydání breaking change nic nerozbije (v PHP composer.json, v NPM package.json, pro Java Maven pom.xml). Tento problém lze alternativně také řešit verzováním lockfile pro daný balíčkovací systém (composer.lock, package.lock/yarn.lock, Maven lockfile nemá); problém ale může stále nastat, pokud na cizím úložišti někdo otagovanou verzi balíčku přepíše. To se může stát buď omylem nebo třeba s nekalými úmysly a spoléhání na cizí úložiště při buildu tak lze považovat za bezpečnostní riziko. Při verzování závilostí mohou všechny zdrojové soubory podléhat kontrole. Dále verzování řeší projekty smazané \cite{williams-left-pad}.
         \subsection{Projekt 2}
             \todo{Popsat projekt 2}\blind[1]
         \subsection{Projekt 3}
