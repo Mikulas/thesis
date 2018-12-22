@@ -18,20 +18,38 @@
     \section{deployment}
         \todo{citovat nejaky whitepaper co je to deploy}\blind[1]
 
-        Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí.
+        Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí. V následujícím textu jsem se zaměřil na monolitické webové aplikace, ale podobné principy fungují i pro nasazení dílčích podpůrných služeb (\textit{microservices}), které mimo HTTP rozhraní mohou nabízet například gRPC, Java RMI, nebo jakékoliv jiné textové nebo binární protokoly.
 
         Komplexita nasazení drasticky narůstá, pokud vyžadujeme kontinuální dostupnost aplikace. V ideálním případě by aplikace měla úspěšně obsloužit všechny příchozí požadavky.
 
-        Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s JVM a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
+        \subsection{Hot swapping}
+            Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s JVM a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
 
-        Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě PHP-FPM při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update PHP-FPM workerů). Ve světě Node.js lze využít PM2, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu Load Balanceru: uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu aplikací: PFSense, HAProxy, Nginx, Varnish\ldots Důležité rozhodnutí při výběru LB je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) LB přeposílají TCP požadavky na základě cílové IP adresy a portu. Je definován i Layer 3 LB, který se rozhoduje pouze podle cílové IP, ale v literatuře se zahrnuje do L4. Layer 7 (aplikační vrstva) LB přeposílají celé HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále L7LB musí řešit HTTPS (TLS termination) a musí tak dopředu vědět, jaké domény obsluhuje. L7 NB dále může reagovat i na získané HTTP odpovědi. Díky HTTP specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
+        \subsection{Jednorázový přeliv provozu mezi starou a novou aplikací}
+            Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě PHP-FPM při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update PHP-FPM workerů). Ve světě Node.js lze využít PM2, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu Load Balanceru: uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru LB je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) LB přeposílají TCP požadavky na základě cílové IP adresy a portu. Je definován i Layer 3 LB, který se rozhoduje pouze podle cílové IP, ale v literatuře se zahrnuje do L4. Layer 7 (aplikační vrstva) LB přeposílají celé HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále L7LB musí řešit HTTPS (TLS termination) a musí tak dopředu vědět, jaké domény obsluhuje. L7 NB dále může reagovat i na získané HTTP odpovědi. Díky HTTP specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
 
-        Jak L4 tak L7 LB často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní IP adresa uživatele. V případě čistého L7 load balancování lze původní IP vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého L4 load balancování o původní IP příjdeme bez PROXY protokolu úplně.
+            Jak L4 tak L7 LB často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní IP adresa uživatele. V případě čistého L7 load balancování lze původní IP vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého L4 load balancování o původní IP příjdeme bez PROXY protokolu úplně.
 
-        Je nutné uvažovat i konzistenci napříč několika příchozími HTTP requesty: uživatel například může načíst HTML z původní verze, ale HTTP požadavek na kaskádové styly už může přijít na novou verzi aplikace. Další klasický problém jsou migrace databáze: aplikace běžící
+            Je nutné uvažovat konzistenci napříč několika příchozími HTTP requesty: uživatel může načíst HTML z původní verze, ale následující HTTP požadavek na kaskádové styly už může přijít na novou verzi aplikace.
 
-        \todo{jake casti se nasazuji, jak a proc se to dela, dostupnost pri deploy}
-        \blind[5]
+            Tento postup můžeme aplikovat i na aplikace běžící ve víc než jedné replice. Spustíme novou verzi aplikace souběžně se startou verzí a atomicky aktualizujeme na load balanceru cíle na novou skupinu serverů. Stále ale nemusíme řešit většinu problémů, které by přinesl distribuovaný systém.
+
+        \subsection{Load balancování víc než jedné instance}
+            Postup z předchozí sekce vyžaduje atomickou změnu konfigurace load balanceru. To je velmi těžké docílit, pokud máme více než jednu instanci load balanceru \todo{cite}. Další nevýhodou je, že při nasazování nové verze aplikace se po nějakou dobu zdvojnásobí nutné výpočetní zdroje (musí běžet současně $n$ starý a $n$ nových instancí aplikace). Při continuous deployment to může být velmi často, což se prodraží na nezbytné infrastruktuře. Praktický problém tohoto řešení je i samotná jednorázovost přelivu uživatelů: pokud je část aplikace rozbitá, je rozbitá pro 100 \% uživatelů.
+
+            Vhodnější řešení je tzv. rolling update, kdy souběžně nějakou dobu provozujeme novou i starou verzi aplikace v narůstajícím poměru. Průběžně monitorujeme aplikační metriky a v případě, že se nová verze aplikace nechová podle očekávaní, můžeme nasazování pozastavit nebo úplně vrátit.
+
+            \todo{popsat rolling update min available a max surge}
+
+            Předpoklady:
+                - mame nekolik LB
+                - mame n starych instanci
+                - mame m novych instanci
+
+            Problémy k vyřešení:
+                - to co jsem popsal u statickych webu
+                - migrace databáze
+                - persistentni storage
 
 
     \section{definice CI/CD}
