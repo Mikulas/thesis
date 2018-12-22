@@ -6,7 +6,13 @@
         \todo{Definovat cloud a rozdíl oproti inhouse, proc je to vhodne pro CI/CD}
         \blind[2]
 
-    \section{dostupnost}
+    \section{Dostupnost aplikace}
+        Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (MTBF) a dobou zotavení z výpadku (MTTR) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akadamické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
+
+        Aplikaci v jedné instanci na jednom fyzickém serveru lze bez výpadku provozovat. Jedním takový příkladem je server Stratus s redundantním hardwarem, který měl v jednom případě rekordní uptime 24 let \cite{thibodeau-longest-uptime}. Celý systém běží na proprietárním operačním systému, který od let 2000 nebyl aktualizovaný. Tyto servery jsou ale fyzicky na jednom místě a při přírodní pohromě nebo delším výpadku elektřiny přestanou být dostupné.
+
+        Řešení je aplikaci provozovat distribuovaně, v několika fyzicky vzdálených datacentrech. V případě výpadku části systému se uživatelské požadavky plynule rozdělí mezi zbylé funkční systémy. Pro uživatele je tato operace transparentní a neprojeví se zhoršením dostupnosti. Provozovat a později aktualizovat distribuovanou aplikaci je relativně složité a více to popisuji v kapitole \ref{distributed-apps}.
+
         \todo{Uživatelská, administrační, vazba na zalohy a upgrade}
         \blind[3]
 
@@ -37,6 +43,7 @@
             Tento postup můžeme aplikovat i na aplikace běžící ve víc než jedné replice. Spustíme novou verzi aplikace souběžně se startou verzí a atomicky aktualizujeme na load balanceru cíle na novou skupinu serverů. Stále ale nemusíme řešit většinu problémů, které by přinesl distribuovaný systém.
 
         \subsection{Distribuovaná aplikace}
+            \label{distributed-apps}
             Postup z předchozí sekce vyžaduje atomickou změnu konfigurace load balanceru. To je velmi těžké docílit, pokud máme více než jednu instanci load balanceru \todo{cite}. Další nevýhodou je, že při nasazování nové verze aplikace se po nějakou dobu zdvojnásobí nutné výpočetní zdroje (musí běžet současně $n$ starý a $n$ nových instancí aplikace). Při continuous deployment to může být velmi často, což se prodraží na nezbytné infrastruktuře. Praktický problém tohoto řešení je i samotná jednorázovost přelivu uživatelů: pokud je část aplikace rozbitá, je rozbitá pro 100 \% uživatelů.
 
             Vhodnější řešení je tzv. rolling update, kdy souběžně nějakou dobu provozujeme novou i starou verzi aplikace v narůstajícím poměru. Průběžně monitorujeme aplikační metriky a v případě, že se nová verze aplikace nechová podle očekávaní, můžeme nasazování pozastavit nebo úplně vrátit. Pracujeme tedy s následujícími předpoklady:
