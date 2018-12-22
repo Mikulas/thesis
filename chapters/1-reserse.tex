@@ -11,7 +11,7 @@
 
         Aplikaci v jedné instanci na jednom fyzickém serveru lze bez výpadku provozovat. Jedním takový příkladem je server Stratus s redundantním hardwarem, který měl v jednom případě rekordní uptime 24 let \cite{thibodeau-longest-uptime}. Celý systém běží na proprietárním operačním systému, který od let 2000 nebyl aktualizovaný. Tyto servery jsou ale fyzicky na jednom místě a při přírodní pohromě nebo delším výpadku elektřiny přestanou být dostupné.
 
-        Řešení je aplikaci provozovat distribuovaně, v několika fyzicky vzdálených datacentrech. V případě výpadku části systému se uživatelské požadavky plynule rozdělí mezi zbylé funkční systémy. Pro uživatele je tato operace transparentní a neprojeví se zhoršením dostupnosti. Provozovat a později aktualizovat distribuovanou aplikaci je relativně složité a více to popisuji v kapitole \ref{distributed-apps}.
+        Řešení je aplikaci provozovat distribuovaně, v několika fyzicky vzdálených datacentrech. V případě výpadku části systému se uživatelské požadavky plynule rozdělí mezi zbylé funkční systémy. Pro uživatele je tato operace transparentní a neprojeví se zhoršením dostupnosti. Provozovat a později aktualizovat distribuovanou aplikaci je relativně složité a více to popisuji v kapitole \ref{distributed-apps}. Získáme ale horizontální škálovatelnost a tím vyšší teoretickou dostupnost.
 
         Při testování CI/CD systémů se budu zajímat o několik různých dostupností:
         \begin{itemize}
@@ -19,6 +19,8 @@
             \item Dostupnost CI/CD systémů při správě, typicky při aktualizaci na novější verzi;
             \item Podpora nasazení uživatelské aplikace v daném CI/CD a dopad na dostupnost dané aplikace.
         \end{itemize}
+
+        \todo{můžu sem dát dostupnosti cloudových služeb a že je malá nebo neexistující garance}
 
     \section{testování}
         \todo{Definovat testování v cloud}
@@ -38,6 +40,7 @@
             Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s JVM a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
 
         \subsection{Jednorázový přeliv provozu mezi starou a novou aplikací}
+            \label{deploy-v-jedne-instanci}
             Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě PHP-FPM při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update PHP-FPM workerů). Ve světě Node.js lze využít PM2, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu Load Balanceru: uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru LB je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) LB přeposílají TCP požadavky na základě cílové IP adresy a portu. Je definován i Layer 3 LB, který se rozhoduje pouze podle cílové IP, ale v literatuře se zahrnuje do L4. Layer 7 (aplikační vrstva) LB přeposílají celé HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále L7LB musí řešit HTTPS (TLS termination) a musí tak dopředu vědět, jaké domény obsluhuje. L7 NB dále může reagovat i na získané HTTP odpovědi. Díky HTTP specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
 
             Jak L4 tak L7 LB často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní IP adresa uživatele. V případě čistého L7 load balancování lze původní IP vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého L4 load balancování o původní IP příjdeme bez PROXY protokolu úplně.
@@ -80,5 +83,9 @@
             \todo{definovat}\blind[2]
 
     \section{kontejnerizase, docker}
+        V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z LXC (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
+
+        Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v balíčku (\textit{docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například JRE).
+
         \todo{Popsat co to je a proc je to vhodne na testovani a deploy}
         \blind[2]
