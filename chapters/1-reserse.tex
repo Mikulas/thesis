@@ -13,8 +13,12 @@
 
         Řešení je aplikaci provozovat distribuovaně, v několika fyzicky vzdálených datacentrech. V případě výpadku části systému se uživatelské požadavky plynule rozdělí mezi zbylé funkční systémy. Pro uživatele je tato operace transparentní a neprojeví se zhoršením dostupnosti. Provozovat a později aktualizovat distribuovanou aplikaci je relativně složité a více to popisuji v kapitole \ref{distributed-apps}.
 
-        \todo{Uživatelská, administrační, vazba na zalohy a upgrade}
-        \blind[3]
+        Při testování CI/CD systémů se budu zajímat o několik různých dostupností:
+        \begin{itemize}
+            \item Dostupnost CI/CD systémů při běžném provozu;
+            \item Dostupnost CI/CD systémů při správě, typicky při aktualizaci na novější verzi;
+            \item Podpora nasazení uživatelské aplikace v daném CI/CD a dopad na dostupnost dané aplikace.
+        \end{itemize}
 
     \section{testování}
         \todo{Definovat testování v cloud}
