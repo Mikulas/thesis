@@ -22,7 +22,7 @@
 
         Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí. V následujícím textu jsem se zaměřil na monolitické webové aplikace, ale podobné principy fungují i pro nasazení dílčích podpůrných služeb (\textit{microservices}), které mimo HTTP rozhraní mohou nabízet například gRPC, Java RMI, nebo jakékoliv jiné textové nebo binární protokoly.
 
-        Komplexita nasazení drasticky narůstá, pokud vyžadujeme kontinuální dostupnost aplikace. V ideálním případě by aplikace měla úspěšně obsloužit všechny příchozí požadavky.
+        Komplexita nasazení drasticky narůstá, pokud vyžadujeme kontinuální dostupnost aplikace. V ideálním případě by aplikace měla úspěšně obsloužit všechny příchozí požadavky. Pokud neuvažujeme continuous deployment a nasazování probíhá výjimečně, může nasazení nové verze spočívat v zastavení původní verze, výpadku, a nasazení nové verze. Toto dodnes některé firmy praktikují. Například všichni tři velcí telefonní operátoři měli v roce 2018 minimálně jednu několikahodinovou odstávku webových služeb (T-Mobile \cite{tmobile-odstavka}, O2 \cite{o2-odstavka}, Vodafone 2. května 2018 a tiskovou zprávu z webu smazal). V následujícím textu se zaměřím pouze na nasazování bez výpadku dostupnosti aplikace.
 
         \subsection{Hot swapping}
             Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s JVM a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
@@ -36,17 +36,18 @@
 
             Tento postup můžeme aplikovat i na aplikace běžící ve víc než jedné replice. Spustíme novou verzi aplikace souběžně se startou verzí a atomicky aktualizujeme na load balanceru cíle na novou skupinu serverů. Stále ale nemusíme řešit většinu problémů, které by přinesl distribuovaný systém.
 
-        \subsection{Load balancování víc než jedné instance}
+        \subsection{Distribuovaná aplikace}
             Postup z předchozí sekce vyžaduje atomickou změnu konfigurace load balanceru. To je velmi těžké docílit, pokud máme více než jednu instanci load balanceru \todo{cite}. Další nevýhodou je, že při nasazování nové verze aplikace se po nějakou dobu zdvojnásobí nutné výpočetní zdroje (musí běžet současně $n$ starý a $n$ nových instancí aplikace). Při continuous deployment to může být velmi často, což se prodraží na nezbytné infrastruktuře. Praktický problém tohoto řešení je i samotná jednorázovost přelivu uživatelů: pokud je část aplikace rozbitá, je rozbitá pro 100 \% uživatelů.
 
             Vhodnější řešení je tzv. rolling update, kdy souběžně nějakou dobu provozujeme novou i starou verzi aplikace v narůstajícím poměru. Průběžně monitorujeme aplikační metriky a v případě, že se nová verze aplikace nechová podle očekávaní, můžeme nasazování pozastavit nebo úplně vrátit. Pracujeme tedy s následujícími předpoklady:
             \begin{itemize}
                 \item Aplikace zároveň běží ve staré i nové verzi. Uživatelé mohou být obsluhováni novou a následně starou verzí aplikace.  Můžeme na úrovni LB částečně zajistit, aby uživatelé v po sobě jdoucích požadavcích byly nasměrování na stejnou verzi aplikace (\textit{session affinity, session persistence}), ale není to spolehlivé a 100 \% řešení. Používá se buď sledovací cookie nebo IP adresa a oboje může uživatel upravit. Kromě toho chceme umožnit tzv. \textit{rollback}, při kterém se aplikace downgraduje na předchozí verzi.
                 \item Rozdělení požadavků mezi aplikace řeší několik load balancerů. Máme vysokou dostupnost, ale ztratili jsme možnost atomických úprav konfigurace.
+            \end{itemize}
 
             Můžeme libovolně nastavit nejenom poměr aplikací, ale i jejich absolutní počty. Pokud snížíme teoretickou dostupnost, můžeme z $n$ starých verzí aplikací vypnout $n-1$ (tzn. 1 instance staré aplikace stále běží a obsluhuje 100 \% požadavků, nenastal výpadek) a následně zapnout $n-1$ nových instancí. Tím jsme minimalizovali počet nutných výpočetních zdrojů. Pokud ale máme k dispozici volné zdroje, můžeme nechat běžících $n$ původních instancí a nasadit $m$ nových. Například v \textit{Kubernetes} je tato logika abstrahována do nastavení očekávaného počtu instancí, minimálního počtu dostupných instancí a maximálního nárůstu. Při nasazování se pak postupně vypínají staré aplikace, čeká se na zapnutí nových a tak dokola, než jsou všechny instance nové aplikace. Z tohoto procesu pochází název \textit{rolling update}.
 
-            Za těchto podmínek nemůžeme nasazovat libovolnou aplikaci. Obecně musí být aplikace zpětně nebo dopředně kompatibilní. To komplikuje databázové migrace, nebo jinou změnu formátu na sdílených (především persistentních) úložištích. Některé změny je tak nutné nasazovat dvoufázově: první nasadíme úpravu, která zajistí dopřednou kompatibilitu, a poté samotné (původně nekompatibilní) změny.o0p
+            Za těchto podmínek nemůžeme nasazovat libovolnou aplikaci. Obecně musí být aplikace zpětně nebo dopředně kompatibilní. To komplikuje databázové migrace, nebo jinou změnu formátu na sdílených (především persistentních) úložištích. Některé změny je tak nutné nasazovat dvoufázově: první nasadíme úpravu, která zajistí dopřednou kompatibilitu, a poté samotné (původně nekompatibilní) změny.
 
 
     \section{definice CI/CD}
@@ -62,12 +63,10 @@
         \subsection{Continuous delivery}
             \todo{define}
             Chad Wathington dále definuje Continuous integration jako podmnožinu CD \cite{fowler-go}.
+            \blind[2]
 
         \subsection{Continuous deployment}
-
-
-        \todo{Definovat ci/cd, popsat k cemu je to dobre atd.}
-        \blind[6]
+            \todo{definovat}\blind[2]
 
     \section{kontejnerizase, docker}
         \todo{Popsat co to je a proc je to vhodne na testovani a deploy}
