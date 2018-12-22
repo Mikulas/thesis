@@ -7,17 +7,17 @@
         \blind[2]
 
     \section{Dostupnost aplikace}
-        Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (MTBF) a dobou zotavení z výpadku (MTTR) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akadamické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
+        Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akadamické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
 
         Aplikaci v jedné instanci na jednom fyzickém serveru lze bez výpadku provozovat. Jedním takový příkladem je server Stratus s redundantním hardwarem, který měl v jednom případě rekordní uptime 24 let \cite{thibodeau-longest-uptime}. Celý systém běží na proprietárním operačním systému, který od let 2000 nebyl aktualizovaný. Tyto servery jsou ale fyzicky na jednom místě a při přírodní pohromě nebo delším výpadku elektřiny přestanou být dostupné.
 
         Řešení je aplikaci provozovat distribuovaně, v několika fyzicky vzdálených datacentrech. V případě výpadku části systému se uživatelské požadavky plynule rozdělí mezi zbylé funkční systémy. Pro uživatele je tato operace transparentní a neprojeví se zhoršením dostupnosti. Provozovat a později aktualizovat distribuovanou aplikaci je relativně složité a více to popisuji v kapitole \ref{distributed-apps}. Získáme ale horizontální škálovatelnost a tím vyšší teoretickou dostupnost.
 
-        Při testování CI/CD systémů se budu zajímat o několik různých dostupností:
+        Při testování \glstext{CICD} systémů se budu zajímat o několik různých dostupností:
         \begin{itemize}
-            \item Dostupnost CI/CD systémů při běžném provozu;
-            \item Dostupnost CI/CD systémů při správě, typicky při aktualizaci na novější verzi;
-            \item Podpora nasazení uživatelské aplikace v daném CI/CD a dopad na dostupnost dané aplikace.
+            \item Dostupnost \glstext{CICD} systémů při běžném provozu;
+            \item Dostupnost \glstext{CICD} systémů při správě, typicky při aktualizaci na novější verzi;
+            \item Podpora nasazení uživatelské aplikace v daném \glstext{CICD} a dopad na dostupnost dané aplikace.
         \end{itemize}
 
         \todo{můžu sem dát dostupnosti cloudových služeb a že je malá nebo neexistující garance}
@@ -30,22 +30,22 @@
     \section{deployment}
         \todo{citovat nejaky whitepaper co je to deploy}\blind[1]
 
-        V této sekci popisuji varianty nasazení nové verze aplikace s vysokou dostupností. U porovnávaných CI/CD systémů budu později zkoumat, jaké varianty nasazení podporují, případně jak obtížné je jednotlivé varianty implementovat.
+        V této sekci popisuji varianty nasazení nové verze aplikace s vysokou dostupností. U porovnávaných \glstext{CICD} systémů budu později zkoumat, jaké varianty nasazení podporují, případně jak obtížné je jednotlivé varianty implementovat.
 
-        Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí. V následujícím textu jsem se zaměřil na monolitické webové aplikace, ale podobné principy fungují i pro nasazení dílčích podpůrných služeb (\textit{microservices}), které mimo HTTP rozhraní mohou nabízet například gRPC, Java RMI, nebo jakékoliv jiné textové nebo binární protokoly.
+        Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí. V následujícím textu jsem se zaměřil na monolitické webové aplikace, ale podobné principy fungují i pro nasazení dílčích podpůrných služeb (\textit{microservices}), které mimo \glstext{HTTP} rozhraní mohou nabízet například \glstext{gRPC}, Java \glstext{RMI}, nebo jakékoliv jiné textové nebo binární protokoly.
 
         Komplexita nasazení drasticky narůstá, pokud vyžadujeme kontinuální dostupnost aplikace. V ideálním případě by aplikace měla úspěšně obsloužit všechny příchozí požadavky. Pokud neuvažujeme continuous deployment a nasazování probíhá výjimečně, může nasazení nové verze spočívat v zastavení původní verze, výpadku, a nasazení nové verze. Toto dodnes některé firmy praktikují. Například všichni tři velcí telefonní operátoři měli v roce 2018 minimálně jednu několikahodinovou odstávku webových služeb (T-Mobile \cite{tmobile-odstavka}, O2 \cite{o2-odstavka}, Vodafone 2. května 2018 a tiskovou zprávu z webu smazal). V následujícím textu se zaměřím pouze na nasazování bez výpadku dostupnosti aplikace.
 
         \subsection{Hot swapping}
-            Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s JVM a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
+            Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s \glstext{JVM} a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
 
         \subsection{Jednorázový přeliv provozu mezi starou a novou aplikací}
             \label{deploy-v-jedne-instanci}
-            Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě PHP-FPM při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update PHP-FPM workerů). Ve světě Node.js lze využít PM2, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu Load Balanceru: uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru LB je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) LB přeposílají TCP požadavky na základě cílové IP adresy a portu. Je definován i Layer 3 LB, který se rozhoduje pouze podle cílové IP, ale v literatuře se zahrnuje do L4. Layer 7 (aplikační vrstva) LB přeposílají celé HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále L7LB musí řešit HTTPS (TLS termination) a musí tak dopředu vědět, jaké domény obsluhuje. L7 NB dále může reagovat i na získané HTTP odpovědi. Díky HTTP specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
+            Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě \glstext{PHPFPM} při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update \glstext{PHPFPM} workerů). Ve světě Node.js lze využít \glstext{PM2}, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu load balanceru (\glstext{LB}): uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru \glstext{LB} je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) \glstext{LB} přeposílají \glstext{TCP} požadavky na základě cílové \glstext{IP} adresy a portu. Je definován i Layer 3 \glstext{LB}, který se rozhoduje pouze podle cílové \glstext{IP}, ale v literatuře se zahrnuje do L4. Layer 7 (aplikační vrstva) \glstext{LB} přeposílají celé \glstext{HTTP} požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále L7LB musí řešit \glstext{HTTPS} (\glstext{TLS} termination) a musí tak dopředu vědět, jaké domény obsluhuje. L7 LB dále může reagovat i na získané \glstext{HTTP} odpovědi. Díky \glstext{HTTP} specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
 
-            Jak L4 tak L7 LB často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní IP adresa uživatele. V případě čistého L7 load balancování lze původní IP vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého L4 load balancování o původní IP příjdeme bez PROXY protokolu úplně.
+            Jak L4 tak L7 \glstext{LB} často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní \glstext{IP} adresa uživatele. V případě čistého L7 load balancování lze původní \glstext{IP} vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého L4 load balancování o původní \glstext{IP} příjdeme bez PROXY protokolu úplně.
 
-            Je nutné uvažovat konzistenci napříč několika příchozími HTTP requesty: uživatel může načíst HTML z původní verze, ale následující HTTP požadavek na kaskádové styly už může přijít na novou verzi aplikace.
+            Je nutné uvažovat konzistenci napříč několika příchozími \glstext{HTTP} requesty: uživatel může načíst \glstext{HTML} z původní verze, ale následující \glstext{HTTP} požadavek na kaskádové styly už může přijít na novou verzi aplikace.
 
             Tento postup můžeme aplikovat i na aplikace běžící ve víc než jedné replice. Spustíme novou verzi aplikace souběžně se startou verzí a atomicky aktualizujeme na load balanceru cíle na novou skupinu serverů. Stále ale nemusíme řešit většinu problémů, které by přinesl distribuovaný systém.
 
@@ -55,7 +55,7 @@
 
             Vhodnější řešení je tzv. rolling update, kdy souběžně nějakou dobu provozujeme novou i starou verzi aplikace v narůstajícím poměru. Průběžně monitorujeme aplikační metriky a v případě, že se nová verze aplikace nechová podle očekávaní, můžeme nasazování pozastavit nebo úplně vrátit. Pracujeme tedy s následujícími předpoklady:
             \begin{itemize}
-                \item Aplikace zároveň běží ve staré i nové verzi. Uživatelé mohou být obsluhováni novou a následně starou verzí aplikace.  Můžeme na úrovni LB částečně zajistit, aby uživatelé v po sobě jdoucích požadavcích byly nasměrování na stejnou verzi aplikace (\textit{session affinity, session persistence}), ale není to spolehlivé a 100 \% řešení. Používá se buď sledovací cookie nebo IP adresa a oboje může uživatel upravit. Kromě toho chceme umožnit tzv. \textit{rollback}, při kterém se aplikace downgraduje na předchozí verzi.
+                \item Aplikace zároveň běží ve staré i nové verzi. Uživatelé mohou být obsluhováni novou a následně starou verzí aplikace.  Můžeme na úrovni \glstext{LB} částečně zajistit, aby uživatelé v po sobě jdoucích požadavcích byly nasměrování na stejnou verzi aplikace (\textit{session affinity, session persistence}), ale není to spolehlivé a 100 \% řešení. Používá se buď sledovací cookie nebo \glstext{IP} adresa a oboje může uživatel upravit. Kromě toho chceme umožnit tzv. \textit{rollback}, při kterém se aplikace downgraduje na předchozí verzi.
                 \item Rozdělení požadavků mezi aplikace řeší několik load balancerů. Máme vysokou dostupnost, ale ztratili jsme možnost atomických úprav konfigurace.
             \end{itemize}
 
@@ -66,26 +66,26 @@
 
     \section{definice CI/CD}
         \subsection{Continuous integration}
-            Nejstarší zmínka o CI je projekt \textit{Infuse} z roku 1989 \cite{kaiser-infuse}. Jde o návrh systému testování komplexních modulárních projektů, který podle hierarchie spouští postupně jednotkové, integrační a akceptační testy.
+            Nejstarší zmínka o \glstext{CI} je projekt \textit{Infuse} z roku 1989 \cite{kaiser-infuse}. Jde o návrh systému testování komplexních modulárních projektů, který podle hierarchie spouští postupně jednotkové, integrační a akceptační testy.
 
-            Fowler v článku z roku 2000 \cite{fowler-ci-original} definuje CI jako praktiku, při které vývojáři změny začleňují do sdíleného kódu jednou denně nebo častěji. Logická funkčnost (ale ne nutně úplnost byznysových funkcní) je pak po každé změně otestována automatickými testy. Pokud testy selžou, vývojář jehož změny zapříčinily při testování problémy je informován a očekává se, že chyby opraví.
+            Fowler v článku z roku 2000 \cite{fowler-ci-original} definuje \glstext{CI} jako praktiku, při které vývojáři změny začleňují do sdíleného kódu jednou denně nebo častěji. Logická funkčnost (ale ne nutně úplnost byznysových funkcní) je pak po každé změně otestována automatickými testy. Pokud testy selžou, vývojář jehož změny zapříčinily při testování problémy je informován a očekává se, že chyby opraví.
 
             Na continuous integration navazuje celá řada praktik: feature branches \todo{seznam}.
 
-            V aktualizovaném článku z roku 2006 Fowler \cite{fowler-ci} zmiňuje užitečnost CI serveru jako volitelnou -- ale praktickou -- podporu této praktiky. Na vhodný výběr CI serveru se soustředí tato práce.
+            V aktualizovaném článku z roku 2006 Fowler \cite{fowler-ci} zmiňuje užitečnost \glstext{CI} serveru jako volitelnou -- ale praktickou -- podporu této praktiky. Na vhodný výběr \glstext{CI} serveru se soustředí tato práce.
 
         \subsection{Continuous delivery}
             \todo{define}
-            Chad Wathington dále definuje Continuous integration jako podmnožinu CD \cite{fowler-go}.
+            Chad Wathington dále definuje Continuous integration jako podmnožinu \glstext{CD} \cite{fowler-go}.
             \blind[2]
 
         \subsection{Continuous deployment}
             \todo{definovat}\blind[2]
 
     \section{kontejnerizase, docker}
-        V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z LXC (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
+        V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \glstext{HTTP} aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
 
-        Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v balíčku (\textit{docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například JRE).
+        Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v balíčku (\textit{docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}).
 
         \todo{Popsat co to je a proc je to vhodne na testovani a deploy}
         \blind[2]
