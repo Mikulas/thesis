@@ -51,7 +51,7 @@
 
         \subsection{Distribuovaná aplikace}
             \label{distributed-apps}
-            Postup z předchozí sekce vyžaduje atomickou změnu konfigurace load balanceru. To je velmi těžké docílit, pokud máme více než jednu instanci load balanceru \todo{cite}. Další nevýhodou je, že při nasazování nové verze aplikace se po nějakou dobu zdvojnásobí nutné výpočetní zdroje (musí běžet současně $n$ starý a $n$ nových instancí aplikace). Při continuous deployment to může být velmi často, což se prodraží na nezbytné infrastruktuře. Praktický problém tohoto řešení je i samotná jednorázovost přelivu uživatelů: pokud je část aplikace rozbitá, je rozbitá pro 100 \% uživatelů.
+            Postup z předchozí sekce vyžaduje atomickou změnu konfigurace load balanceru. To je velmi těžké docílit, pokud máme více než jednu instanci load balanceru \todo{cite}. Další nevýhodou je, že při nasazování nové verze aplikace se po nějakou dobu zdvojnásobí nutné výpočetní zdroje (musí běžet současně $n$ starých a $n$ nových instancí aplikace). Při continuous deployment to může být velmi často, což se prodraží na nezbytné infrastruktuře. Praktický problém tohoto řešení je i samotná jednorázovost přelivu uživatelů: pokud je část aplikace rozbitá, je rozbitá pro 100 \% uživatelů.
 
             Vhodnější řešení je tzv. rolling update, kdy souběžně nějakou dobu provozujeme novou i starou verzi aplikace v narůstajícím poměru. Průběžně monitorujeme aplikační metriky a v případě, že se nová verze aplikace nechová podle očekávaní, můžeme nasazování pozastavit nebo úplně vrátit. Pracujeme tedy s následujícími předpoklady:
             \begin{itemize}
