@@ -11,6 +11,12 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = ["cookbooks", "../cookbooks"]
+
+    chef.json = {
+      "gitlab.rb" => File.read('gitlab.rb')
+    }
+
     chef.add_recipe "gitlab-omnibus"
+    chef.add_recipe "gitlab-runner"
   end
 end
