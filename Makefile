@@ -10,7 +10,7 @@ quick:
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 
 MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs))
-	arara main
+	arara main || ( tail -n 50 main.log && exit 1 )
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 
 skim:
