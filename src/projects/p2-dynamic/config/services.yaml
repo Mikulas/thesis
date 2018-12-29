@@ -38,3 +38,17 @@ services:
             $driver: '@nextras.driver'
             $dir: "migrations"
             $phpParams: {dbal: '@Doctrine\DBAL\Connection'}
+
+    # redis sessions
+    Redis:
+        class: Redis
+        calls:
+            - method: connect
+              arguments:
+                  - '%env(REDIS_HOST)%'
+                  - '%env(int:REDIS_PORT)%'
+
+    session.handler.redis:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
+        arguments:
+            - '@Redis'

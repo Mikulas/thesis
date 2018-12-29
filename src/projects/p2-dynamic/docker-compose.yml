@@ -1,0 +1,24 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+    - "8001:8001"
+    volumes:
+    - .:/src
+    links:
+    - redis
+    - mysql
+
+  redis:
+    image: redis:5.0
+    ports:
+      - 6379:6379
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: project2
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306
