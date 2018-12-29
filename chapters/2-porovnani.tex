@@ -34,6 +34,8 @@
         \subsection{P1: Jednoduchá aplikace bez externích závislostí}
             Tato kategorie pokrývá výhradně statické weby. Aplikace může obsahovat dynamické části jako je například kontaktní formulář, ale samotné zpracování se děje mimo statickou aplikaci -- cílem formulářů může být například Google Form \cite{mccoy-google-form}, nebo jiné aplikace (ať už třetích stran nebo vlastní).
 
+            Pro testování \CICD systémů jsem vytvořil jednoduchý statický projekt s nástrojem Jekyll \cite{jekyll}. Ten ze zdrojových souborů které se skládají hlavně z Markdown textů, metadat a šablon generuje statické HTML soubory. Dále umí kompilovat i styly, což jsem využil pro jednoduchý \code{scss} soubor. Na závěr každého buildu se všechny assety přemístí do složky podle aktuálního data. Tím je aplikace připravena pro nasazení současně se starší nebo novější verzí.
+
             \todo{tohle asi přesunout někam do teorie jak se dělá deploy}
 
             Při \CICD se typicky v repozitáři uchovávají pouze zdrojová data. Pro generátory statických webů to mohou být například soubory ve formátu Markdown a specifikace \HTML šablon, ze kterých se. Z těch se pak v rámci buildu na \CICD pipeline vygenerují výsledné \HTML soubory. Je vhodné, aby statické zdroje (JavaScripty, kaskádové styly, \ldots) byly vygenerovány do unikátní složky, například podle verze buildu nebo podle času. Samotné nasazení na produkční server pak lze udělat bez výpadku takto: nejprve je nutné nasadit nové statické zdroje. Ty mají unikátní názvy (nejlépe jsou v unikátně pojmenovanné složce), takže jejich nasazení nepřepíše současné soubory. Následně se přepíší \HTML soubory. Uživatelé kteří ještě načetli starou verzi načtou staré zdroje. \HTML soubory neexistující v nové verzi lze po uvážení z produkčního serveru odstranit. Není potřeba invalidovat cache, protože nové zdroje jsou pojmenované jinak než ty staré. Po uplynutí vhodného času lze staré zdrojové soubory ze serveru smazat.
@@ -58,7 +60,7 @@
         \subsection{P2: Komplexní aplikace}
             V této kategorii uvažuji komplexní aplikace vyžadující relační databázi, případně další závislosti jako jsou např. fronta, key-value storage, mailer, služba na zpracování obrázků nebo generování faktur, nebo platební bráne. Na rozdíl od statických webů se tyto aplikace složitě testují. V případě databáze například stačí spustit pro testy nový databázový stoj a pro novou databázi spustit migrace. V případě platební brány která může od aplikace požadovat veřejně dostupnou url pro webhooks to může znamenat, že už samotný test vyžaduje nějakou úroveň nasazení aplikace. \todo {tohle přepsat, je to neohrabané}
 
-            \todo{Popsat projekt 2}\blind[1]
+            Pro testování jsem implementoval blog v PHP, konkrétně za použití frameworku Symfony. Aplikace při zpracování každého požadavku posílá dotazy na články do externí MySQL databáze. Dále komunikuje s key-value serverem Redis, kde spravuje session. Třetí závislost je API třetí strany: mailgun.com, které se používá pro posílání transakčních emailů.
 
 
         \subsection{P3: Aplikace distribuovaná jako kontejner}
