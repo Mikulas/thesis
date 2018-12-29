@@ -1,2 +1,5 @@
+build:
+	./build.sh
+
 serve:
-	bundle exec jekyll serve
+	cd _site && python -m SimpleHTTPServer 8000
