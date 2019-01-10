@@ -18,5 +18,6 @@ Vagrant.configure("2") do |config|
 
     chef.add_recipe "gitlab-omnibus"
     chef.add_recipe "gitlab-runner"
+    chef.add_recipe "build-dependencies"
   end
 end
