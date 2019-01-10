@@ -5,14 +5,13 @@ _: MT_Dite_Mikulas_2019
 media/%.pdf: media/%.svg
 	inkscape -D -z --file="$(shell echo ${PWD})/$<" --export-pdf "$(shell echo ${PWD})/$@" --export-latex
 
-main.tex: main.ctex
-	./preprocess.sh
-
-quick: main.tex
+quick:
+	./preprocess.sh -D'TODO=1'
 	echo "" | xelatex -shell-escape main
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 
 MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs)) main.tex
+	./preprocess.sh -D'TODO=1'
 	arara main || ( tail -n 50 main.log && exit 1 )
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 

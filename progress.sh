@@ -9,7 +9,7 @@ make quick >/dev/null
 pdftotext MT_Dite_Mikulas_2019.pdf
 LINES_DONE="$(wc -l MT_Dite_Mikulas_2019.txt | awk '{print $1}')"
 
-./preprocess.sh
+./preprocess.sh -D'TODO=1'
 echo "Building version with TODOs"
 make quick >/dev/null
 pdftotext MT_Dite_Mikulas_2019.pdf

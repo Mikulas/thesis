@@ -29,7 +29,7 @@
 \usepackage{todonotes}
 \let\oldtodo\todo
 \renewcommand{\todo}[1]{
-#ifndef NOTODO
+#ifdef TODO
     \textcolor{red}{\oldtodo[noline]{#1}\textbf{[[#1]]}}
 #endif
 }
