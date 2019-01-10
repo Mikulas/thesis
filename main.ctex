@@ -29,12 +29,16 @@
 \usepackage{todonotes}
 \let\oldtodo\todo
 \renewcommand{\todo}[1]{
+#ifndef NOTODO
     \textcolor{red}{\oldtodo[noline]{#1}\textbf{[[#1]]}}
+#endif
 }
 
 \usepackage{blindtext}
 \newcommand{\blind}[1][1]{
+#ifdef TODO
     \textcolor{gray}{\Blindtext[#1][1]}
+#endif
 }
 
 \newcommand{\importsvg}[1]{
@@ -75,7 +79,6 @@
     \end{figure}
 }
 
-
 \newcommand{\CI}{ \glstext{CI} }
 \newcommand{\CICD}{ \glstext{CICD} }
 \newcommand{\CD}{ \glstext{CD} }
@@ -105,7 +108,7 @@
 \end{introduction}
 
 \input{chapters/1-reserse.tex}
-\input{chapters/2-porovnani.tex}
+\input{chapters/2-0-porovnani.tex}
 \input{chapters/3-nasazeni.tex}
 
 \begin{conclusion}
