@@ -1,0 +1,14 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+  - make build
+
+deploy:
+  stage: deploy
+  script:
+  - echo "not implemented"
+  - exit 1

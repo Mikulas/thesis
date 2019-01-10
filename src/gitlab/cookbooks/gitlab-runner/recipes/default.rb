@@ -33,6 +33,7 @@ execute 'add_gitlab_runner_repo' do
 gitlab-runner register \
   --non-interactive \
   --url "http://localhost/" \
+  --clone-url "http://localhost/" \
   --registration-token "preset-runner-token" \
   --executor "shell" \
   --description "custom-runner" \
