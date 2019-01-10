@@ -1,14 +1,20 @@
 stages:
+  - setup
   - build
   - deploy
+
+setup:
+  stage: setup
+  script:
+    - bundle install
 
 build:
   stage: build
   script:
-  - make build
+    - make build
 
 deploy:
   stage: deploy
   script:
-  - echo "not implemented"
-  - exit 1
+    - echo "not implemented"
+    - exit 1
