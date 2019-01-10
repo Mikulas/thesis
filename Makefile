@@ -22,4 +22,8 @@ skim:
 clean:
 	git clean -Xf
 
+progress:
+	./progress.sh
+
+
 .PHONY: clean all
