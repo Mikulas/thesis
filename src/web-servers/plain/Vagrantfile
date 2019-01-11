@@ -1,0 +1,21 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.box_version = "= 20181222.0.0"
+
+  config.vm.network "forwarded_port", guest: 80, host: 80
+  config.vm.network :private_network, ip: "10.0.0.50"
+  config.vm.hostname = "webserver-plain"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 4096
+    v.cpus = 2
+    v.name = "webserver-plain"
+  end
+
+  config.vm.provision "chef_solo" do |chef|
+    chef.cookbooks_path = ["cookbooks", "../../cookbooks"]
+
+    chef.add_recipe "hosts"
+    chef.add_recipe "nginx"
+  end
+end
