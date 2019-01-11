@@ -10,11 +10,15 @@ setup:
 
 build:
   stage: build
+  artifacts:
+    paths:
+      - _site/
   script:
     - make build
 
 deploy:
   stage: deploy
+  dependencies:
+    - build
   script:
-    - echo "not implemented"
-    - exit 1
+    - make deploy

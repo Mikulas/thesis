@@ -1,6 +1,9 @@
 build:
 	./build.sh
 
+deploy:
+	./deploy.sh
+
 serve:
 	cd _site && python -m SimpleHTTPServer 8000
 
