@@ -4,9 +4,13 @@
 #
 
 node['ssh-ring']['home-dirs'].each do |user, homeDir|
+  user user do
+    action :modify
+    shell '/bin/bash'
+  end
   directory homeDir+'/.ssh' do
-    owner 'www-data'
-    group 'www-data'
+    owner user
+    group user
     mode '0744'
     action :create
   end

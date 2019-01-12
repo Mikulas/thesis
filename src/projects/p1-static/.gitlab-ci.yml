@@ -1,12 +1,6 @@
 stages:
-  - setup
   - build
   - deploy
-
-setup:
-  stage: setup
-  script:
-    - bundle install
 
 build:
   stage: build
@@ -14,6 +8,9 @@ build:
     paths:
       - _site/
   script:
+    - rvm use 2.6
+    - gem install jekyll bundler
+    - bundle install
     - make build
 
 deploy:

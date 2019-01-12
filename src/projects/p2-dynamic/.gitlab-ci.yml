@@ -15,4 +15,5 @@ deploy:
   dependencies:
     - build
   script:
+    - mv .env-prod .env
     - make deploy
