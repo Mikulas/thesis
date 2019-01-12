@@ -10,3 +10,14 @@ redis:
 stop:
 	docker stop p2-mysql57 p2-redis
 
+build:
+	composer install
+
+deploy:
+	./deploy.sh
+
+stage:
+	mv .git-unstage .git
+
+unstage:
+	mv .git .git-unstage

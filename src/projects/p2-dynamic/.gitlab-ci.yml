@@ -1,0 +1,18 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  artifacts:
+    paths:
+      - vendor/
+  script:
+    - make build
+
+deploy:
+  stage: deploy
+  dependencies:
+    - build
+  script:
+    - make deploy
