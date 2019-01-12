@@ -16,12 +16,19 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = ["cookbooks", "../cookbooks"]
 
     chef.json = {
-      "gitlab.rb" => File.read('gitlab.rb')
+      "gitlab.rb" => File.read('gitlab.rb'),
+      "ssh-ring" => {
+          "home-dirs" => {
+              "gitlab-runner" => "/home/gitlab-runner"
+          }
+      }
     }
 
     chef.add_recipe "hosts"
     chef.add_recipe "gitlab-omnibus"
     chef.add_recipe "gitlab-runner"
-    chef.add_recipe "build-dependencies"
+    chef.add_recipe "ssh-ring"
+    chef.add_recipe "deps-p1-build"
+    chef.add_recipe "deps-p2-build"
   end
 end

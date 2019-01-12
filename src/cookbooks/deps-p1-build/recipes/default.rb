@@ -1,5 +1,5 @@
 #
-# Cookbook:: build-dependencies
+# Cookbook:: deps-p1-build
 # Recipe:: default
 #
 

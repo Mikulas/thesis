@@ -15,7 +15,18 @@ Vagrant.configure("2") do |config|
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = ["cookbooks", "../../cookbooks"]
 
+    chef.json = {
+      "ssh-ring" => {
+          "home-dirs" => {
+              "www-data" => "/var/www"
+          }
+      }
+    }
+
     chef.add_recipe "hosts"
     chef.add_recipe "nginx"
+    chef.add_recipe "ssh-ring"
+    chef.add_recipe "deps-p1-run"
+    chef.add_recipe "deps-p2-run"
   end
 end
