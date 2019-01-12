@@ -32,10 +32,8 @@
         Na instalovaných systémech pak provedu základní nezbytné nastavení: to bude pravděpodobně konfigurace veřejné \glstext{URL}, případně portů. \todo{další?} Bez dalšího nastavení zhodnotím zvlášť aplikační dostupnost za provozu a za správcovských úkonů: samostatně pro pro aktualizace \CI systému a pro rekonfiguraci. Tím se dozvím, jestli se lze spolehnout na výchozí nastavení dodavatele. Dostupnost budu měřit nástrojem \code{siege} \ref{fulmer-siege}. Jde o podobný nástroj jako je Apache \code{ab} \ref{apache-ab}, který navíc umí parsovat přijaté \glstext{HTML} a odesílat další požadavky na odkázané javascripty, kaskádové styly a další zdroje. Simuluje tak lépe chování uživatelů s webovým prohlížečem. Dostupnost budu testovat kontinuálními požadavky bez prodlev (volba \code{--benchmark}) s 10 uživateli (\code{--concurrent=10}). Výsledkem testu je počet selhaných požadavků, měřených podle \HTTP kódu odpovědi. Ideální výsledek je 0 selhaných požadavků. Dostupnost za klasického provozu aplikace budu měřit po dobu 15 minut. U administrátorských úkonů budu dostupnost měřit po celou dobu úkonu, která se bude lišit.
 
         Následně nakonfiguruji systém tak, aby měl co nejlepší možnou dostupnost a opět zopakuji testy na dostupnost.
-        \todo{Co se pro každý systém bude dělat (nastavovat, nasazovat).}
-        \blind[4]
 
-        \todo{Na jakých typových projektech tohle budu zkoušet.}
+        Na třech ukázkových projektech otestuji možnosti \CI, které systém nabízí. Aplikační testy budu z části simulovat jednoduchým bash scriptem.  Zaměřím se na: sledování stavu testů a přehlednost (logování, reporting), možnosti debugování (vzdálené připojení do testovacího prostředí, \code{ssh}), uchovávání artefaktů (výsledků buildu), konfigurace v kódu (vs konfigurace klikáním v administraci). \todo{rychlost od nahrání změn, …?}
 
         \subsection{P1: Jednoduchá aplikace bez externích závislostí}
             Tato kategorie pokrývá výhradně statické weby. Aplikace může obsahovat dynamické části jako je například kontaktní formulář, ale samotné zpracování se děje mimo statickou aplikaci -- cílem formulářů může být například Google Form \cite{mccoy-google-form}, nebo jiné aplikace (ať už třetích stran nebo vlastní).
