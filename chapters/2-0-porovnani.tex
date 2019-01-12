@@ -20,15 +20,18 @@
 }
 
 \chapter{Porovnání}
-    \todo{Jakou metodou jsem vybral CI/CD systémy. Zmínit, že jsem to vybral hlavně pro webobý stack: statický, php a kontainery. Webová Java, C\#, atd. mají přímo svá korporátní prostředí (Visual Studio Team Services), nebo je lze spustit v kontejneru. Dále se nebudu věnovat aplikacím mimo web.}
+    V této práci se budu soustředit na systémy pro webové aplikace. To jsou především Javascript, Java, Python a PHP \cite{github-octoverse-languages}. Přesto že se \CI většinou nelimitují na konkrétní jazyky, vyhnu se při porovnání systémům primárně pro mobilní a desktopové aplikace. Dále se nebudu věnovat úzce zaměřeným proprietárním systémům (jako jsou například \textit{Visual Studio Team Services}, \textit{TeamCity}, \ldots).
 
-    Přestože je hodně systémů prodáváno jako \CICD, podporují většinou pouze \CI část (primárně testování) a v nejlepším případě nějakou formou umožňují sledovat a spouštět nasazení aplikace. To je případ Jenkins, GitLab, Drone a dalších \cite{ellingwood-cicd-list}.
-    To souvisí s tím, že pro komplexní \CD systém je nezbytná úzká integrace s hostitelskými servery -- hlavní komponenty které \CD konfiguruje jsou networking a potažmo DNS, \HTTP web servery, můžou nastavovat load balancery případně jiné části infrastruktury jako jsou databáze atd.
-    Budu porovnávat zlášť \CI a \CD systémy, protože neexistuje jeden systém, který by kvalitně zvládat oboje. U testovacích systémů, které se honosí podporou \CD vypíchnu co opravdu mají implementované a co jim chybí.
+    Přestože je hodně systémů prodáváno jako \CICD, podporují většinou pouze \CI část (primárně testování) a v nejlepším případě nějakou formou umožňují sledovat a spouštět nasazení aplikace. To je případ Jenkins, GitLab, Drone a dalších \cite{ellingwood-cicd-list}. To souvisí s tím, že pro komplexní \CD systém je nezbytná úzká integrace s hostitelskými servery -- hlavní komponenty které \CD konfiguruje jsou networking a potažmo DNS, \HTTP web servery, můžou nastavovat load balancery případně jiné části infrastruktury jako jsou databáze atd.
+
+    Budu porovnávat zlášť \CI a \CD systémy; ukázalo se, že neexistuje jeden systém, který by kvalitně zvládat zastoupit obě role. U testovacích systémů, které se honosí podporou \CD vypíchnu co opravdu mají implementované a co jim chybí.
 
     \section{Metodika porovnávání \CI systémů}
         U každého systému se nejprve seznámím s aktuální dokumentací. \CI systémy provozované pouze jako \glstext{SaaS} (\textit{Software as a Service}) budu muset testovat v cloudu. Pokud systém nabízí self-hosted variantu, zprovozním ji na lokálním virtuálním serveru. Pro systémy s oficiálním kontejnerem budu systém spouštět v Dockeru. V případě, že systém má několik oficiálních variant instalace a nabízí jinou funkcionalitu (to je případ GitLabu), nainstaluji a otestuji systém několikrát. Všechny instalace budou nascriptované a opakovatelné. Technickou část práce netýkající se přímo daných \CI systémů popisuji \pfxref{v příloze}{ch:implementace}.
 
+        Na instalovaných systémech pak provedu základní nezbytné nastavení: to bude pravděpodobně konfigurace veřejné \glstext{URL}, případně portů. \todo{další?} Bez dalšího nastavení zhodnotím zvlášť aplikační dostupnost za provozu a za správcovských úkonů: samostatně pro pro aktualizace \CI systému a pro rekonfiguraci. Tím se dozvím, jestli se lze spolehnout na výchozí nastavení dodavatele. Dostupnost budu měřit nástrojem \code{siege} \ref{fulmer-siege}. Jde o podobný nástroj jako je Apache \code{ab} \ref{apache-ab}, který navíc umí parsovat přijaté \glstext{HTML} a odesílat další požadavky na odkázané javascripty, kaskádové styly a další zdroje. Simuluje tak lépe chování uživatelů s webovým prohlížečem. Dostupnost budu testovat kontinuálními požadavky bez prodlev (volba \code{--benchmark}) s 10 uživateli (\code{--concurrent=10}). Výsledkem testu je počet selhaných požadavků, měřených podle \HTTP kódu odpovědi. Ideální výsledek je 0 selhaných požadavků. Dostupnost za klasického provozu aplikace budu měřit po dobu 15 minut. U administrátorských úkonů budu dostupnost měřit po celou dobu úkonu, která se bude lišit.
+
+        Následně nakonfiguruji systém tak, aby měl co nejlepší možnou dostupnost a opět zopakuji testy na dostupnost.
         \todo{Co se pro každý systém bude dělat (nastavovat, nasazovat).}
         \blind[4]
 

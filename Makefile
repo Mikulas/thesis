@@ -10,7 +10,7 @@ quick:
 	echo "" | xelatex -shell-escape main
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 
-MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs)) main.tex
+MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs))
 	./preprocess.sh -D'TODO=1'
 	arara main || ( tail -n 50 main.log && exit 1 )
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
