@@ -21,13 +21,16 @@
 
 \chapter{Porovnání}
     \todo{Jakou metodou jsem vybral CI/CD systémy. Zmínit, že jsem to vybral hlavně pro webobý stack: statický, php a kontainery. Webová Java, C\#, atd. mají přímo svá korporátní prostředí (Visual Studio Team Services), nebo je lze spustit v kontejneru. Dále se nebudu věnovat aplikacím mimo web.}
-    \blind[1]
 
-    \section{Metodika porovnávání}
+    Přestože je hodně systémů prodáváno jako \CICD, podporují většinou pouze \CI část (primárně testování) a v nejlepším případě nějakou formou umožňují sledovat a spouštět nasazení aplikace. To je případ Jenkins, GitLab, Drone a dalších \cite{ellingwood-cicd-list}.
+    To souvisí s tím, že pro komplexní \CD systém je nezbytná úzká integrace s hostitelskými servery -- hlavní komponenty které \CD konfiguruje jsou networking a potažmo DNS, \HTTP web servery, můžou nastavovat load balancery případně jiné části infrastruktury jako jsou databáze atd.
+    Budu porovnávat zlášť \CI a \CD systémy, protože neexistuje jeden systém, který by kvalitně zvládat oboje. U testovacích systémů, které se honosí podporou \CD vypíchnu co opravdu mají implementované a co jim chybí.
+
+    \section{Metodika porovnávání \CI systémů}
+        U každého systému se nejprve seznámím s aktuální dokumentací. \CI systémy provozované pouze jako \glstext{SaaS} (\textit{Software as a Service}) budu muset testovat v cloudu. Pokud systém nabízí self-hosted variantu, zprovozním ji na lokálním virtuálním serveru. Pro systémy s oficiálním kontejnerem budu systém spouštět v Dockeru. V případě, že systém má několik oficiálních variant instalace a nabízí jinou funkcionalitu (to je případ GitLabu), nainstaluji a otestuji systém několikrát. Všechny instalace budou nascriptované a opakovatelné. Technickou část práce netýkající se přímo daných \CI systémů popisuji \pfxref{v příloze}{ch:implementace}.
+
         \todo{Co se pro každý systém bude dělat (nastavovat, nasazovat).}
         \blind[4]
-
-        \CICD systémy provozované pouze jako \glstext{SaaS} (\textit{Software as a Service}) budu muset testovat v cloudu. Pokud systém nabízí self-hosted variantu, zprovozním ji na lokálním virtuálním serveru. Pro systémy s oficiálním kontejnerem budu \CICD spouštět v Dockeru.
 
         \todo{Na jakých typových projektech tohle budu zkoušet.}
 
