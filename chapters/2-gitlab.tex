@@ -83,6 +83,16 @@ build:
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[1]
 
     \subsection{Dostupnost}
+        \subsubsection{GitLab omnibus}
+            Omnibus distribuce GitLabu, tedy balíček který obsahuje všechny komponenty, je primárně pro snadné nasazení a nepočítá se s tím, že by běžel s vysokou dostupností (\HA). Umožňují ale aktualizovat systém bez výpadku: doporučený postup je aktualizovat balíček, spustit databázové migrace a reloadnout webový frontend a konzumenty fronty \cite{gitlab-omnibus-update}. Důsledně se snaží dodržovat kompatibilitu napříč verzemi a databázové migrace dělají zpětně kompatibilní. V každém vydání nové verze jsou změny rozepsané a případné nekompatibility jsou znárorněny v tzv. \textit{upgrade barometer}.
+
+            V základním nastavení nelze GitLab Omnibus replikovat. Některé komponenty lze ale vyčlenit. Nezbytné jsou PostgreSQL a Redis. Jediné co pak zbývá a sdílí se mezi replikami jsou samotné git repozitáře na souborovém úložišti. Vyzkoušel jsem, že GitLab Omnibus správně funguje ve víc replikách, když se vyčlení databáze a repozitáře se sdílí přes \glstext{NFS}. Jedná se ale o nezdokumentované nasazení a nemá oficiální podporu.
+
+            Při nasazení ve víc replikách lze docílit 100 \% dostupnosti při aktualizaci na novější verzi.
+
+        \subsection{GitLab microservices}
+            \todo{todo popsat: vypsat komponenty a pak sepsat ze gitaly neni HA}
+
         \todo{Může gitlab běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[2]
 
     \subsection{Integrace}

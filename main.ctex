@@ -68,6 +68,7 @@
 \newcommand{\CI}{ \glstext{CI}\xspace}
 \newcommand{\CICD}{ \glstext{CICD}\xspace}
 \newcommand{\CD}{ \glstext{CD}\xspace}
+\newcommand{\HA}{ \glstext{HA}\xspace}
 \newcommand{\HTML}{ \glstext{HTML}\xspace}
 \newcommand{\HTTP}{ \glstext{HTTP}\xspace}
 
