@@ -13,10 +13,11 @@ cat main.blg | \
 echo ""
 echo "Tex:"
 awk '/^File: assignment\.pdf/ { found = 1 } found { print }' main.log | \
-    egrep "Warning|Error" | \
+    egrep "Warning|Error|Emergency|Undefined control sequence|Illegal parameter|<argument>" | \
     grep -v 'glossarystyle' | \
     grep -v 'Token not allowed in a PDF' | \
     grep -v 'Some font shapes were not available' | \
     grep -v "Font shape ${T}TU/lmss/bx/sc' undefined" | \
     grep -v "Name format 'last-first' deprecated." \
+    || egrep -A 3 'Emergency|Illegal' main.log \
     || echo '✅ all ok'

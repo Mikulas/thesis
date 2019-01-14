@@ -58,10 +58,28 @@ build:
         \todo{cd: manualni spusteni jobu, gitlab operations environments v placenem}\blind[1]
         \todo{že to umi nasazovani beta aplikaci, podpora kubernetes}\blind[1]
 
+    \subsection{Open-source}
+        \todo{popsat jak se ten projekt vyvyji a ze je nerealne tam neco mergnout, protoze to dela milion lidi a nikdo to nevede}\blind[1]
+
     \subsection{Rozšiřitelnost}
         \todo{Má gitlab nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[1]
 
     \subsection{Zabezpečení}
+        Podle \glstext{CVE} Details měl GitLab nejvíc kritické problémy -- hodnocené podle podle \glstext{CVSS} -- zjištěné v posledním roce (2018) \cite{cve-gitlab}. To může souviset s exponenciálním růstem, který zažili díky \code{\#movingtogitlab} a akvicizi firmou Microsoft \cite{gitlab-growth}. Není zatím jasné, jestli dramatický nárůst počtu uživatelů přilákal bezpečnostní analytiky, nebo jestli bezpečnostní problémy jsou výsledkem zrychleného vývoje a zhoršení kvality produktu.
+
+        \todo{Jak dlouho trvá gitlabu opravit cve a zverejnit fix?}
+
+        Správa problémů (\textit{issues}) u projektů na GitLabu má možnost vytvořit nový záznam v důvěrném režimu. Takové problémy jsou pak viditelné pouze pro správce repozitáře. To je vhodné pro \textit{responsible disclosure} (zodpovědné zveřejnění) bezpečnostních chyb. GitLab toto úspěšně používá i pro vlastní projekty.
+
+        GitLab zavádí v kontextu \CICD nový pojem \textit{continuous security testing} (kontinuální bezpečnostní testování) \cite{gitlab-app-security}. Na rozdíl od testování po začlenění změn a nasazení, GitLab umožňuje každému vývojáři deploynout danou větev verzovacího systému do vlastního testovacího prostředí. To je znázorněno \pfxref{v diagramu}{fig:gitlab-review-cycle}.
+
+        \begin{figure}[hb]
+            \centering
+            \includegraphics[width=\textwidth]{media/gitlab-review-cycle.pdf}
+            \caption{Cyklus kontroly kvality aplikace GitLab s integrovaným \glstext{DAST} \cite{gitlab-app-security}. Vývojář může vyhodnotit bezpečnostní problémy před začleněním změň do sdíleného kódu.}
+            \label{fig:gitlab-review-cycle}
+        \end{figure}
+
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[1]
 
     \subsection{Dostupnost}
