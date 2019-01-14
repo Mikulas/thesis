@@ -110,5 +110,6 @@
 \printglossary[type=\acronymtype,style=acronyms]
 
 \input{medium.tex}
+\input{todo.tex}
 
 \end{document}
