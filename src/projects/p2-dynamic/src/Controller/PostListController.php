@@ -40,7 +40,7 @@ class PostListController extends AbstractController
         $articles = $this->articles->findBy([], ['createdAt' => 'DESC']);
 
         return $this->render('posts.html.twig', [
-            'title' => 'P2: Ukázkový dynamická aplikace',
+            'title' => 'P2: Ukázková dynamická aplikace',
             'views' => $views,
             'articles' => $articles,
         ]);
