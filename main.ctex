@@ -24,6 +24,9 @@
 
 \setcounter{tocdepth}{1}
 
+% https://tex.stackexchange.com/questions/17489/change-caption-name-of-figures
+\usepackage[figurename=Fig.]{caption}
+
 % from https://www.herout.net/blog/2017/03/pomalu-uz-pojdme-psat/
 \usepackage{xcolor}
 \usepackage{todonotes}
