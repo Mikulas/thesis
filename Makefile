@@ -9,11 +9,16 @@ quick:
 	./preprocess.sh -D'TODO=1'
 	echo "" | xelatex -shell-escape main
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
+	make clean-log
 
 MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs))
 	./preprocess.sh -D'TODO=1'
-	arara main || ( tail -n 50 main.log && exit 1 )
+	arara main || ( make clean-log && exit 1 )
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
+	make clean-log
+
+clean-log:
+	./clean-log.sh
 
 skim:
 	open -a /Applications/Skim.app MT_Dite_Mikulas_2019.pdf

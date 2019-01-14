@@ -10,6 +10,12 @@
 % arara: biber
 % arara: xelatex: { shell: yes }
 % arara: xelatex: { shell: yes }
+
+% https://tex.stackexchange.com/a/18088/19197
+\RequirePackage{silence}
+\WarningFilter{blindtext}{czech not defined}
+\WarningFilter{latex}{Marginpar}
+
 \documentclass[thesis=M,czech,hidelinks]{template/FITthesisXE}
 
 \bibliography{library}
