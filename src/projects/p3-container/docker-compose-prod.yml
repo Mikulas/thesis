@@ -1,0 +1,28 @@
+version: '3'
+services:
+  web:
+    image: "registry.gitlab.ditemiku.local:4567/root/project-3:$CI_COMMIT_SHA"
+    ports:
+    - "8001:8001"
+    depends_on:
+    - redis
+    - mysql
+    environment:
+      APP_ENV: dev
+      APP_SECRET: 0d63ce321bf28c3fb80cd41a4a03a848
+      DATABASE_URL: mysql://root:password@mysql:3306/project3
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+  redis:
+    image: redis:5.0
+    ports:
+      - 6379:6379
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: project3
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306

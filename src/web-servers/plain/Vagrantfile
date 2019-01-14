@@ -28,5 +28,6 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "ssh-ring"
     chef.add_recipe "deps-p1-run"
     chef.add_recipe "deps-p2-run"
+    chef.add_recipe "deps-p3-run"
   end
 end

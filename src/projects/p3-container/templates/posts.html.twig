@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+    <h2 class="post-list-heading">Posts</h2>
+    <ul class="post-list">
+        {% for article in articles %}
+            <li>
+                <span class="post-meta">{{ article.createdAt | date('M d, Y') }}</span>
+                <h3>
+                    <a class="post-link" href="/post/{{ article.id }}">
+                        {{ article.title }}
+                    </a>
+                </h3>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p class="rss-subscribe">subscribe <a href="#">via RSS</a></p></div>
+
+    <p>You viewed this page {{ views }} times.</p>
+
+{% endblock %}
