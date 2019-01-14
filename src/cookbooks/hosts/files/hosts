@@ -7,5 +7,5 @@ ff02::1	ip6-allnodes
 ff02::2	ip6-allrouters
 ff02::3	ip6-allhosts
 
-10.0.0.10   gitlab
+10.0.0.10   gitlab registry.gitlab gitlab.ditemiku.local registry.gitlab.ditemiku.local
 10.0.0.50   webserver-plain

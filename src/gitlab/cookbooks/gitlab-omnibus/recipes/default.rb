@@ -26,6 +26,17 @@ file '/etc/gitlab/gitlab.rb' do
   content node['gitlab.rb']
 end
 
+cookbook_file '/opt/registry-cert.pem' do
+  source 'cert.pem'
+  mode '0644'
+  action :create
+end
+cookbook_file '/opt/registry-key.pem' do
+  source 'key.pem'
+  mode '0644'
+  action :create
+end
+
 execute 'gitlab_ctl_reconfigure' do
   command 'gitlab-ctl reconfigure'
 end
