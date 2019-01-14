@@ -19,6 +19,7 @@
 *.run.xml
 *.tdo
 *.toc
+*.pyg
 
 /media/svg/*.pdf
 /media/svg/*.pdf_tex
