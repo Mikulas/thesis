@@ -57,6 +57,7 @@ build:
     \subsection{Podpora \CD praktik}
         \todo{cd: manualni spusteni jobu, gitlab operations environments v placenem}\blind[1]
         \todo{že to umi nasazovani beta aplikaci, podpora kubernetes}\blind[1]
+        \todo{review apps}
 
     \subsection{Open-source}
         \todo{popsat jak se ten projekt vyvyji a ze je nerealne tam neco mergnout, protoze to dela milion lidi a nikdo to nevede}\blind[1]
@@ -101,7 +102,12 @@ build:
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
-            \todo{Popsat deploy projektu 1 z gitlabu}\blind[2]
+            Nastavení pipeline pro statický projekt není vůbec přímočaré. Z webového rozhraní jsem vytvořil projekt včetně repozitáře, v lokálním git repozitáři jsem nastavil přidělený remote a zdrojové kódy jsem nahrál na GitLab. Potom jsem ručně napsal konfiguraci pipeline v souboru \code{.gitlab-ci.yml}. Protože jsem GitLab runner nasadil s executorem \code{shell}, nainstaloval jsem předem do sdíleného prostředí nezbytné závislosti. Popis instalace Ruby, Gem a balíčků Jekyll a Bundler jsem popsal \pfxref{v příloze}{ch:implementace}. Konfigurace GitLab pipeline obsahuje značné množství klíčových slov, ale má vynikající webovou dokumentaci. Uvítal jsem také podporu schématu v \glstext{IDE} IntelliJ IDEA \cite{idea-gitlab-plugin}, bez kterého se těžko s JSON pracuje.
+
+            Pipeline jsem specifikoval dvoukrokovou. V prvním kroku se generují výstupy a výsledky se archivují jako tzv.~artefakty. V kroku druhém  se tyto artefakty stáhnou a nahrají na webový server. Díky tomuto rozdělení lze na GitLabu deploy opakovat bez nutnosti znovu generovat všechny artefakty. To umožňuje mj.~velmi rychlý rollback a obecně přesun mezi verzemi.
+
+            Implementoval jsem podporu pro GitLab review apps. Změny z větve \code{deploy/prod} se automaticky nahrávají do produkčního prostředí. Ostatní větve se nasadí pro dynamicky vygenerovaného prostředí a vývojář je má po kontrole možnost ručně vypnout.
+
         \subsubsection{Projekt 2}
             \todo{Popsat deploy projektu 2 z gitlabu}\blind[2]
         \subsubsection{Projekt 3}
