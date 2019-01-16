@@ -3,6 +3,13 @@
 # Recipe:: default
 #
 
+directory '/srv' do
+  owner 'www-data'
+  group 'www-data'
+  mode '0775'
+  action :create
+end
+
 package %w(nginx) do
   action :upgrade
 end
