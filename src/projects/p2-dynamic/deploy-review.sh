@@ -5,7 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 REMOTE="www-data@webserver-plain"
 
-mv .env-prod .env
+# todo je potreba nastavit env file
 
 echo "Uploading sources"
 rsync -avzh "$DIR/" "$REMOTE:/srv/p2/"
