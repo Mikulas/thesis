@@ -83,7 +83,11 @@ build:
         \end{itemize}
 
     \subsection{Open-source}
-        \todo{popsat jak se ten projekt vyvyji a ze je nerealne tam neco mergnout, protoze to dela milion lidi a nikdo to nevede}\blind[1]
+        GitLab je vyvíjen jako otevřený software, v tom smyslu, že veškerý kód je veřejně čitelný. Některé části jsou opravdu open-source i co se licence týče: GitLab \glstext{CE} je pod \glstext{MIT} licencí. Jiné části, například GitLab \glstext{EE}, jsou pod vlastní licencí. Licence dokonce ani nedovoluje \glstext{EE} verzi provozovat bez zakoupené licence.
+
+        Příspěvky a návrhy na změny kódu od lidí mimo GitLab Inc. jsou možne, ale vesměs ignorované. Jako přispěvatel jsem hodně cítil, že firma GitLab je čistě remote a nemá žádné kanceláře a tým na jednom místě \cite{gitlab-team}. Většina návrhů na změnu -- od jednořádkových oprav po drobnější funkční úpravy -- co jsem poslal zůstala bez povšimnutí. To je tím spíš mrzuté, když razí cestu „minimum konfigurace, radši pošlete návrh na úpravu kódu pro všechny“ \cite{gitlab-no-custom}.
+
+        U jednoho úkolu do kterého jsem se víc zapojil trvalo rok a půl začlenit drobnou změnu. Na tyto změny čekalo několik desítek firem. Šest vývojářů poslalo nezávisle na sobě návrhy na změnu. Změny byly vesměs triviální, bez dopadu na ostatní části kódu, byly otestované a dobře zdokumentované. Po opakovaném urgováním přes oficiální kanál podpory se u úkolu vyjádřil zaměstnanec GitLab. Bohužel se pouze zeptal, kdo má tuto část kódu na starost a tím na dva měsíce úkol opět usnul. Když se po dalším urgování přes podporu úkolu někdo chopil, zadání vesměs nepochopil a snažil se protlačit nepoužitelné řešení. Nechal si naštěstí problém znovu vysvětlit a řešení přehodnotil. Nakonec byl celý problém vyřešen a změny jsou zařazeny do vydání 11.8, tedy skoro 2 roky po otevření úkolu. Celé vlákno je veřejně na GitLab Issue Trackeru \cite{gitlab-issue-slow}. Podobnou zkušenost mám i z několika dalších GitLab projektů, včetně aktivně vyvíjeného GitLab Helm Chart.
 
     \subsection{Rozšiřitelnost}
         \todo{Má gitlab nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[1]
