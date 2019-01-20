@@ -18,6 +18,7 @@ LINES_TODO="$(wc -l main.txt | awk '{print $1}')"
 PERCENT="$(bc <<< "scale=2; $LINES_DONE/$LINES_TODO*100")"
 echo "$LINES_DONE / $LINES_TODO ($PERCENT %)"
 
-echo "$(date '+%Y-%m-%d %H:%M:%S'),$PERCENT,$LINES_DONE,$LINES_TODO" >> progress.csv
+TAB=$'\t'
+echo "$(date '+%Y-%m-%d %H:%M:%S')$TAB$LINES_DONE$TAB$LINES_TODO" >> progress.csv
 
 rm main.txt
