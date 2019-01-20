@@ -22,7 +22,3 @@ group 'docker' do
   members 'gitlab-runner'
   append true
 end
-
-execute 'swarm_init' do
-  command 'docker swarm init --advertise-addr 10.0.0.50'
-end

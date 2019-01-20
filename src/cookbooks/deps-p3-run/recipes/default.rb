@@ -36,3 +36,8 @@ directory '/var/www/.docker' do
   mode '0770'
   action :create
 end
+
+execute 'swarm_init' do
+  command 'docker swarm init --advertise-addr 10.0.0.50'
+  ignore_failure true # init fails if swarm is already up
+end
