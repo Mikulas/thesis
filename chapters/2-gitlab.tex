@@ -11,9 +11,20 @@
         Aplikaci lze konfigurovat na několika místech: z webového rozhraní, \code{gitlab.yml} a \code{gitlab.rb}). V každé části je bohužel trochu něco jiného. V rámci této práce jsem upravil konfiguraci v \code{gitlab.rb}, kde jsem nastavil externí \glstext{URL}, na kterou GitLab generuje externí linky (například v emailové komunikaci), počáteční heslo pro administrátora a především token, kterým se bude autentifikovat GitLab Runner obstarávající \CI.
 
     \subsection{GitLab mikroslužby}
-        \todo{popsat architekturu}\blind[1]
-        \todo{popsat výhody oproti omnibus}\blind[1]
-        \todo{popsat instalaci a nastavení}\blind[1]
+        GitLab začal oficiálně na konci roku 2018 podporovat také nasazení do Kubernetes přes Helm \cite{gitlab-helm-chart}. Kubernetes je distribuovaný orchestrátor kontejnerů a Helm je balíčkovací aplikace. Každá komponenta GitLabu byla oddělena do samostatného docker obrazu a v Helm balíčku (\textit{Helm chart}) je pomocí Kubernetes zdrojů popsáno jak se dané kontejnery mají spouštět a jak jsou provázané. Teoreticky je možné kontejnery spouštět i ručně v jiném systému než Kubernetes, ale není to oficiálně podporované a neexistuje k tomu dokumentace.
+
+        \todo{diagram}
+        \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura GitLab \label{pic:gitlab-architecture}}
+
+        Hlavní výhody nasazení GitLabu přes mikroslužby jsou:
+        \begin{itemize}
+            \item Přehlednost. Administrátor přesně ví, jaké komponenty systém obsahuje. Jednotlivé části nejsou skryté v Omnibus balíčku, kde se těžko dohledávají logy.
+            \item Metriky mohou přímo využívat exportery nasazené v clusteru. V Omnibus jsou k dispozici pouze metriky pro celý balík, nebo je musí další proces uvnitř exportovat. To je další komplexita a nekonzistence se zbytkem prostředí.
+            \item Lepší škálovatelnost. Můžeme škálovat pouze některé komponenty. Navíc díky přesným metrikám můžeme škálovat vytížené komponenty dynamicky.
+            \item Využití upstream služeb. Řada komponent, které GitLab využívá, jsou nezměněné aplikace třetích stran. To je například ElasticSearch, Redis a relační databáze. V Omnibus balíčku jsou přibalené; nelze je aktualizovat a pokud na to GitLab nemyslel, nelze je vyčlenit a použít externí službu. U mikroslužeb má administrátor plnou kontrolu nad tím, které služby nasadí a pro které například použije cloudovou managed variantu.
+        \end{itemize}
+
+        Instalace GitLabu jako mikroslužeb je oproti verzi Omnibus velmi komplikovaná. Vyžaduje minimálně uživatelskou znalost Kubernetes a velmi podrobnou znalost Helm. Dokumentace je zatím (k lednu 2019) nekompletní a hodně nastavení a jejich význam je nutné dohledávat v šablonách Helm chartu. Některé konfigurace nejsou podporovánu vůbec. Narazil jsem například na nutnost nakonfigurovat Redis clusteru s heslem \cite{gitlab-helm-issue-redis}. Například managed varianta od \glstext{AWS} podporuje přihlášení heslem pouze při použití \glstext{TLS} tunelu, protože bez něj se posílá heslo v plaintextu a nedává moc smysl vůbec heslo použít. To souvisí s tím, že GitLab mikroslužby jsou velmi nové; dá se očekávat, že čím víc firem bude takto GitLab nasazovat, tím lepší dokumentace a podpora pro různá prostředí vznikne.
 
     \subsection{GitLab \CI}
         \CI není přímo komponenta distribuovaná s GitLab, je ale dobře zaintegrovaná. Díky skvělému návrhu GitLab pouze vystavuje události na \glstext{API}. K API se může registrovat libovolné množství runnerů, které se periodicky \glstext{API} dotazují na nové práce ke spuštění \cite{gitlab-runner-registration}. Runner může běžet na stejném serveru jako GitLab, ale velkou výhodou je možnost spustit runner i na jiném vzdáleném serveru -- například pro mobilní aplikace se často používá Mac mini s macOS, které je pro kompilaci nezbytné. Při registraci runneru je možné ho přidělit pouze některým projektům podle tagu, nebo ho zveřejnit pro všechny projekty. \todo{přiděluje to podle tagu gitlab nebo si to rozhoduje runner?}
@@ -86,13 +97,26 @@ build:
 
     \subsection{Dostupnost}
         \subsubsection{GitLab omnibus}
-            Omnibus distribuce GitLabu, tedy balíček který obsahuje všechny komponenty, je primárně pro snadné nasazení a nepočítá se s tím, že by běžel s vysokou dostupností (\HA). Umožňují ale aktualizovat systém bez výpadku: doporučený postup je aktualizovat balíček, spustit databázové migrace a reloadnout webový frontend a konzumenty fronty \cite{gitlab-omnibus-update}. Důsledně se snaží dodržovat kompatibilitu napříč verzemi a databázové migrace dělají zpětně kompatibilní. V každém vydání nové verze jsou změny rozepsané a případné nekompatibility jsou znárorněny v tzv. \textit{upgrade barometer}.
+            Omnibus distribuce GitLabu, tedy balíček který obsahuje všechny komponenty, je primárně pro snadné nasazení a nepočítá se s tím, že by běžel s vysokou dostupností (\HA). Umožňují ale aktualizovat systém bez výpadku: doporučený postup je aktualizovat balíček, spustit databázové migrace a reloadnout webový frontend a konzumenty fronty \cite{gitlab-omnibus-update}. Důsledně se snaží dodržovat kompatibilitu napříč verzemi a databázové migrace dělají zpětně kompatibilní. V každém vydání nové verze jsou změny rozepsané a případné nekompatibility jsou znázorněny v tzv. \textit{upgrade barometer}.
 
             V základním nastavení nelze GitLab Omnibus replikovat. Některé komponenty lze ale vyčlenit. Nezbytné jsou PostgreSQL a Redis. Jediné co pak zbývá a sdílí se mezi replikami jsou samotné git repozitáře na souborovém úložišti. Vyzkoušel jsem, že GitLab Omnibus správně funguje ve víc replikách, když se vyčlení databáze a repozitáře se sdílí přes \glstext{NFS}. Jedná se ale o nezdokumentované nasazení a nemá oficiální podporu.
 
             Při nasazení ve víc replikách lze docílit 100 \% dostupnosti při aktualizaci na novější verzi.
 
         \subsection{GitLab microservices}
+            Mikroslužby jsou obecně vhodné pro \glstext{HA} systémy:
+
+            \begin{quote}
+                [\ldots] each microservice in microservice architectures is operationally independent from others, and the only form of communication between services is through their published interfaces. This is fundamental since this allows one to change, fix or upgrade a microservice without compromising the system correctness, provided that the interfaces are preserved. \textit{Dragoni et al.~\cite{dragoni-microservices}}
+            \end{quote}
+
+            Klíčové komponenty GitLabu můžeme provozovat ve víc replikách a aktualizaci dělat pomocí rolling update, naprosto transparentně pro ostatní části systému. Některé komponenty jako jsou konzumenti fronty a manažer příchozích emailů můžeme dokonce aktualizovat s krátkým výpadkem, bez pozorovatelného dopadu pro uživatele.
+
+            Správa stavových služeb je v distribuovaném systému nejkomplikovanější. GitLab jich bohužel používá celou řadu: relační databázi PostgreSQL, key-value storage Redis a vlastní služby Gitaly pro správu repozitářů. PostgreSQL s master-slave architekturou lze provozovat s vysokou dostupností použitím hot standby instance \cite{kim-postgres}. Redis také používá master-slave architekturu, ale dokáže si v případě výpadku sám zvolit v clusteru nový master díky komponentě Redis Sentinel \cite{redis-ha}. Tyto služby poskytovatelé cloudu nabízí i se správou, kde zodpovídají za dostupnost a některé aktualizace.
+
+            Služba Gitaly je v oficiálním Helm chartu \glstext{SPOF}. Vystavuje \glstext{gRPC} \glstext{API} nad git repozitáři, se kterým pracuje většina ostatních komponent. Gitaly běží v jedné replice a je závislé na stavových datech na disku. Konzultoval jsem tento problém s oficiální podporou a je možné Gitaly provozovat nad \glstext{NFS} ve více replikách. Jde o kompromis mezi dostupností a rychlostí. Gitaly je z části limitováno propustností disku a \glstext{NFS} některé operace zpomalí.
+
+\pfxref{Na diagramu}{pic:gitlab-architecture}
             \todo{todo popsat: vypsat komponenty a pak sepsat ze gitaly neni HA}
 
         \todo{Může gitlab běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[2]
@@ -109,6 +133,8 @@ build:
 
             Implementoval jsem podporu pro GitLab review apps. Změny z větve \code{deploy/prod} se automaticky nahrávají do produkčního prostředí. Ostatní větve se nasadí pro dynamicky vygenerovaného prostředí a vývojář je má po kontrole možnost ručně vypnout.
 
+            Při použití \code{docker} executoru je pipeline stejně jednoduchá, ale odpadá nutnost předem nastavit prostředí a není nutné řešit kolize závislostí napříč projekty. GitLab dokáže artifacts ukládat z kontejneru stejně jako v \code{shell} executoru.
+
         \subsubsection{Projekt 2}
             Pipeline pro dynamický komplexní projekt je překvapivě podobná, jako u statického projektu. Opět jsem vytvořil dvě hlavní stage: build a deploy. Hlavní rozdíl je v samotných příkazech pro sestavení, které jsem abstrahoval do \code{Makefile}. Protože využívám \code{shell} executor, předinstaloval jsem \glstext{PHP}, balíčkovací systém composer a další. To je bohužel správa kterou je potřeba dělat mimo konfiguraci pipeline.
 
@@ -120,3 +146,5 @@ build:
             Pro build aplikace se používá hostitelský docker démon. Celou řadu výhod a nevýhod a alternativní řešení jsem rozepsal \pfxref{v sekci o Dockeru}{sec:gitlab-ci-docker}.
 
             Pro spuštění aplikace na webovém serveru se nejprve nahraje soubor pro konfiguraci Docker Swarm stacku. Na webovém serveru se pak spustí přihlášení do registru a příkazem \code{docker stack deploy} se spustí a případně aktualizuje aplikace.
+
+            U tohoto ukázkového projektu si použitím \code{docker} executoru moc nepomůžeme. Docker jako závislost musí být na hostitelském serveru předinstalovaný a pro zbytek se používají kontejnery.
