@@ -4,10 +4,47 @@ stages:
 
 build:
   stage: build
+  artifacts:
+    paths:
+      - vendor/
   script:
     - make build
 
-deploy:
+deploy_review:
   stage: deploy
   script:
+    - make deploy-review
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: http://$CI_ENVIRONMENT_SLUG.p3.ditemiku.local
+    on_stop: stop_review
+  except:
+    refs:
+      - master
+      - deploy/prod
+
+stop_review:
+  stage: deploy
+  script:
+    - make stop-review
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  except:
+    refs:
+      - master
+      - deploy/prod
+
+deploy:
+  stage: deploy
+  only:
+    refs:
+      - deploy/prod
+  dependencies:
+    - build
+  script:
     - make deploy
+  environment:
+    name: prod
+    url: http://p3.ditemiku.local
