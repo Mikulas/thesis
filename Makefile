@@ -17,6 +17,9 @@ MT_Dite_Mikulas_2019: $(addsuffix .pdf,$(svgs))
 	mv main.pdf MT_Dite_Mikulas_2019.pdf
 	make clean-log
 
+library-test:
+	./library-test.sh
+
 clean-log:
 	./clean-log.sh
 

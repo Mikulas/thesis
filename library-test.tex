@@ -1,0 +1,28 @@
+% arara: xelatex: { shell: yes }
+% arara: biber
+% arara: xelatex: { shell: yes }
+% arara: xelatex: { shell: yes }
+
+\documentclass{article}
+
+\RequirePackage {polyglossia}
+\setmainlanguage{czech}
+\RequirePackage [backend=biber, style=iso-numeric, autolang=other,%
+					sorting=none, sortlocale=cs_CZ, spacecolon=false]{ biblatex }
+
+\bibliography{library}
+
+\setcounter{biburlnumpenalty}{600}
+\setcounter{biburlucpenalty}{900}
+\setcounter{biburllcpenalty}{600}
+
+
+\begin{document}
+
+    \printbibliography[]
+
+    \newpage
+
+    %MARK:citations
+
+\end{document}
