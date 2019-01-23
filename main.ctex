@@ -106,6 +106,7 @@
 
 \appendix
 \input{chapters/6-implementace.tex}
+\input{chapters/7-jenkins-plugins.tex}
 
 \chapter{Použité zkratky}
 \printglossary[type=\acronymtype,style=acronyms]
