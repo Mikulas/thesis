@@ -20,6 +20,9 @@
 
 \bibliography{library}
 
+\usepackage{subcaption}
+\usepackage{afterpage}
+
 \usepackage{import}
 \usepackage{booktabs}
 \usepackage{dirtree}
