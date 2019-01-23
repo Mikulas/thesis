@@ -18,12 +18,20 @@
         Problém Jenkins je uživatelské rozhraní. Ve výchozím stavu má \glstext{UI} celou řadu velmi problematických částí: několika-úrovňové menu, které vyžaduje přesný pohyb myší; nesjednocené symboly, navíc často nekonvenční (například modrá koule u úspěšného jobu místo klasické zelené); konfigurace a všechny formuláře jsou složité a běžně obsahují 100+ vstupů. Rozšíření Blue Ocean nabízí alternativní \glstext{UI} pro zobrazení průběhu a výsledků buildů \cite{jenkins-plugin-blueocean}. Bohužel nemodernizuje zbytek Jenkins, administraci. Pokud uživatelé konfigurují projekty výhradně přes \code{Jenkinsfile}, nemusí do původního rozhraní vůbec přistupovat. Osobně mi rozhraní přišlo hezké, ale oproti konkurenčním \CICD pomalé.
 
     \subsection{Rozšiřitelnost}
-        REF: \ref{fig:jenkins-plugins} PAGE: \pageref{fig:jenkins-plugins}
+        Jenkins má v oficiálním registru přes $1\,500$ rozšíření. Používaných je jich ale jenom zlomek; jak ukazuji \pfxref{na grafu}{fig:jenkins-plugins} často instalovaných rozšíření je jenom kolem $200$. Velmi překvapivé bylo zjištění, že rozšíření jsou často aktualizovaná. \pfxref{Z grafu}{fig:jenkins-plugins-update} lze vidět, že jenom zhruba $600$ rozšíření můžeme považovat za udržované.
+
         \begin{figure}[htb!]
             \centering
             \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/jenkins-plugins.pdf}
             \caption{Rozdělení počtu instalací. Oříznutých 80~\% je klesající dlouhý ocas. Pouze zhruba $80$ rozšíření má víc instalací než $100\,000$. Necelých $200$ rozšíření má víc než $10\,000$ instalací. Přes 60~\% publikovaných rozšíření má méně než $1\,000$ instalací. Zdroj: data vytažena z \url{https://plugins.jenkins.io/}, agregace a vizualizace vlastní. Data jsou dostupná na přiloženém mediu v \code{appendix/jenkins-plugin-installations.csv}.}
             \label{fig:jenkins-plugins}
+        \end{figure}
+
+        \begin{figure}[htb!]
+            \centering
+            \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/jenkins-plugins-update.pdf}
+            \caption{Rozdělení podle poslední aktualizace. Skoro 30~\% byla aktualizována v posledním půl roce. 40~\% rožšíření mělo alespoň jednu aktualizaci za poslední rok. Zdroj: data vytažena z \url{https://plugins.jenkins.io/}, agregace a vizualizace vlastní. Data jsou dostupná na přiloženém mediu v \code{appendix/jenkins-plugin-updates.csv}.}
+            \label{fig:jenkins-plugins-update}
         \end{figure}
 
         \todo{Popsat ekosystem existujich extensions, jejich bezpecnost}\blind[2]
