@@ -45,7 +45,7 @@
 
         Druhou variantou buildu Docker obrazů je tzv. \textit{Docker in Docker} (\glstext{DinD}). To je Docker démon zabalený do Docker kontejneru. Při spuštění stále sdílí Linuxové jádro s hostitelským systémem, ale samotný Docker proces je izolovaný: má samostatný seznam procesů, vlastní limity a oddělenou build cache. \glstext{DinD} může být spuštěný právě pro jeden job. Ukázková specifikace pipeline pro Docker v kontejnerovém prostředí je popsána \pfxref{v kódu}{fig:gitlab-dind}.
 
-        \begin{figure}[hb]
+        \begin{iffigure}
             \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
 services:
   - "docker:dind"
@@ -60,7 +60,7 @@ build:
             \end{minted}
             \caption{Ukázkový soubor \code{.gitlab-ci.yml} pro nastavení \glstext{DinD}.}
             \label{fig:gitlab-dind}
-        \end{figure}
+        \end{iffigure}
 
         Při samostatně spuštěném \glstext{DinD} pro každý build máme perfektní izolaci všech klientů, ale přicházíme o některé výhody Dockeru, konkrétně o stažené obrazy a cache předchozích buildů. To je známý problém a GitLab ho bez úspěchu řeší už několik let \cite{gitlab-docker-artifact-caching}. Největší výhoda tohoto řešení je perfektní dostupnost: každá pipeline má vlastní Docker a případné aktualizace se dějí na úrovni změny obrazu v \code{.gitlab-ci.yml}. Přes GitLab mechanizmus pro cachování lze uložit Docker data a při dalším jobu je opět nahrát do nového Docker daemona \cite{patel-docker-cache}. Toto řešení je ale velmi pomalé. Obrazy včetně cache budou běžně kolem stovek megabajtů a zapisujeme je dokonce hned čtyřikrát: jednou na disk při exportu, potom do GitLab cache což je často externí objektové úložiště (jako je AWS S3) a po čtvrté při načítání do prázdného Dockeru. Pro aplikace s extrémně dlouhým buildem v řádu desítek minut to může být přínosné, ale pro typické webové aplikace na které se tato práce soustředí není toto řešení vhodné.
 
@@ -104,12 +104,12 @@ build:
 
         GitLab zavádí v kontextu \CICD nový pojem \textit{continuous security testing} (kontinuální bezpečnostní testování) \cite{gitlab-app-security}. Na rozdíl od testování po začlenění změn a nasazení, GitLab umožňuje každému vývojáři deploynout danou větev verzovacího systému do vlastního testovacího prostředí. To je znázorněno \pfxref{v diagramu}{fig:gitlab-review-cycle}.
 
-        \begin{figure}[hb]
+        \begin{iffigure}
             \centering
             \includegraphics[width=\textwidth]{media/gitlab-review-cycle.pdf}
             \caption{Cyklus kontroly kvality aplikace GitLab s integrovaným \glstext{DAST} \cite{gitlab-app-security}. Vývojář může vyhodnotit bezpečnostní problémy před začleněním změň do sdíleného kódu.}
             \label{fig:gitlab-review-cycle}
-        \end{figure}
+        \end{iffigure}
 
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[1]
 

@@ -21,7 +21,7 @@
         Jenkins má v oficiálním registru přes $1\,500$ rozšíření. Používaných je jich ale jenom zlomek; jak ukazuji \pfxref{na grafu}{fig:jenkins-plugins} často instalovaných rozšíření je jenom kolem $200$. Velmi překvapivé bylo zjištění, že rozšíření jsou často aktualizovaná. \pfxref{Z grafu}{fig:jenkins-plugins-update} lze vidět, že přes $600$ rozšíření mělo vydání v posledním roce.
 
         \afterpage{
-            \begin{figure}[H]
+            \begin{iffigure}
                 \centering
                 \begin{subfigure}[b]{\textwidth}
                     \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/jenkins-plugins.pdf}
@@ -36,7 +36,7 @@
                 \end{subfigure}
 
                 \caption{Zdroj: data vytažena z \url{https://plugins.jenkins.io/}, agregace a vizualizace vlastní. Data jsou dostupná na přiloženém mediu v \code{appendix/jenkins-plugin-*.csv}.}
-            \end{figure}
+            \end{iffigure}
             \clearpage
         }
 
@@ -47,14 +47,14 @@
         Stejným způsobem kterým Jenkins deleguje funkcionalitu na pluginy, přenáší zodpovědnost i za bezpečnost. Jádro Jenkins mělo za rok 2018 nahlášeno 53 \glstext{CVE}, rozšíření pro Jenkins skoro 100 \cite{cve-jenkins}.
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
 
-        \begin{figure}[hbt]
+        \begin{iffigure}
             \centering
             \makebox[\textwidth][c]{
                 \includegraphics[width=1.2\textwidth]{media/jenkins-cve.pdf}
             }
             \caption{Rozložení Jenkins \glstext{CVE} a přiřazené skóre podle \glstext{CVSS}. Většina nahlášených bezpečnostních chyb bylo \glstext{XSS} a únik informací. Nejvážnější problém v jádru v roce 2018 byla možnost neomezeného spouštění procesů na masteru, které mohl využít každý uživatel s právem přidat nový agent \cite{cve-jenkins}.}
             \label{fig:gitlab-review-cycle}
-        \end{figure}
+        \end{iffigure}
 
     \subsection{Dostupnost}
         \todo{Při instalaci pluginu to dela restart}

@@ -53,6 +53,18 @@
 #endif
 }
 
+#ifdef NOFIGURE
+\newenvironment{iffigure}{
+    MARK-START\\
+    \begin{figure}[hbt!]
+}{
+    \end{figure}
+    MARK-END
+}
+#else
+\newenvironment{iffigure}{\begin{figure}[hbt!]}{\end{figure}}
+#endif
+
 \newcommand{\importsvg}[1]{
     \def\svgwidth{\columnwidth}
     \import{media/svg/}{#1.pdf_tex}
