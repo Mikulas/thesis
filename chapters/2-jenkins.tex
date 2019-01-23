@@ -18,7 +18,7 @@
         Problém Jenkins je uživatelské rozhraní. Ve výchozím stavu má \glstext{UI} celou řadu velmi problematických částí: několika-úrovňové menu, které vyžaduje přesný pohyb myší; nesjednocené symboly, navíc často nekonvenční (například modrá koule u úspěšného jobu místo klasické zelené); konfigurace a všechny formuláře jsou složité a běžně obsahují 100+ vstupů. Rozšíření Blue Ocean nabízí alternativní \glstext{UI} pro zobrazení průběhu a výsledků buildů \cite{jenkins-plugin-blueocean}. Bohužel nemodernizuje zbytek Jenkins, administraci. Pokud uživatelé konfigurují projekty výhradně přes \code{Jenkinsfile}, nemusí do původního rozhraní vůbec přistupovat. Osobně mi rozhraní přišlo hezké, ale oproti konkurenčním \CICD pomalé.
 
     \subsection{Rozšiřitelnost}
-        Jenkins má v oficiálním registru přes $1\,500$ rozšíření. Používaných je jich ale jenom zlomek; jak ukazuji \pfxref{na grafu}{fig:jenkins-plugins} často instalovaných rozšíření je jenom kolem $200$. Velmi překvapivé bylo zjištění, že rozšíření jsou často aktualizovaná. \pfxref{Z grafu}{fig:jenkins-plugins-update} lze vidět, že jenom zhruba $600$ rozšíření můžeme považovat za udržované.
+        Jenkins má v oficiálním registru přes $1\,500$ rozšíření. Používaných je jich ale jenom zlomek; jak ukazuji \pfxref{na grafu}{fig:jenkins-plugins} často instalovaných rozšíření je jenom kolem $200$. Velmi překvapivé bylo zjištění, že rozšíření jsou často aktualizovaná. \pfxref{Z grafu}{fig:jenkins-plugins-update} lze vidět, že přes $600$ rozšíření mělo vydání v posledním roce.
 
         \afterpage{
             \begin{figure}[H]
@@ -40,11 +40,21 @@
             \clearpage
         }
 
-        \todo{Popsat ekosystem existujich extensions, jejich bezpecnost}\blind[1]
+        \todo{Popsat ekosystem existujich extensions}\blind[1]
         \todo{Popsat moznosti vlastnich rozsireni, groovy atd}\blind[1]
 
     \subsection{Zabezpečení}
+        Stejným způsobem kterým Jenkins deleguje funkcionalitu na pluginy, přenáší zodpovědnost i za bezpečnost. Jádro Jenkins mělo za rok 2018 nahlášeno 53 \glstext{CVE}, rozšíření pro Jenkins skoro 100 \cite{cve-jenkins}.
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
+
+        \begin{figure}[hbt]
+            \centering
+            \makebox[\textwidth][c]{
+                \includegraphics[width=1.2\textwidth]{media/jenkins-cve.pdf}
+            }
+            \caption{Rozložení Jenkins \glstext{CVE} a přiřazené skóre podle \glstext{CVSS}. Většina nahlášených bezpečnostních chyb bylo \glstext{XSS} a únik informací. Nejvážnější problém v jádru v roce 2018 byla možnost neomezeného spouštění procesů na masteru, které mohl využít každý uživatel s právem přidat nový agent \cite{cve-jenkins}.}
+            \label{fig:gitlab-review-cycle}
+        \end{figure}
 
     \subsection{Dostupnost}
         \todo{Při instalaci pluginu to dela restart}
