@@ -25,7 +25,7 @@
                 \centering
                 \begin{subfigure}[b]{\textwidth}
                     \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/jenkins-plugins.pdf}
-                    \caption{Rozdělení počtu instalací. Oříznutých 80~\% je klesající dlouhý ocas. Pouze zhruba $80$ rozšíření má víc instalací než $100\,000$. Necelých $200$ rozšíření má víc než $10\,000$ instalací. Přes 60~\% publikovaných rozšíření má méně než $1\,000$ instalací.}
+                    \caption{Rozdělení počtu instalací. Oříznutých 80~\% je klesající dlouhý ocas. Pouze zhruba $80$ rozšíření má víc instalací než $100\,000$. To jsou pluginy, které se nabízí administrátorům při první konfiguraci Jenkins. Necelých $200$ rozšíření má víc než $10\,000$ instalací. Přes 60~\% publikovaných rozšíření má méně než $1\,000$ instalací.}
                     \label{fig:jenkins-plugins}
                 \end{subfigure}
 
@@ -40,8 +40,9 @@
             \clearpage
         }
 
-        \todo{Popsat ekosystem existujich extensions}\blind[1]
-        \todo{Popsat moznosti vlastnich rozsireni, groovy atd}\blind[1]
+        Celkově působí Jenkins velmi roztříštěně. Některá rozšíření mají dokumentaci na Jenkins Wiki, jiné na portálu Jenkins Plugins a zbytek na vlastních dedikovaných stránkách nebo na GitHubu. Část pluginů má nějaký obsah na všech těchto místech a dohledat konkrétní informace bývá obtížné. Velký problém je poznat, jaká rozšíření nainstalovat. Pipelines jsou pro moderní použití Jenkins nezbytné, ale administrátor to musí sám vyčíst z blogů a odkoukat od ostatních. Je na trhu prostor pro svéhlavou distribuci Jenkins, která by obsahovala \textit{best-practice} rozšíření a konfiguraci.
+
+        Jenkins umožňuje upravit prakticky cokoliv. Na rozdíl od GitLabu, kde vývojář může konfigurovat pipeline a spouštět libovolné procesy, na Jenkins lze upravit samotné rozhraní. Šlo by například rozšířit Jenkins o stránku s přehledem nasazených prostředí, podobně jako má GitLab své Environments. Je pak ale na zvážení, jestli není praktičtější podobně velké úpravy vyčlenit do samostatné webové aplikace. Kromě toho existují rozšíření, které umožňují spouštět skripty v rámci jobů. Například \textit{Pipeline: Groovy} načte zdrojový kód umožňuje ho v jobu spustit. To bývá užitečné pro vyčlenění společné funkcionality napříč několika projekty a pro zpřehlednění pipeline.
 
     \subsection{Zabezpečení}
         Stejným způsobem kterým Jenkins deleguje funkcionalitu na pluginy, přenáší zodpovědnost i za bezpečnost. Jádro Jenkins mělo za rok 2018 nahlášeno 53 \glstext{CVE}, rozšíření pro Jenkins skoro 100 \cite{cve-jenkins}.
