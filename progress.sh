@@ -7,6 +7,8 @@ function count-lines() {
     gsed -e '/MARK-START/,/MARK-END/{//!d}' main.txt | wc -l | awk '{print $1}'
 }
 
+make clean
+
 ./preprocess.sh -D'NOFIGURE=1'
 echo "Building version without TODOs"
 echo "" | xelatex -shell-escape main >/dev/null

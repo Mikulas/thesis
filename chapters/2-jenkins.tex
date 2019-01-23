@@ -58,8 +58,11 @@
         \end{iffigure}
 
     \subsection{Dostupnost}
-        \todo{Při instalaci pluginu to dela restart}
-        \todo{Může Jenkins běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+        Tím že Jenkins je výhradně ke spouštění jobů, dostupnost neřeší. Myšlenka je taková, že Jenkins periodicky skenuje různé repozitáře a při detekci změny začne nový job. V případě výpadku se pouze job zpozdí. Na rozdíl od GitLabu neposkytuje další vývojářům další funkce jako je repozitář verzovacího systému, správa úkolů a podobně. Přesto je výpadek Jenkins problematický i při každodenním užívání: projekty nemůžou využívat spouštění jobů z \glstext{API} a vyvojáři nemůžou zobrazovat logy a využívat artifacts.
+
+        Při instalaci ale i při aktualizaci rozšíření vyžaduje Jenkins restart. Některá rozšíření lze nainstalovat i bez restartu, ale pro upgrade je vyžadován \cite{jenkins-norestart}. Nabízí možnost restartovat po dokončení všech právě běžících jobů, nebo manuální restart. V mém testovacím prostředí trvá restart přes 30 vteřin.
+
+        \todo{Může Jenkins běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[2]
 
     \subsection{Integrace}
         \todo{Integrace Jenkins, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]

@@ -55,11 +55,11 @@
 
 #ifdef NOFIGURE
 \newenvironment{iffigure}{
-    MARK-START\\
     \begin{figure}[hbt!]
+    MARK-START
 }{
-    \end{figure}
     MARK-END
+    \end{figure}
 }
 #else
 \newenvironment{iffigure}{\begin{figure}[hbt!]}{\end{figure}}
