@@ -106,22 +106,22 @@
 
 \begin{introduction}
     \pagenumbering{arabic}
-    \input{chapters/0-uvod.tex}
+    \input{chapters/000-uvod.tex}
 \end{introduction}
 
-\input{chapters/1-reserse.tex}
-\input{chapters/2-0-porovnani.tex}
-\input{chapters/3-nasazeni.tex}
+\input{chapters/100-reserse.tex}
+\input{chapters/200-porovnani.tex}
+\input{chapters/300-nasazeni.tex}
 
 \begin{conclusion}
-    \input{chapters/5-zaver.tex}
+    \input{chapters/500-zaver.tex}
 \end{conclusion}
 
 \printbibliography[]
 
 \appendix
-\input{chapters/6-implementace.tex}
-\input{chapters/7-jenkins-plugins.tex}
+\input{chapters/600-implementace.tex}
+\input{chapters/700-jenkins-plugins.tex}
 
 \chapter{Použité zkratky}
 \printglossary[type=\acronymtype,style=acronyms]

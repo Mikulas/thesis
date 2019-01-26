@@ -1,0 +1,60 @@
+\newcommand{\todoPorovani}[1]{
+    \subsection{Architektura #1, možnosti konfigurace}
+        \todo{Jaké má #1 části, jak se to deployuje, externí závislosti\ldots}\blind[4]
+    \subsection{Rozšiřitelnost}
+        \todo{Má #1 nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
+    \subsection{Zabezpečení}
+        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
+    \subsection{Dostupnost}
+        \todo{Může #1 běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+    \subsection{Integrace}
+        \todo{Integrace #1, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
+        \todo{Možnosti deploy z #1 do cílového systému; k8s, sftp, openstack, \ldots}\blind[5]
+    \subsection{Praktické nasazení projektů}
+        \subsubsection{Projekt 1}
+            \todo{Popsat deploy projektu 1 z #1}\blind[2]
+        \subsubsection{Projekt 2}
+            \todo{Popsat deploy projektu 2 z #1}\blind[2]
+        \subsubsection{Projekt 3}
+            \todo{Popsat deploy projektu 3 z #1}\blind[2]
+}
+
+\chapter{Porovnání}
+    V této práci se budu soustředit na systémy pro webové aplikace. To jsou především Javascript, Java, Python a PHP \cite{github-octoverse-languages}. Přesto že se \CI většinou nelimitují na konkrétní jazyky, vyhnu se při porovnání systémům primárně pro mobilní a desktopové aplikace. Dále se nebudu věnovat úzce zaměřeným proprietárním systémům (jako jsou například \textit{Visual Studio Team Services}, \textit{TeamCity}, \ldots).
+
+    Přestože je hodně systémů prodáváno jako \CICD, podporují většinou pouze \CI část (primárně testování) a v nejlepším případě nějakou formou umožňují sledovat a spouštět nasazení aplikace. To je případ Jenkins, GitLab, Drone a dalších \cite{ellingwood-cicd-list}. To souvisí s tím, že pro komplexní \CD systém je nezbytná úzká integrace s hostitelskými servery -- hlavní komponenty které \CD konfiguruje jsou networking a potažmo DNS, \HTTP web servery, můžou nastavovat load balancery případně jiné části infrastruktury jako jsou databáze atd.
+
+    Budu porovnávat zlášť \CI a \CD systémy; ukázalo se, že neexistuje jeden systém, který by kvalitně zvládat zastoupit obě role. U testovacích systémů, které se honosí podporou \CD vypíchnu co opravdu mají implementované a co jim chybí.
+
+    \input{chapters/210-metodika.tex}
+
+    \input{chapters/250-gitlab.tex}
+
+    \input{chapters/250-jenkins.tex}
+
+    \section{Concourse}
+        \todoPorovani{Concourse}
+    \section{Drone.io}
+        \todoPorovani{Drone.io}
+
+    \section{GoCD}
+        Systém GoCD vychází z projektu Cruise \cite{thoughtworks-gocd}. Oba projekty vznikly ve firmě ThoughtWorks, kde pracoval průkopník a zastánce praktik \textit{extrémního programování} M. Fowler \cite{fowler-go}. Fowler systém Cruise doporučoval ve známém článku o \CI \cite{fowler-ci}.
+
+    \section{CircleCI, Semaphore, TravisCI}
+        \todo{tohle asi spojit do jednoho jako velmi podobné PaaS, možná ověřit jestli je v tom nějaký velký rozdíl ve feature setu}
+        \todoPorovani{TravisCI+PaaS}
+
+    \section{možná Phabricator?}
+        \todo{prozkoumat Phabricator}
+    \section{-další-}
+        IntelliJ TeamCity, Go CD, Atlassian Bamboo, Codeship, Codefresh, Wercker
+
+    \section{nový GitHub}
+        \todo{Prozkoumat, pokud dostanu vsupenku do bety. Vypada to velmi dobre a je to z prvnich pocitu hodne podobne jako GitLab Runner}
+
+    \section{nejake vlastni scriptiky}
+        \todo{pokud malo dlouhe, porovnat nejake vlastni scriptiky}
+        \blind[4]
+
+    \section{Souhrn}
+        \missingfigure[figwidth=\columnwidth,figheight=\textheight]{Tabulka s přehledem}

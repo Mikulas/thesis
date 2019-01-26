@@ -7,7 +7,7 @@
         \blind[2]
 
     \section{Dostupnost aplikace}
-        Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akadamické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
+        Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akademické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
 
         Aplikaci v jedné instanci na jednom fyzickém serveru lze bez výpadku provozovat. Jedním takový příkladem je server Stratus s redundantním hardwarem, který měl v jednom případě rekordní uptime 24 let \cite{thibodeau-longest-uptime}. Celý systém běží na proprietárním operačním systému, který od let 2000 nebyl aktualizovaný. Tyto servery jsou ale fyzicky na jednom místě a při přírodní pohromě nebo delším výpadku elektřiny přestanou být dostupné.
 
@@ -86,6 +86,8 @@
         V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
 
         Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v balíčku (\textit{docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}).
+
+        \todo{dind}\blind[1]
 
         \todo{Popsat co to je a proc je to vhodne na testovani a deploy}
         \blind[2]
