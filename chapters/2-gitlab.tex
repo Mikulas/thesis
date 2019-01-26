@@ -146,6 +146,7 @@ build:
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
+            \label{subsec:gitlab-p1}
             Nastavení pipeline pro statický projekt není vůbec přímočaré. Z webového rozhraní jsem vytvořil projekt včetně repozitáře, v lokálním git repozitáři jsem nastavil přidělený remote a zdrojové kódy jsem nahrál na GitLab. Potom jsem ručně napsal konfiguraci pipeline v souboru \code{.gitlab-ci.yml}. Protože jsem GitLab runner nasadil s executorem \code{shell}, nainstaloval jsem předem do sdíleného prostředí nezbytné závislosti. Popis instalace Ruby, Gem a balíčků Jekyll a Bundler jsem popsal \pfxref{v příloze}{ch:implementace}. Konfigurace GitLab pipeline obsahuje značné množství klíčových slov, ale má vynikající webovou dokumentaci. Uvítal jsem také podporu schématu v \glstext{IDE} IntelliJ IDEA \cite{idea-gitlab-plugin}, bez kterého se těžko s JSON pracuje.
 
             Pipeline jsem specifikoval dvoukrokovou. V prvním kroku se generují výstupy a výsledky se archivují jako tzv.~artefakty. V kroku druhém  se tyto artefakty stáhnou a nahrají na webový server. Díky tomuto rozdělení lze na GitLabu deploy opakovat bez nutnosti znovu generovat všechny artefakty. To umožňuje mj.~velmi rychlý rollback a obecně přesun mezi verzemi.

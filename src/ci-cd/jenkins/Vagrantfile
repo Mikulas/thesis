@@ -12,6 +12,9 @@ Vagrant.configure("2") do |config|
     v.name = "jenkins"
   end
 
+  config.vm.synced_folder "../../projects/", "/var/lib/jenkins/projects/",
+    mount_options: ["dmode=775,fmode=777"], owner: "jenkins", group: "jenkins"
+
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = ["cookbooks", "../../cookbooks"]
 
