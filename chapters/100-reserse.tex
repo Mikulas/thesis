@@ -82,12 +82,14 @@
         \subsection{Continuous deployment}
             \todo{definovat}\blind[2]
 
-    \section{kontejnerizase, docker}
+    \section{Kontejnerizace}
         V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
 
         Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v balíčku (\textit{docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}).
 
-        \todo{dind}\blind[1]
+        Jeden z problémů, který při stavění kontejnerů budu muset řešit, je zanořování Dockeru. První vrstva je prostředí, ve kterém se spouští jednotlivé \CI joby. Kontejnerizace na této úrovni přináší lepší kontrolu závislostí a izolaci, ale není nutná. To je vesměs nezávislé na tom, jaké aplikace se budou na \CI stavět. Druhá vrstva, ve které se Docker může využívat, je stavění Docker obrazů v rámci konkrétního \CI jobu. Přístup k Dockeru na této úrovni nelze ničím nahradit. Jedna možnost zanořování se označuje \textit{Docker in Docker} (\glstext{DinD}), při které všechny kontejnery stále sdílí jedno linuxové jádro, ale vnitřní kontejner je řízen Docker démonem spuštěným uvnitř vnějšího kontejneru.
+
+        \todo{diagram DinD v CI}
 
         \todo{Popsat co to je a proc je to vhodne na testovani a deploy}
         \blind[2]
