@@ -9,4 +9,5 @@ ff02::3	ip6-allhosts
 
 10.0.0.10   gitlab registry.gitlab gitlab.ditemiku.local registry.gitlab.ditemiku.local
 10.0.0.11   jenkins jenkins.ditemiku.local
+10.0.0.12   concourse concourse.ditemiku.local
 10.0.0.50   webserver-plain

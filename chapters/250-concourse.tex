@@ -1,7 +1,21 @@
 \section{Concourse}
+    \todo{Concourse záměrně nemá žádné vazby na nic a jediné co podporuje je polling, takže to nefunguje pro spoustu use-cases.}
+
+    \todo{popsat že má skvělou dokumentaci a popisují očekávaný disk, cpu, memory usage i high availability}
 
     \subsection{Architektura Concourse, možnosti konfigurace}
-        \todo{Jaké má Concourse části, jak se to deployuje, externí závislosti\ldots}\blind[4]
+        Concourse využívá -- podobně jako Jenkins a GitLab -- architekturu kontrolerů (které nazývají \textit{web node}) a pracovních uzlů (\textit{worker node}). Na rozdíl od ostatních systémů ale má všechny části bezstavové. Data se persistují do externí PostgreSQL databáze. Díky tomu lze řídící rovinu libovolně škálovat a při provozu ve víc replikách má výbornou dostupnost.
+
+        \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura Concourse \label{pic:concourse-architecture}}
+        \todo{\url{https://concourse-ci.org/concepts.html\#component-atc}}
+
+        Nasazení Concourse je skvěle zdokumentované. Podobně jako u dalších distribuovaných systémů je potřeba před spuštěním jednotlivých komponent vygenerovat celou řadu klíčů. Na podepisování uživatelských session a interní komunikaci, identifikátor pro \glstext{SSH} server a pro každý \textit{worker node} jeden klíč k registraci ke kontroleru. Další nastavení je volitelné \code{concourse-cluster}.
+
+        Pro rychlé otestování funkčnosti a drobné projekty nabízí Concourse zjednodušenou variantu spuštění. Jedním příkazem (\code{concourse quickstart}) se spustí kontroler a worker a automaticky se pro ně vygenerují a zaregistrují potřebné klíče.
+
+        Concourse neřeší balancování Web instancí. Je možné -- a dokonce doporučené -- mít víc než jednu repliku kontroleru, ale je na administrátorovi aby příchozí požadavky nějakým způsobem směroval, Concourse pouze na každé Web instanci vystavuje \glstext{HTTP} \code{concourse-cluster}. V Kubernetes, OpenShift nebo podobném orchestrátoru můžeme přímo využít vestavěné služby, pro jiné systémy se ale nasazení Concourse komplikuje přidáním dalšího software pro load balancing.
+
+        Worker instance musí být spuštěné pod root uživatelem. Podle firmy DigitalOcean je to proto, že worker potřebuje spravovat kontejnery \code{concourse-do}. To může v základním nastavení Dockeru ale libovolný linuxový uživatel v \code{docker} skupině. \code{docker-postinstall}. I s přístupem k Dockeru ale Concourse worker odmítal nastartovat a stále vyžadovat root uživatele.
 
     \subsection{Rozšiřitelnost}
         \todo{Má Concourse nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
@@ -13,8 +27,9 @@
         \todo{Může Concourse běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
 
     \subsection{Integrace}
-        \todo{Integrace Concourse, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z Concourse do cílového systému; k8s, sftp, openstack, \ldots}\blind[5]
+        \todo{má to integrace na spoustu oauth (a obecně auth) viz concourse quickstart --help}\blind[1]
+        \todo{Integrace Concourse, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[1]
+        \todo{Možnosti deploy z Concourse do cílového systému; k8s, sftp, openstack, \ldots}\blind[2]
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}

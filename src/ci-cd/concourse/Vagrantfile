@@ -1,0 +1,30 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.box_version = "= 20181222.0.0"
+
+  config.vm.network "forwarded_port", guest: 80, host: 8082
+  config.vm.network :private_network, ip: "10.0.0.12"
+  config.vm.hostname = "concourse"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 8192
+    v.cpus = 4
+    v.name = "concourse"
+  end
+
+  config.vm.provision "chef_solo" do |chef|
+    chef.cookbooks_path = ["cookbooks", "../../cookbooks"]
+
+    chef.json = {
+      "ssh-ring" => {
+          "home-dirs" => {
+              "concourse" => "/home/concourse"
+          }
+      }
+    }
+
+    chef.add_recipe "hosts"
+    chef.add_recipe "concourse"
+    chef.add_recipe "ssh-ring"
+  end
+end

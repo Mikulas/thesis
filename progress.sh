@@ -26,5 +26,7 @@ echo "$LINES_DONE / $LINES_TODO ($PERCENT %)"
 
 TAB=$'\t'
 echo "$(date '+%Y-%m-%d %H:%M:%S')$TAB$LINES_DONE$TAB$LINES_TODO" >> progress.csv
+tail -n 1 progress.csv
+tail -n 1 progress.csv | pbcopy
 
 rm main.txt
