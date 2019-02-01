@@ -27,6 +27,7 @@
         Protože některé \code{check} operace můžou být drahé a případně pomalé, přišel Concourse s možností definovat pro zdroje také token, kterým lze programově vynutit okamžité spuštění \code{check} z \glstext{API}. To je něco co by používala organizace pracující aktivně na několika málo z hodně repozitářů, kde je žádoucí spustit pipeline do pár vteřin od změny, ale není praktické s takovou periodou kontrolovat desítky repozitářů.
 
     \subsection{Zabezpečení}
+        \label{subsec:concourse-security}
         \todo{Každý v týmu může dělat cokoliv? Ověřit}\blind[1]
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[2]
 
@@ -42,12 +43,18 @@
     \subsection{Praktické nasazení projektů}
         Navzdory skvělé dokumentaci pro nasazení Concourse clusteru bylo pro mě vytváření pipeline a jejich správa utrpení. Na rozdíl od ostatních \CI není kanonická verze pipeline v repozitáři, ale v Concourse. To souvisí s tím, že concourse je hodně abstraktní a nesoustředí se jenom na stavbu aplikací. Existují zdroje \cite{concourse-pipeline-res} které umožňují pipeline editovat, ale použití by reálně znamenalo vytvořit jednu pipeline která by byla „napevno“ nastavená v concourse a stahovala aktuální stav repozitáře, upravila by jinou pipeline podle specifikace a následně danou pipeline spustila. Výsledek je zbytečně komplikovaný a pomalý.
 
-        Pipeline se tak zakládají a upravují explicitně z konzole a systém nenutí vývojáře specifikaci pipeline verzovat.
+        Pipeline se tak zakládají a upravují z konzole, ne úpravou konfigurace v repozitáři a pushnutí, takže systém nenutí vývojáře specifikaci pipeline verzovat.
+
+        Pro mě nejvíc zmatená část Concourse je koncept \textit{task}. Tasky umožňují spustit část pipeline ze staženého resource (což může být repozitář, ale i cokoliv jiného). Lze tak drobnou část pipeline editovat jenom s přístupem k repozitáři, ale v tasku nelze nastavit definici resources, jejich stažení ani jejich nahrání. Tasky mají vstup a výstup, ale jejich integrace do pipeline se řeší mimo. Po praktické zkušenosti s nasazením všech tří projektů mi toto řešení přijde míň vhodné, než mít kompletní definici pipeline v jednom souboru spravovaném přes konzoli.
+
         %\todo{že při vytvoření pipeline to bylo pauznuté a nešlo to z UI vyřešit a musel jsem hledat command}
 
         \subsubsection{Projekt 1}
             Při nasazení projektu jsem se potýkal s náhodnýmy problémy, které ostatní \CI systémy neměly. Jedna z chyb byla například kryptická zpráva \textit{volume graph is disabled}. To je známá chyba už z roku 2016 a je o tom, že v dokumentaci je uveden klíč \code{image} ale Concourse očekává \code{image_resource} \cite{concourse-issue-402}. Banalita, ale při kombinaci se špatnou zastaralou dokumentací a malou komunitou je to zdlouhavý problém k řešení. Další problém který jsme při implementaci měl bylo stahování Docker kontejnerů z veřejného repozitáře. Přestože jsem nejnovější Concourse spustil na čisté \glstext{VM} přesně podle dokumentace, bylo pravděpodobně nastaveno špatně \glstext{DNS}. Po ruční editaci nameserverů jsem skončil na další kryptické chybě \code{unknown handle: \textit{uuid}}. Na to nepomohlo ani smazat celou pipeline a vytvořit ji znovu. Rozhodl jsem se smazat celou databázi a začít znovu. Pro testování je to bezproblémové řešení, ale Concourse mě tímto hodně odlákal a v produkčním prostředí mu nedůvěřuji. Ještě na další problém jsem narazil po restartu, kde se nějakým záhadným způsobem poškodil stažený Docker obraz a Concourse končil chybou, ale nestáhnul obraz znovu.
-            \todo{Popsat deploy projektu 1 z Concourse}\blind[1]
+
+            Pro kompilaci projektu a nahrání výsledků na web server jsem využil dva zdroje. Prvního zabudovaný zdroj \code{git} sleduje repozitář projekty a při detekci změny spustí zbytek pipeline. Následně se v jobu repozitář naklonuje a v rámci tasku se spustí kompilace. Výsledné vystavěné soubory se pak posílají do zdroje \code{rsync-resource}, který je definovaný externím Docker obrazem. Přijatá data nahraje přes rsync na server.
+
+            V ukázkových definicích jsem vědomě zapsal soukromé klíče přímo v plaintextu. Concourse podporuje různé systémy pro předávání tajemství a popisuji je \pfxref{v sekci}{subsec:concourse-security}. Nasazení těchto produktů a jejich použití bylo ale mimo rozsah této práce.
 
         \subsubsection{Projekt 2}
             \todo{Popsat deploy projektu 2 z Concourse}\blind[2]
