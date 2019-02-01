@@ -19,10 +19,6 @@
 
         Worker instance musí být spuštěné pod root uživatelem. Podle firmy DigitalOcean je to proto, že worker potřebuje spravovat kontejnery \code{concourse-do}. To může v základním nastavení Dockeru ale libovolný linuxový uživatel v \code{docker} skupině. \code{docker-postinstall}. I s přístupem k Dockeru ale Concourse worker odmítal nastartovat a stále vyžadovat root uživatele.
 
-        \todo{Popsat jak se zakládají pipelines a že je to dost nepřehledné}
-        \todo{že při vytvoření pipeline to bylo pauznuté a nešlo to z UI vyřešit a musel jsem hledat command}
-        \blind[2]
-
     \subsection{Rozšiřitelnost}
         Oproti Jenkins, kde se instalují pluginy, přistupuje Concourse k rozšiřitelnosti obráceně. Poskytuje několik základních zdrojů (pipeline, job) a \glstext{API}. Uživatelé můžou v rámci spuštěných kontejnerů volat cokoliv potřebují. Alternativní rozhraní a podobně je možné implementovat jako externí aplikaci. Concourse se snaží dělat jednu věc a dělat jí dobře.
 
@@ -44,10 +40,14 @@
         \todo{Možnosti deploy z Concourse do cílového systému; k8s, sftp, openstack, \ldots}\blind[1]
 
     \subsection{Praktické nasazení projektů}
-        Navzdory skvělé dokumentaci pro nasazení Concourse clusteru bylo pro mě vytváření pipeline a jejich správa utrpení.
+        Navzdory skvělé dokumentaci pro nasazení Concourse clusteru bylo pro mě vytváření pipeline a jejich správa utrpení. Na rozdíl od ostatních \CI není kanonická verze pipeline v repozitáři, ale v Concourse. To souvisí s tím, že concourse je hodně abstraktní a nesoustředí se jenom na stavbu aplikací. Existují zdroje \cite{concourse-pipeline-res} které umožňují pipeline editovat, ale použití by reálně znamenalo vytvořit jednu pipeline která by byla „napevno“ nastavená v concourse a stahovala aktuální stav repozitáře, upravila by jinou pipeline podle specifikace a následně danou pipeline spustila. Výsledek je zbytečně komplikovaný a pomalý.
+
+        Pipeline se tak zakládají a upravují explicitně z konzole a systém nenutí vývojáře specifikaci pipeline verzovat.
+        %\todo{že při vytvoření pipeline to bylo pauznuté a nešlo to z UI vyřešit a musel jsem hledat command}
 
         \subsubsection{Projekt 1}
-            \todo{Popsat deploy projektu 1 z Concourse}\blind[2]
+            Při nasazení projektu jsem se potýkal s náhodnýmy problémy, které ostatní \CI systémy neměly. Jedna z chyb byla například kryptická zpráva \textit{volume graph is disabled}. To je známá chyba už z roku 2016 a je o tom, že v dokumentaci je uveden klíč \code{image} ale Concourse očekává \code{image_resource} \cite{concourse-issue-402}. Banalita, ale při kombinaci se špatnou zastaralou dokumentací a malou komunitou je to zdlouhavý problém k řešení. Další problém který jsme při implementaci měl bylo stahování Docker kontejnerů z veřejného repozitáře. Přestože jsem nejnovější Concourse spustil na čisté \glstext{VM} přesně podle dokumentace, bylo pravděpodobně nastaveno špatně \glstext{DNS}. Po ruční editaci nameserverů jsem skončil na další kryptické chybě \code{unknown handle: \textit{uuid}}. Na to nepomohlo ani smazat celou pipeline a vytvořit ji znovu. Rozhodl jsem se smazat celou databázi a začít znovu. Pro testování je to bezproblémové řešení, ale Concourse mě tímto hodně odlákal a v produkčním prostředí mu nedůvěřuji. Ještě na další problém jsem narazil po restartu, kde se nějakým záhadným způsobem poškodil stažený Docker obraz a Concourse končil chybou, ale nestáhnul obraz znovu.
+            \todo{Popsat deploy projektu 1 z Concourse}\blind[1]
 
         \subsubsection{Projekt 2}
             \todo{Popsat deploy projektu 2 z Concourse}\blind[2]
