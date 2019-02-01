@@ -34,7 +34,10 @@
         Ve veřejné databázi \glstext{CVE} nemá Concourse moc záznamů \cite{cve-concourse}. Žádné nejsou kompletně zařazené a otagované a část z nich nemá dopočítané ani \glstext{CVSS}. Ani při hledání v repozitáři jsem nenašel žádné důležité nahlášené bezpečnostni problémy.
 
     \subsection{Dostupnost}
-        \todo{Může Concourse běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+        Dostupnost Concourse za běžného provozu je perfektní. Díky oddělenému externímu úložišti a bezstavové kontrolní ploše lze Concourse provozovat ve vysoké dostupnosti a téměř libovolně škálovat. Ideální by bylo místo PostgreSQL používat nějakou distribuovanou \glstext{HA} databázi. V současném návrhu je databáze \glstext{SPoF} a nelze ji jednoduše ničím nahradit.
+
+        \todo{Otestovat restore z backupu}\blind[1]
+        \todo{Otestovat upgrade a říct jak stabilní concourse byl}\blind[1]
 
     \subsection{Integrace}
         \todo{má to integrace na spoustu oauth (a obecně auth) viz concourse quickstart --help}\blind[1]
