@@ -46,8 +46,11 @@ end
 # concourse quickstart \
 #   --add-local-user mikulas:mikulas \
 #   --main-team-local-user mikulas \
-#   --external-url http://concourse.ditemiku.local \
+#   --external-url "http://concourse.ditemiku.local:8082" \
 #   --worker-work-dir /opt/concourse/worker \
 #   --postgres-database="atc" \
 #   --postgres-user="concourse" \
-#   --postgres-password="concourse"
+#   --postgres-password="concourse" \
+#   --bind-port=80
+
+# fly -t example set-pipeline -c concourse.yml -p p1
