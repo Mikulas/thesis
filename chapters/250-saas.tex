@@ -6,7 +6,7 @@
     V této sekci shrnu výhody a nevýhody moderních \glstext{SaaS} \CI. Vyzdvihnu významné rozdíly, pokud na nějaké narazím, ale primárně budu popisovat \circleci, \semaphore a \travis dohromady.
 
     \subsection{Architektura SaaS CI a možnosti konfigurace}
-        \travis a \semaphore mají prakticky z pohledu uživatele prakticky stejnou architekturu. Pro každý job zapnou samostatný virtuální stroj. \travis poměrně překvapivě přešel v roce 2019 kompletně na virtuální stroje; dříve umožňoval spouštět i Docker kontejnery, což využívalo 45 \% všech jobů \cite{travis-arch}. \travis jako důvod uvádí složitější kompilace Docker obrazů pomocí \glstext{DinD}. To ale může znamenat, že pro firmu je to dražší řešení na podporu, ne nutně že jde o lepší řešení pro uživatele. V rámci virtuálního stroje má uživatel veškerou volnost a může instalovat a spouštět vesměs cokoliv. V základním obrazu je předinstalovaná celá řada často používaných nástrojů a runtime ve spoustě verzí. Velmi praktická funkce \travis, kterou ostatní \CI nástroje v základu nemají, je \textit{Build Matrix}: uživatel specifikuje různé verze různých závislostí a \CI pak spustí job pro \textit{všechny} kombinace \cite{travis-build-matrix}. Některé kombinace lze navíc označit jako volitelné a jejich selhání je jenom informační. To se hodí pro nestabilní \glstext{RC} verze závilostí a podobně.
+        \travis a \semaphore mají prakticky z pohledu uživatele prakticky stejnou architekturu. Pro každý job zapnou samostatný virtuální stroj. \travis poměrně překvapivě přešel v roce 2019 kompletně na virtuální stroje; dříve umožňoval spouštět i Docker kontejnery, což využívalo 45 \% všech jobů \cite{travis-arch}. \travis jako důvod uvádí složitější kompilace Docker obrazů pomocí \glstext{DinD}. To ale může znamenat, že pro firmu je to dražší řešení na podporu, ne nutně že jde o lepší řešení pro uživatele. V rámci virtuálního stroje má uživatel veškerou volnost a může instalovat a spouštět vesměs cokoliv. V základním obrazu je předinstalovaná celá řada často používaných nástrojů a runtime ve spoustě verzí. Velmi praktická funkce \travis, kterou ostatní \CI nástroje v základu nemají, je \textit{Build Matrix}: uživatel specifikuje různé verze různých závislostí a \CI pak spustí job pro \textit{všechny} kombinace \cite{travis-build-matrix}. Některé kombinace lze navíc označit jako volitelné a jejich selhání je jenom informační. To se hodí pro predběžné testování nestabilních \glstext{RC} verzí závislostí a podobně.
 
         \circleci naopak v roce 2018 zmigroval všechny uživatele z virtuální strojů (\circleci 1.0) na čistě kontejnerové prostředí (\circleci 2.0) \cite{circle-migration}. V specifikaci pipeline uživatel uvádí všechny kontejnery které chce spustit a jejich prolinkování/pořadí. Umí také spustit některé služby paralelně a na pozadí, což se používá například pro databáze a podobné závislosti.
 
@@ -17,7 +17,9 @@
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[2]
 
     \subsection{Dostupnost}
-        \todo{Může CircleCI, Semaphore, TravisCI běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
+        \circleci, \travis ani \semaphore nedefinují žádné \glstext{SLA}. Za posledních 12 měsíců měl \circleci uptime $99.899$~\%~\cite{circle-uptime}, \travis $99.93$~\%~\cite{travis-uptime}. \semaphore reportuje za poslední rok podezřele vysoký uptime $100$~\%~\cite{semaphore-uptime}.
+
+        Kromě samotných \CI služeb jsou ale tyto služby závislé na dostupnosti úložišť kódu (GitHub, GitLab, Bitbucket, …).
 
     \subsection{Integrace}
         \todo{Integrace CircleCI, Semaphore, TravisCI, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
