@@ -1,5 +1,9 @@
 \section{GitHub Actions}
-    \todo{O GitLab Actions}\blind[1]
+    GitHub, největší vývojářská platforma \cite{github-about}, neměl od svého založení v roce 2008 žádné zabudované \CI. Podporoval napojení na externí služby přes webhooks a v roce 2012 přidali tzv.~\textit{commit status \glstext{API}}, které umožnilo \CI zapsat výsledek pipeline zpět do GitHubu. V roce 2018 GitHub funkci přejmenoval na \textit{check runs \glstext{API}}, ale funkčně zůstala podobná.
+
+    V roce byla 2019 zveřejněna úplně nová funkcionalita: GitHub Actions. Jde o obecný systém, který reaguje na různé GitHub události (nový commit, změna issue, deploy aplikace, \ldots) a spouští Docker kontejnery. Nepodporuje žádné složitější koncepty jako jsou služby na pozadí (například databáze jako závislost pro aplikační testy).
+
+    Actions mohly úplně nahradit služby třetích stran jako jsou Travis, CircleCI, Semaphore a další. Spíš se ale dá očekávat, že se budou Actions s dalšími \CI nějakým způsobem kombinovat. Testy jednoúčelové a aplikovatelné na libovolný repozitář jsou pro Actions vhodné. Například statické otestování bash skriptů pomocí shellcheck \cite{ga-shellcheck}. Naopak aplikační testy na byznys logiku bude jednodušší spravovat v komplexnějším \CI.
 
     \subsection{Architektura GitHub Actions, možnosti konfigurace}
         \todo{Jaké má GitHub Actions části, jak se to deployuje, externí závislosti\ldots}\blind[2]
