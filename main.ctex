@@ -80,13 +80,12 @@
 
 \newcommand{\pfxref}[2]{ \hyperref[#2]{#1~\ref{#2}}\xspace}
 
-\newcommand{\CI}{ \glstext{CI}\xspace}
-\newcommand{\CICD}{ \glstext{CICD}\xspace}
-\newcommand{\CD}{ \glstext{CD}\xspace}
-\newcommand{\HA}{ \glstext{HA}\xspace}
-\newcommand{\HTML}{ \glstext{HTML}\xspace}
-\newcommand{\HTTP}{ \glstext{HTTP}\xspace}
-
+\newcommand{\CI}{\xspace{}\glstext{CI}\xspace}
+\newcommand{\CICD}{\xspace{}\glstext{CICD}\xspace}
+\newcommand{\CD}{\xspace{}\glstext{CD}\xspace}
+\newcommand{\HA}{\xspace{}\glstext{HA}\xspace}
+\newcommand{\HTML}{\xspace{}\glstext{HTML}\xspace}
+\newcommand{\HTTP}{\xspace{}\glstext{HTTP}\xspace}
 
 \makeglossaries
 \input{glossary.tex}
