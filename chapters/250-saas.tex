@@ -14,7 +14,7 @@
         \todo{Má CircleCI, Semaphore, TravisCI nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[2]
 
     \subsection{Zabezpečení}
-        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[2]
+        Ani jeden z těchto \glstext{SaaS} \CI systémů nenabízí bug bounty. Pro \travis jsem našel jednu zprávu o bezpečnostní chybě z roku 2018 \cite{travis-db-drop}. Pro \circleci ani \semaphore jsem žádné zveřejněné incidenty nenašel.
 
     \subsection{Dostupnost}
         \circleci, \travis ani \semaphore nedefinují žádné \glstext{SLA}. Za posledních 12 měsíců měl \circleci uptime $99.90$~\%~\cite{circle-uptime}, \travis $99.93$~\%~\cite{travis-uptime}. \semaphore reportuje za poslední rok podezřele vysoký uptime $100$~\%~\cite{semaphore-uptime}.
@@ -22,8 +22,9 @@
         Kromě samotných \CI služeb jsou ale tyto služby závislé na dostupnosti úložišť kódu (GitHub, GitLab, Bitbucket, …).
 
     \subsection{Integrace}
-        \todo{Integrace CircleCI, Semaphore, TravisCI, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z CircleCI, Semaphore, TravisCI do cílového systému; k8s, sftp, openstack, \ldots}\blind[2]
+        \travis lze používat pouze s repozitáři na GitHub, \circleci a \semaphore podporují kromě toho také Bitbucket. Nelze používat vlastní repozitáře a jiné systémy. Teoreticky lze vytvořit vlastní obálku nad cizím \glstext{API} a posílat webhooky ve formátu jako GitHub, ale nejde o oficiálně podporovanou variantu.
+
+        Všechny tři \CI podporují GitHub perfektně a i nově zveřejněné funkce implementují rychle.
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
