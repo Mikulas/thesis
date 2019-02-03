@@ -1,18 +1,24 @@
 \section{GitHub Actions}
-    GitHub, největší vývojářská platforma \cite{github-about}, neměl od svého založení v roce 2008 žádné zabudované \CI. Podporoval napojení na externí služby přes webhooks a v roce 2012 přidali tzv.~\textit{commit status \glstext{API}}, které umožnilo \CI zapsat výsledek pipeline zpět do GitHubu. V roce 2018 GitHub funkci přejmenoval na \textit{check runs \glstext{API}}, ale funkčně zůstala podobná.
+    GitHub je \glstext{SaaS} a největší vývojářská platforma \cite{github-about}. Překvapivě od svého založení v roce 2008 neměl zabudované žádné \CI. Podporoval napojení na externí služby přes webhooks a až v roce 2012 přidali tzv.~\textit{commit status \glstext{API}}, které umožnilo \CI zapsat výsledek pipeline zpět do GitHubu. V roce 2018 GitHub toto přejmenoval na \textit{check runs \glstext{API}}, ale funkcionalita zůstala podobná.
 
     V roce byla 2019 zveřejněna úplně nová funkcionalita: GitHub Actions. Jde o obecný systém, který reaguje na různé GitHub události (nový commit, změna issue, deploy aplikace, \ldots) a spouští Docker kontejnery. Nepodporuje žádné složitější koncepty jako jsou služby na pozadí (například databáze jako závislost pro aplikační testy).
+
+    V době psaní práce (první čtvrtletí 2019) jsou Actions v beta verzi a zuřivě se vyvíjí. Nebudu zkoumat konkrétní detaily, ale zaměřím se hlavně na vysokoúrovňový pohled a jak Actions zapadají do stávajícího ekosystému.
 
     Actions mohly úplně nahradit služby třetích stran jako jsou Travis, CircleCI, Semaphore a další. Spíš se ale dá očekávat, že se budou Actions s dalšími \CI nějakým způsobem kombinovat. Testy jednoúčelové a aplikovatelné na libovolný repozitář jsou pro Actions vhodné. Například statické otestování bash skriptů pomocí shellcheck \cite{ga-shellcheck}. Naopak aplikační testy na byznys logiku bude jednodušší spravovat v komplexnějším \CI.
 
     \subsection{Architektura GitHub Actions, možnosti konfigurace}
-        \todo{Jaké má GitHub Actions části, jak se to deployuje, externí závislosti\ldots}\blind[2]
+        Workflow se konfigurují souborem \code{.github/main.workflow} ve formátu \glstext{HCL}. GitHub také nabízí grafický editor, který konfigurační soubor generuje a ukládá do repozitáře. Samotná konfigurace obsahuje právě jeden blok \code{workflow}, ve kterém se definuje \glstext{API} událost která má workflow spustit. Zatím není možné spustit pipeline v reakci na víc než jednu událost.
+
+        Zbytek workflow je acyklický graf docker kontejnerů (\code{action}) ke spuštění. Vývojář může změnit výchozí entrypoint a argumenty kontejneru, a definuje, na jaké jiné actions musí počkat. Kontejnery si mohou jednorázově předat informace souborem na disku. \todo{paralelni joby sdili nebo jak?}
+
+        Kromě veřejných Docker obrazů dokáže GitHub kompilovat a spouštět i obrazy definované souborem Dockerfile v repozitáři. Navíc skvěle využívá koncept Docker štítků (\textit{labels}) pro definici metadat. Není tak potřeba jeden registr a Actions jsou úplně decentralizované \cite{ga-labels}. To dokonce umožňuje reimplementovat proprietární tenkou Workflow vrstvu, jako například vznikla v \code{nektos/act} \cite{nektos-act}.
 
     \subsection{Rozšiřitelnost}
         \todo{Má GitHub Actions nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[1]
 
     \subsection{Zabezpečení}
-        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[1]
+        GitHub jako \glstext{SaaS} přejímá skoro všechnu zodpovědnost za bezpečnost. Actions umožňují volat libovolné kontejnery a na vývojáři tak zůstává jenom kontrola Docker obrazů. V nejhorším případě kompromitovaný Docker obraz může při spuštění v pipeline ukrást aktuální stav repozitáře a může číst všechna definovaná tajemství, což budou typicky tokeny do služeb třetích stran.
 
     \subsection{Dostupnost}
         \todo{Může GitHub Actions běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
