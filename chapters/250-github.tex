@@ -14,26 +14,11 @@
 
         Kromě veřejných Docker obrazů dokáže GitHub kompilovat a spouštět i obrazy definované souborem Dockerfile v repozitáři. Navíc skvěle využívá koncept Docker štítků (\textit{labels}) pro definici metadat. Není tak potřeba jeden registr a Actions jsou úplně decentralizované \cite{ga-labels}. To dokonce umožňuje reimplementovat proprietární tenkou Workflow vrstvu, jako například vznikla v \code{nektos/act} \cite{nektos-act}.
 
-    \subsection{Rozšiřitelnost}
-        \todo{Má GitHub Actions nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[1]
-
     \subsection{Zabezpečení}
         GitHub jako \glstext{SaaS} přejímá skoro všechnu zodpovědnost za bezpečnost. Actions umožňují volat libovolné kontejnery a na vývojáři tak zůstává jenom kontrola Docker obrazů. V nejhorším případě kompromitovaný Docker obraz může při spuštění v pipeline ukrást aktuální stav repozitáře a může číst všechna definovaná tajemství, což budou typicky tokeny do služeb třetích stran.
 
     \subsection{Dostupnost}
-        \todo{Může GitHub Actions běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
-
-    \subsection{Integrace}
-        \todo{Integrace GitHub Actions, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[1]
-        \todo{Možnosti deploy z GitHub Actions do cílového systému; k8s, sftp, openstack, \ldots}\blind[1]
+        GitHub nedefinuje žádné \glstext{SLA} pro většinu placených plánů. Pro nejdražší korporátní plán nabízí \glstext{SLA} $99,95$ \%.
 
     \subsection{Praktické nasazení projektů}
-        \subsubsection{Projekt 1}
-            \todo{Popsat deploy projektu 1 z GitHub Actions}\blind[1]
-
-        \subsubsection{Projekt 2}
-            \todo{Popsat deploy projektu 2 z GitHub Actions}\blind[1]
-
-        \subsubsection{Projekt 3}
-            \todo{Popsat deploy projektu 3 z GitHub Actions}\blind[1]
-
+        GitHub Actions jsou v neveřejné beta verzi a neměl jsem možnost vytvořit pipeline pro ukázkové projekty. \todo{kdyžtak doplnit github actions pro ukázkové projekty}
