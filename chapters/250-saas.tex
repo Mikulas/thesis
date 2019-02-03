@@ -1,8 +1,14 @@
-\section{CircleCI, Semaphore, TravisCI}
-    
+\newcommand{\circleci}{ CircleCI\xspace}
+\newcommand{\travis}{ Travis~\glstext{CI}\xspace}
+\newcommand{\semaphore}{ Semaphore~\glstext{CI}\xspace}
 
-    \subsection{Architektura CircleCI, Semaphore, TravisCI, možnosti konfigurace}
-        \todo{Jaké má CircleCI, Semaphore, TravisCI části, jak se to deployuje, externí závislosti\ldots}\blind[4]
+\section{\glstext{SaaS}: \circleci, \semaphore, \travis}
+    V této sekci shrnu výhody a nevýhody moderních \glstext{SaaS} \CI. Vyzdvihnu významné rozdíly, pokud na nějaké narazím, ale primárně budu popisovat \circleci, \semaphore a \travis dohromady.
+
+    \subsection{Architektura SaaS CI a možnosti konfigurace}
+        \travis a \semaphore mají prakticky z pohledu uživatele prakticky stejnou architekturu. Pro každý job zapnou samostatný virtuální stroj. \travis poměrně překvapivě přešel v roce 2019 kompletně na virtuální stroje; dříve umožňoval spouštět i Docker kontejnery, což využívalo 45 \% všech jobů \cite{travis-arch}. \travis jako důvod uvádí složitější kompilace Docker obrazů pomocí \glstext{DinD}. To ale může znamenat, že pro firmu je to dražší řešení na podporu, ne nutně že jde o lepší řešení pro uživatele. V rámci virtuálního stroje má uživatel veškerou volnost a může instalovat a spouštět vesměs cokoliv. V základním obrazu je předinstalovaná celá řada často používaných nástrojů a runtime ve spoustě verzí. Velmi praktická funkce \travis, kterou ostatní \CI nástroje v základu nemají, je \textit{Build Matrix}: uživatel specifikuje různé verze různých závislostí a \CI pak spustí job pro \textit{všechny} kombinace \cite{travis-build-matrix}. Některé kombinace lze navíc označit jako volitelné a jejich selhání je jenom informační. To se hodí pro nestabilní \glstext{RC} verze závilostí a podobně.
+
+        \circleci naopak v roce 2018 zmigroval všechny uživatele z virtuální strojů (\circleci 1.0) na čistě kontejnerové prostředí (\circleci 2.0) \cite{circle-migration}. V specifikaci pipeline uživatel uvádí všechny kontejnery které chce spustit a jejich prolinkování/pořadí. Umí také spustit některé služby paralelně a na pozadí, což se používá například pro databáze a podobné závislosti.
 
     \subsection{Rozšiřitelnost}
         \todo{Má CircleCI, Semaphore, TravisCI nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[2]
