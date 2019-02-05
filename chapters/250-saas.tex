@@ -28,7 +28,11 @@
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
-            \todo{Popsat deploy projektu 1 z CircleCI, Semaphore, TravisCI}\blind[2]
+            Ze všech \CI vyzkoušených v této práci bylo nasazení na \travis suveréně nejjednodušší. Na deseti řádcích se přehledně definují všechny závislosti a volá se build. I nezaškolený uživatel by dokázal vytvořit novou pipeline podle minimální ukázky.
+
+            Na \circleci je konfigurace pipeline znatelně složitější. Rozdělením na kontejnery se ale separují jednotlivé závislosti a správa komplexních projektů by byla jednodušší. Další výhoda \circleci pro tento projekt je možnost opakovat pouze jenom dílčí kroky a ukládat mezivýsledky do cache, která se může použít při každém spuštění. Toho jsem využil pro instalaci závislostí z Gemfile. Alternativou bylo vytvořit nový Docker obraz a Ruby gemy tam předinstalovat. To má ale řadu nevýhod, předně to zvyšuje komplexitu a bylo by složitější použít jiné gemy (jiná rozšíření pro Jekyll).
+
+            \todo{Popsat deploy projektu 1 z Semaphore}\blind[1]
 
         \subsubsection{Projekt 2}
             \todo{Popsat deploy projektu 2 z CircleCI, Semaphore, TravisCI}\blind[2]
