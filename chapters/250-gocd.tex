@@ -7,10 +7,18 @@
         Po prvním zobrazení webového rozhraní serveru se zobrazuje quick-start, který provádí vytvořením nové pipeline. Přestože GoCD podporuje \textit{Pipelines as code}, očekávaný primární vstup je klikání v administraci \cite{gocd-pas}. Načítání externích souborů je vyřešeno rozšířením, jehož použití se definuje v hlavní \glstext{XML} konfiguraci na webu. Separovaná konfigurace tak není kompletní a závisí na další ruční konfiguraci.
 
     \subsection{Rozšiřitelnost}
-        GoCD nabízí několik možností, jak rozšiřovat výchozí funkcionalitu \cite{gocd-extensions}.
+        GoCD nabízí několik možností, jak rozšiřovat výchozí funkcionalitu pomocí pluginů \cite{gocd-extensions}. Na rozdíl od Jenkins, kde lze upravit prakticky cokoliv, vystavuje pro pluginy GoCD jenom některá \glstext{API}. Nelze tak například ovlivňovat uživatelské rozhraní.
 
-\cite{gocd-plugins}
-        \todo{Má GoCD nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
+        Zhruba 80 pluginů je na oficiálním registru \cite{gocd-plugins}. ThoughtWorks~Inc.~zaštiťují 8 pluginů a a z toho je 6 placených.
+
+        Z veřejně dostupných rozšíření jsou všechna kromě jednoho hostována na GitHub. Jak jsem ale vizualizoval \pfxref{v  grafu}{fig:jenkins-plugins}, GoCD rozšíření jsou ještě hůř udržovaná než ta pro Jenkins. A to je jich méně než dvacetina.
+
+        \begin{iffigure}
+            \centering
+            \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/go-plugins-update.pdf}
+            \caption{Rozdělení podle poslední aktualizace. Pouze 17 rozšíření (20 \%) bylo aktualizováno v posledním půl roce. Pouhých 30~\% rožšíření mělo alespoň jednu aktualizaci za poslední rok. Přibližně 20 \% rozšíření nemá žádné stabilní vydání. Zdroj: data vytěžena z GitHub repozitářů, dostupná na přiloženém mediu v \code{appendix/gocd-plugins.csv}.}
+            \label{fig:jenkins-plugins}
+        \end{iffigure}
 
     \subsection{Zabezpečení}
         v zakladu admin access bez zabezpeceni
