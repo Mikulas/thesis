@@ -21,8 +21,11 @@
         \end{iffigure}
 
     \subsection{Zabezpečení}
-        v zakladu admin access bez zabezpeceni
-        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
+        Po instalaci serveru je v základu celá administrace dostupná pro všechny, bez autorizace. Lze zapnout zabudovaná rozšíření, která zprovozní přihlášení heslem a nebo přes \glstext{LDAP}. Nic v \glstext{UI} k tomu ale správce nenabádá. Velmi překvapivě ale není v Shodan databázi žádná nezabezpečená instance GoCD na výchozím portu \cite{shodan-gocd}.
+
+        Izolace klientů závisí na použítých agentech. Klasický agent používá sdílené prostředí a zdroje, ale GoCD podporuje tzv.~\textit{Elastic Agent}, které se zapínají a vypínají dynamicky podle poptávky. Lze je využít pro zapnutí nového prostředí v Dockeru, Kubernetes, OpenStacku a několika dalších. Tato jednorázová prostředí nabízí lepší izolaci. Nenašel jsem rozšíření, které by dokázalo spravovat Elastic Agents pro VMware nebo jiný virtualizační nástroj, který by měl ještě lepší izolaci klientů.
+
+        Na webu \glstext{CVE} Details jsem pro GoCD nenašel žádná historická \glstext{CVE}. Projekt ale využívá platformu HackerOne, kde za poslední tři roky zpracovali 39 nahlášených chyb \cite{gocd-hackerone}. Ze zveřejněných reportů je vidět, že správci reagují rychle a bezpečnostní chyby opravují v co nejkratším možném termínu.
 
     \subsection{Dostupnost}
         GoCD agenti jsou z principu stavové aplikace a stejně jako u všech ostatních \CI jejich výpadek přijdeme o spuštěné joby. Může jich ale běžet mnoho a pomocí rolling update je lze aktualizovat bez výpadku.
