@@ -2,7 +2,12 @@
     Systém GoCD vychází z projektu Cruise \cite{thoughtworks-gocd}. Oba projekty vznikly ve firmě ThoughtWorks, kde pracoval průkopník a zastánce praktik \textit{extrémního programování} M. Fowler \cite{fowler-go}. Fowler systém Cruise doporučoval ve známém článku o \CI \cite{fowler-ci}.
 
     \subsection{Architektura GoCD, možnosti konfigurace}
-        \todo{Jaké má GoCD části, jak se to deployuje, externí závislosti\ldots}\blind[4]
+        \todo{architektura server+agents}\blind[1]
+
+        Po prvním zobrazení webového rozhraní serveru se zobrazuje quick-start, který provádí vytvořením nové pipeline. Přestože GoCD podporuje \textit{Pipelines as code}, očekávaný primární vstup je klikání v administraci \cite{gocd-pas}. Načítání externích souborů je vyřešeno rozšířením, jehož použití se definuje v hlavní \glstext{XML} konfiguraci na webu. Separovaná konfigurace tak není kompletní a závisí na další ruční konfiguraci.
+
+        \todo{jak se to deployuje}\blind[1]
+        \todo{externí závislosti}\blind[1]
 
     \subsection{Rozšiřitelnost}
         \todo{Má GoCD nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
@@ -11,7 +16,11 @@
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
 
     \subsection{Dostupnost}
-        \todo{Může GoCD běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+        GoCD agenti jsou z principu stavové aplikace a stejně jako u všech ostatních \CI jejich výpadek přijdeme o spuštěné joby. Může jich ale běžet mnoho a pomocí rolling update je lze aktualizovat bez výpadku.
+
+        Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD na požádání distribuuje \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádnéoho requestu když vypadne primární replika.
+
+        \todo{Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
 
     \subsection{Integrace}
         \todo{Integrace GoCD, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
