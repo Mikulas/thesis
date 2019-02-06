@@ -40,8 +40,7 @@
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
-            \todo{ze jsem bojoval s env, jinak vlastne v pohode, prirovanat k jenkins}
-            \todo{Popsat deploy projektu 1 z GoCD}\blind[2]
+            Nasazení GoCD pro statický projekt bylo vesměs stejné, jako u GitLab shell executoru: na server jsem předinstalovat Ruby a v rámci pipeline se pak pouze volá instalace Ruby gems a samotná kompilace. Narazil jsem na drobný problém při použití \glstext{RVM} (správce Ruby verzí), který dynamicky upravuje \code{\$PATH}, ale GoCD tato nastavení nerespektoval. Musel jsem tak ručně cestu k Ruby upravit v souboru \code{.profile} a restartovat GoCD agent aby se změny projevily.
 
         \subsubsection{Projekt 2}
             \todo{Popsat deploy projektu 2 z GoCD}\blind[2]
