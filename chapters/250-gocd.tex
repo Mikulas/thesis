@@ -32,11 +32,14 @@
 
         Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD prodává velmi drahý \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádnéoho requestu když vypadne primární replika.
 
-        \todo{Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
+        Upgrade serveru na novější verzi vyžaduje restart a tím pádem nedostupnost celého prostředí. Navíc se při startu nové verze aplikace automaticky spustí databázové migrace, které na větších instancích podle dokumentace mohou trvat přes 10 minut \cite{gocd-upgrading}. Celkově je tak při rutinní aktualizaci potřeba počítat s výpadkem minimálně 15 minut.
+
+        \todo{Jak se dělá backup/restore? Jak stabilní to je?}\blind[1]
 
     \subsection{Integrace}
-        \todo{Integrace GoCD, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z GoCD do cílového systému; k8s, sftp, openstack, \ldots}\blind[5]
+        Lze propojit GoCD s dalšími nástroji; některé funkce -- především ty co mají vliv na \glstext{UI} -- jsou vestavěné. To je například odkazování na externí správu úkolů podle regulárního výrazu. Ostatní integrace jsou dostupná jako rozšíření, která je nutné doinstalovat: mezi ně patří například oznámení stavu na GitHub/Stash/Gerrit a podobně. Pro Bitbucket ani Gitlab podpora neexistuje. Lze ji ale doprogramovat jako nové rozšíření.
+
+        Navzdory svému jménu nenabízí GoCD žádnou podporu pro continuous deployment. Ve webovém rozhraní (ani jinde) není možnost spravovat nasazená prostředí a verze aplikací, podpora pro ručně potvrzené kroky je velmi limitovaná, a integrace s Kubernetes/OpenShift nebo jiným  nebo neexistuje.
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
