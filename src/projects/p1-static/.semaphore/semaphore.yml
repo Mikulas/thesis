@@ -1,0 +1,30 @@
+version: v1.0
+name: P1 Build and Deploy
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Setup
+    task:
+      jobs:
+        - name: bundle
+          commands:
+          - checkout
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - sem-version ruby 2.6.0
+          - bundle install --deployment -j 4 --path vendor/bundle
+          - cache store gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock) vendor/bundle
+
+  - name: Build
+    task:
+      jobs:
+      - name: jekyll
+        commands:
+          - checkout
+          - cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH-,gems-master-
+          - sem-version ruby 2.6.0
+          - bundle install --deployment --path vendor/bundle
+          - make build
+          - echo "Deploy step would be here"
