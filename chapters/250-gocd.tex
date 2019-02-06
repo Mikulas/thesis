@@ -2,23 +2,24 @@
     Systém GoCD vychází z projektu Cruise \cite{thoughtworks-gocd}. Oba projekty vznikly ve firmě ThoughtWorks, kde pracoval průkopník a zastánce praktik \textit{extrémního programování} M. Fowler \cite{fowler-go}. Fowler systém Cruise doporučoval ve známém článku o \CI \cite{fowler-ci}.
 
     \subsection{Architektura GoCD, možnosti konfigurace}
-        \todo{architektura server+agents}\blind[1]
+        GoCD stejně jako většina ostatních \CI staví na architektuře jednoho kontrolního serveru a řadě interních nebo externích agentů, které se starají o spuštění jednotlivých jobů. Ve výchozím nastavení jsou data persistována v embedované H2 databázi na server procesu. Instalace GoCD je díky tomu jednoduchá, protože stačí zaregistrovat externí repozitář a nainstalovat balíček pro server a pro agenty.
 
         Po prvním zobrazení webového rozhraní serveru se zobrazuje quick-start, který provádí vytvořením nové pipeline. Přestože GoCD podporuje \textit{Pipelines as code}, očekávaný primární vstup je klikání v administraci \cite{gocd-pas}. Načítání externích souborů je vyřešeno rozšířením, jehož použití se definuje v hlavní \glstext{XML} konfiguraci na webu. Separovaná konfigurace tak není kompletní a závisí na další ruční konfiguraci.
 
-        \todo{jak se to deployuje}\blind[1]
-        \todo{externí závislosti}\blind[1]
-
     \subsection{Rozšiřitelnost}
+        GoCD nabízí několik možností, jak rozšiřovat výchozí funkcionalitu \cite{gocd-extensions}.
+
+\cite{gocd-plugins}
         \todo{Má GoCD nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
 
     \subsection{Zabezpečení}
+        v zakladu admin access bez zabezpeceni
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
 
     \subsection{Dostupnost}
         GoCD agenti jsou z principu stavové aplikace a stejně jako u všech ostatních \CI jejich výpadek přijdeme o spuštěné joby. Může jich ale běžet mnoho a pomocí rolling update je lze aktualizovat bez výpadku.
 
-        Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD na požádání distribuuje \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádnéoho requestu když vypadne primární replika.
+        Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD prodává velmi drahý \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádnéoho requestu když vypadne primární replika.
 
         \todo{Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
 
@@ -28,6 +29,7 @@
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
+            \todo{ze jsem bojoval s env, jinak vlastne v pohode, prirovanat k jenkins}
             \todo{Popsat deploy projektu 1 z GoCD}\blind[2]
 
         \subsubsection{Projekt 2}

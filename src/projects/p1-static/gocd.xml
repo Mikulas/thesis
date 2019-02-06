@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pipeline name="p1">
+  <materials>
+    <git url="file:///src/p1-static/" shallowClone="true" />
+  </materials>
+  <stage name="BuildStage">
+    <jobs>
+      <job name="BuildJob">
+        <tasks>
+          <exec command="bundle">
+            <arg>install</arg>
+            <arg>--deployment</arg>
+            <arg>-j=4</arg>
+            <arg>--path=vendor/bundle</arg>
+            <runif status="passed" />
+          </exec>
+          <exec command="make">
+            <arg>build</arg>
+            <runif status="passed" />
+          </exec>
+          <exec command="make">
+            <arg>deploy</arg>
+            <runif status="passed" />
+          </exec>
+        </tasks>
+      </job>
+    </jobs>
+  </stage>
+</pipeline>

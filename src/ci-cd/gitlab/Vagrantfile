@@ -21,6 +21,9 @@ Vagrant.configure("2") do |config|
           "home-dirs" => {
               "gitlab-runner" => "/home/gitlab-runner"
           }
+      },
+      "deps-p1-build" => {
+        "user" => "gitlab-runner"
       }
     }
 

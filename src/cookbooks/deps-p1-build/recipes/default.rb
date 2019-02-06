@@ -23,16 +23,16 @@ end
 
 group 'rvm' do
   action :modify
-  members 'gitlab-runner'
+  members node["deps-p1-build"]['user']
   append true
 end
 
 execute 'install_ruby_for_user' do
   command 'rvm use ruby-2.6'
-  user 'gitlab-runner'
+  user node["deps-p1-build"]['user']
 end
 
 execute 'install_jekyll_bundler' do
   command 'gem install jekyll bundler'
-  user 'gitlab-runner'
+  user node["deps-p1-build"]['user']
 end
