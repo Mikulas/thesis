@@ -11,4 +11,5 @@ ff02::3	ip6-allhosts
 10.0.0.11   jenkins jenkins.ditemiku.local
 10.0.0.12   concourse concourse.ditemiku.local
 10.0.0.13   gocd gocd.ditemiku.local
+10.0.0.14   droneio droneio.ditemiku.local
 10.0.0.50   webserver-plain
