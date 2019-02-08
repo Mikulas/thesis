@@ -7,8 +7,8 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "webserver-plain"
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = 4096
-    v.cpus = 2
+    v.memory = 1024
+    v.cpus = 1
     v.name = "webserver-plain"
   end
 
