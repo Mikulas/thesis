@@ -9,22 +9,31 @@
         Stejně jako ostatní \CI se Drone skládá z jednoho masteru a agentů. Master persistuje data do sqlite databáze, ale některá data o frontě požadavků udržuje pouze v paměti \cite{drone-ha}. Nemá žádné externí závilosti.
 
     \subsection{Rozšiřitelnost}
-        Drone rozlišuje dva koncepty. První jsou \textit{pipeline plugins}, což jsou obyčejné kontejnery spuštěné v pipeline. Jediný rozdíl je drobné syntaktické zjednodušení, které umožňuje v konfiguraci pipeline psát místo \code{environment[PLUGIN_KEY]=x} jenom \code{settings.key=x}. Kdyby Drone tuto funkci neměl, byla by tvorba pluginů transparentnější a přístupnější i těm nejméně zkušeným uživatelům.
+        Drone rozlišuje dva koncepty. První jsou \textit{pipeline plugins}, což jsou obyčejné kontejnery spuštěné v pipeline. Jediný rozdíl je drobné syntaktické zjednodušení, které umožňuje v konfiguraci pipeline psát místo \code{environment[PLUGIN\_KEY]=x} jenom \code{settings.key=x}. Kdyby Drone tuto funkci neměl, byla by tvorba pluginů transparentnější a přístupnější i těm nejméně zkušeným uživatelům.
 
         Druhý koncept rozšíření -- dostupný pouze v placené Enterprise verzi -- upravuje nějakým způsobem definici pipeline. Jediné zdokumentované rozšíření je zatím Jsonnet, které umožňuje používat stejnojmenný šablonovací jazyk místo \glstext{YAML} \cite{drone-jsonnet}.
 
     \subsection{Zabezpečení}
-        zabudovane sifrovani pro secrets (zadne jine ci to nema) + podpora pro vault atd (to ma i concourse treba, ale free)
-        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
+        Díky kontejnerové architektuře má Drone základní izolaci i v rámci jednoho agenta. Lepší izolace lze dosáhnout v placené verzi, která nabízí dynamické agenty, které můžou spouštět \glstext{VM} nebo nějakým způsobem využívat cloud.
+
+        Vynikající vlastnost kterou ostatní v základu \CI nenabízejí je možnost zašifrovat tajemství a umístit ho do veřejně čitelné pipeline. Využívá se k tomu asymetrické šifrování, při kterém \CI nikdy nezveřejňuje svůj privátní klíč. Dál je podporován mj.~HashiCorp Vault a \glstext{AWS} Secrets Manager.
+
+        Při napojení na GitHub je vyžadováno moc práv, včetně čtení a zápisu do všech soukromých repozitářů. Je na to otevřené issue od začátku roku 2018, ale Drone je zatím bez opravy \cite{drone-github-acl}.
+
+        Nenašel jsem žádná Drone \glstext{CVE}, ani jsem nenašel žádné zdokumentované bezpečnostní problémy ve veřejném seznamu chyb a úkolů celé Drone organizace (ať otevřené, nebo vyřešené).
 
     \subsection{Dostupnost}
-        \cite{drone-ha}
-        \todo{Může Drone běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+        Podobně jako ostatní \CI má Drone jeden stavový master, který není možné load balancovat. Jeden z autorů prohlásil, že na stabilním cloudu má Drone uptime $99,999$ \cite{drone-ha}. Nemůže ale zahrnovat aktualizace. Kromě toho s nástupem smýšlení \textit{infrastructure as a code} není běžné udržovat dlouhožijící \textit{pet} servery.
+
+        \todo{Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
+        \todo{Jak se dělá backup/restore}\blind[1]
 
     \subsection{Integrace}
-        login pres oauth vybraneho providera, pravdepodobne nejde mit vic provideru najednou => ale dobra integrace
-        \todo{Integrace Drone, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z Drone do cílového systému; k8s, sftp, openstack, \ldots}\blind[2]
+        Drone podporuje jenom vybrané správce repozitářů: GitHub, Gitlab, Bitbucket, Gitea a Gogs. Důležité je, že neexistuje podpora pro obecný git remote.
+
+        Ani přes úzkou integraci na repozitáře není ale výsledná integrace bezchybná. Například oznámení výsledku pipeline na GitHub (tzv. \textit{Commit Status} nebo novější \textit{Checks}) nejsou zabudované a je nutné použít plugin, což dále komplikuje pipeline kterou uživatel musí napsat a udržovat.
+
+        \todo{Možnosti deploy z Drone do cílového systému; k8s, sftp, openstack, \ldots}\blind[1]
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
