@@ -1,36 +1,39 @@
-\section{Drone.io}
+\section{Drone}
+    Drone je minimalistické \CI postavené na kontejnerech. Je to svým způsobem jenom Docker orchestrátor, který má navíc drobné webové rozhraní. V \glstext{UI} lze dělat pouze dva úkony: číst výstup jobů a zapínat/vypínat sledování repozitářů. Kromě toho je celý web implementovaný jako \glstext{SPA}. To má sice pozitivní vliv na rychlost přepínání stránek, ale při testování občas aplikace nereagovala a několikrát se zasekla úplně. Dokonce ve webové administraci není ani seznam agentů, joby čekající na zpracování a podobně.
 
-    divna dokumentace kde chybi jak to instalovat na bare metal
-    pri pullovani docker image neni v adminu videt co se deje
-    login pres oauth vybraneho providera, pravdepodobne nejde mit vic provideru najednou => ale dobra integrace
-    v dokumentaci neuvadi verze ale doporucuji je je pouzivat, wtf
-    minimalisticke ale dostacujici UI (skoda ze je to SPA, obcas je to zaseknute)
-    chybi administrace, neni videt seznam jobu agentu atd
-    pluginy = kontejnery s trochu jinym env a hezci syntaxi
-    zabudovane sifrovani pro secrets (nic jineho to nema) + podpora pro vault atd (to ma i concourse treba)
+    Některé důležité funkce skrývá Drone za placenou licenci. Nejde ani o korporátní podporu, ale o nezbytné vlastnosti bez který lze \CI těžko provozovat. Mezi ně patří: dynamický runner, který by umožňoval využívat cluster nebo externí služby (například \glstext{AWS} CodeBuild) podle vytížení; sdílení tajemství napříč organizací a obecně podpora pro externí správce tajemství; šablony pro pipeline.
 
-    \subsection{Architektura Drone.io, možnosti konfigurace}
-        \todo{Jaké má Drone.io části, jak se to deployuje, externí závislosti\ldots}\blind[4]
+    \subsection{Architektura Drone, možnosti konfigurace}
+        Dokumentace Drone je dostatečně obsáhlá, ale není vyčerpávající a odkazy jsou navíc netypicky pojmenované. Instalace je rozdělena podle externího správce úložišť, tradičně bývá odlišná dokumentace pro způsoby instalace (bare metal, kontejnery, \ldots). Není možné v jedné Drone instanci využívat zároveň například GitLab a Bitbucket, podporováno je pouze jedno úložiště. Dokumentační stránka o instalaci na Kubernetes je dokonce úplně špatně. Doporučuje spouštět Drone server jako \code{Pod} (mělo by jít o \code{Deployment}, nebo Helm chart) a agenti dokonce naprosto chybí.
+
+        Stejně jako ostatní \CI se Drone skládá z jednoho masteru a agentů. Master persistuje data do sqlite databáze, ale některá data o frontě požadavků udržuje pouze v paměti \cite{drone-ha}. Nemá žádné externí závilosti.
 
     \subsection{Rozšiřitelnost}
-        \todo{Má Drone.io nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[3]
+        Drone rozlišuje dva koncepty. První jsou \textit{pipeline plugins}, což jsou obyčejné kontejnery spuštěné v pipeline. Jediný rozdíl je drobné syntaktické zjednodušení, které umožňuje v konfiguraci pipeline psát místo \code{environment[PLUGIN_KEY]=x} jenom \code{settings.key=x}. Kdyby Drone tuto funkci neměl, byla by tvorba pluginů transparentnější a přístupnější i těm nejméně zkušeným uživatelům.
+
+        Druhý koncept rozšíření -- dostupný pouze v placené Enterprise verzi -- upravuje nějakým způsobem definici pipeline. Jediné zdokumentované rozšíření je zatím Jsonnet, které umožňuje používat stejnojmenný šablonovací jazyk místo \glstext{YAML} \cite{drone-jsonnet}.
 
     \subsection{Zabezpečení}
+        zabudovane sifrovani pro secrets (zadne jine ci to nema) + podpora pro vault atd (to ma i concourse treba, ale free)
         \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[3]
 
     \subsection{Dostupnost}
-        \todo{Může Drone.io běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
+        \cite{drone-ha}
+        \todo{Může Drone běžet ve víc replikách? Jak se dělá upgrade? Jak stabilní to je?}\blind[3]
 
     \subsection{Integrace}
-        \todo{Integrace Drone.io, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z Drone.io do cílového systému; k8s, sftp, openstack, \ldots}\blind[2]
+        login pres oauth vybraneho providera, pravdepodobne nejde mit vic provideru najednou => ale dobra integrace
+        \todo{Integrace Drone, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
+        \todo{Možnosti deploy z Drone do cílového systému; k8s, sftp, openstack, \ldots}\blind[2]
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
-            \todo{Popsat deploy projektu 1 z Drone.io}\blind[2]
+            pri pullovani docker image neni v adminu videt co se deje
+            v dokumentaci neuvadi verze ale doporucuji je je pouzivat, wtf
+            \todo{Popsat deploy projektu 1 z Drone}\blind[2]
 
         \subsubsection{Projekt 2}
-            \todo{Popsat deploy projektu 2 z Drone.io}\blind[2]
+            \todo{Popsat deploy projektu 2 z Drone}\blind[2]
 
         \subsubsection{Projekt 3}
-            \todo{Popsat deploy projektu 3 z Drone.io}\blind[2]
+            \todo{Popsat deploy projektu 3 z Drone}\blind[2]
