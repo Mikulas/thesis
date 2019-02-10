@@ -4,7 +4,7 @@
     Některé důležité funkce skrývá Drone za placenou licenci. Nejde ani o korporátní podporu, ale o nezbytné vlastnosti bez který lze \CI těžko provozovat. Mezi ně patří: dynamický runner, který by umožňoval využívat cluster nebo externí služby (například \glstext{AWS} CodeBuild) podle vytížení; sdílení tajemství napříč organizací a obecně podpora pro externí správce tajemství; šablony pro pipeline.
 
     \subsection{Architektura Drone, možnosti konfigurace}
-        Dokumentace Drone je dostatečně obsáhlá, ale není vyčerpávající a odkazy jsou navíc netypicky pojmenované. Instalace je rozdělena podle externího správce úložišť, tradičně bývá odlišná dokumentace pro způsoby instalace (bare metal, kontejnery, \ldots). Není možné v jedné Drone instanci využívat zároveň například GitLab a Bitbucket, podporováno je pouze jedno úložiště. Dokumentační stránka o instalaci na Kubernetes je dokonce úplně špatně. Doporučuje spouštět Drone server jako \code{Pod} (mělo by jít o \code{Deployment}, nebo Helm chart) a agenti dokonce naprosto chybí.
+        Dokumentace Drone je dostatečně obsáhlá, ale není vyčerpávající a odkazy jsou navíc netypicky pojmenované. Instalace je rozdělena podle externího správce úložišť, tradičně bývá odlišná dokumentace pro způsoby instalace (bare metal, kontejnery, \ldots). Není možné v jedné Drone instanci využívat zároveň například GitLab a Bitbucket, podporováno je pouze jedno úložiště. Dokumentační stránka o instalaci na Kubernetes je dokonce úplně špatně. Doporučuje spouštět Drone server jako \code{Pod} (mělo by jít o \code{Deployment}, nebo Helm chart) a agenti dokonce naprosto chybí. Další problém dokumentace je, že používá ve všech ukázkách Docker obrazy bez tagu. To je špatně, protože výchozí tag \code{latest} se může kdykoliv změnit na nekompatibilní verzi. Vždy je lepší explicitně uvést tag.
 
         Stejně jako ostatní \CI se Drone skládá z jednoho masteru a agentů. Master persistuje data do sqlite databáze, ale některá data o frontě požadavků udržuje pouze v paměti \cite{drone-ha}. Nemá žádné externí závilosti.
 
@@ -37,9 +37,11 @@
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
-            pri pullovani docker image neni v adminu videt co se deje
-            v dokumentaci neuvadi verze ale doporucuji je je pouzivat, wtf
-            \todo{Popsat deploy projektu 1 z Drone}\blind[2]
+            Pro statický projekt jsem jako u ostatních \CI vytvořil dvoukrokovou pipeline, kde první část kompiluje zdrojové soubory nástrojem Jekyll a druhá část nahrává výsledný web na webový server pomocí \code{rsync}. Protože všechny kroky běží v kontejneru a nelze použít zdroje na hostitelském stroji, místo přednahrání \glstext{RSA} klíče je nutné ho umístit do pipeline. Aby byl dostupný pouze pro \CI a nemohl ho nikdo jiný zneužít, je zašifrovaný \glstext{CLI} nástrojem \code{drone encrypt}. Tato utilita nepodporuje načítání z \code{stdin}, takže binární, víceřádkové nebo obecně složitější data je nutné nějakým způsobem překódovat. V tomto případě jsem klíč nejprve překódoval s \code{base64}. Toto řešení není ideální, protože vyžaduje práci v kontejneru, kde dekódovací nástroj nemusí být nainstalovaný.
+
+            Další problém na který jsem při tvorbě pipeline narazil byla chybějící indikace stavu pipeline ve webovém rozhraní. Při prvním dlouhém stahování docker obrazu pro danou pipeline vypadá Drone rozbitě/zaseknutě. Chybí jakákoliv indikace postupu nebo dokonce času k dokončení.
+
+            Přes všechny počáteční nesnáze je konfigurace Drone pipeline relativně snadná a přímočará. Především tomu pomáhá koncept \textit{Volumes}, což definuje složku souborů sdílející se mezi všemi joby. Ostatní \CI toto řeší mnohem složitěji, například přes read-only \textit{artifacts}.
 
         \subsubsection{Projekt 2}
             \todo{Popsat deploy projektu 2 z Drone}\blind[2]
