@@ -10,7 +10,7 @@
 
         Speciálně pro \CI je cloud vhodný cenou. Jelikož \CI má nárazové využití a to navíc ještě jenom přes pracovní hodiny, je u dedikovaných serverů výjimečně špatná utilizace. V cloudu je možné platit pouze za využité zdroje a zapínat je dynamicky. Při porovnávání \CI nástrojů budu zjišťovat, jestli a do jaké míry podporují cloud.
 
-    \section{Dostupnost aplikace}
+    \section{Dostupnost aplikací}
         Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akademické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
 
         Aplikaci v jedné instanci na jednom fyzickém serveru lze bez výpadku provozovat. Jedním takový příkladem je server Stratus s redundantním hardwarem, který měl v jednom případě rekordní uptime 24 let \cite{thibodeau-longest-uptime}. Celý systém běží na proprietárním operačním systému, který od let 2000 nebyl aktualizovaný. Tyto servery jsou ale fyzicky na jednom místě a při přírodní pohromě nebo delším výpadku elektřiny přestanou být dostupné.
@@ -24,9 +24,9 @@
             \item Podpora nasazení uživatelské aplikace v daném \CICD a dopad na dostupnost dané aplikace.
         \end{itemize}
 
-        \todo{můžu sem dát dostupnosti cloudových služeb a že je malá nebo neexistující garance}
+        Žádný z velkých poskytovatelů nenabízí \glstext{SLA} pro jednu instanci (virtuální stroj). Definují pouze $99,99$~\% dostupnost na celý region (\glstext{AWS} \cite{aws-sla}, \glstext{GCP} \cite{gcp-sla}, Azure \cite{azure-sla}). V rámci regionu může bez vlivu na \glstext{SLA} vypadnout několik datacenter (\textit{availability zones}). Při porušení \glstext{SLA} vrací poskytovatelé na požádaní část kreditů. Neexistuje tak prakticky žádná garance dostupnosti a aplikace musí \glstext{HA} zajistit distribuováním mezi datacentra.
 
-    \section{testování}
+    \section{Testování aplikací}
         \todo{Definovat odlisnosti testování v cloud a self hosted testovani}\blind[2]
         \todo{Popsat, jak lze snadno integrovat další služby jako například Messenger}\blind[1]
 
