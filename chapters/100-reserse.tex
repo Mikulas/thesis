@@ -35,10 +35,8 @@
 
         Testování bezpečnosti aplikací zmíním níže v sekci o \pfxref{SAST a DAST}{sast-dast}.
 
-    \section{deployment}
-        \todo{citovat nejaky whitepaper co je to deploy}\blind[1]
-
-        V této sekci popisuji varianty nasazení nové verze aplikace s vysokou dostupností. U porovnávaných \CICD systémů budu později zkoumat, jaké varianty nasazení podporují, případně jak obtížné je jednotlivé varianty implementovat.
+    \section{Nasazení aplikace}
+        V této sekci popisuji varianty nasazení nové verze aplikace s vysokou dostupností. U porovnávaných \CICD systémů budu později zkoumat, jaké varianty nasazení podporují, případně jak obtížné je jednotlivé varianty implementovat. \todo{pridat citace}
 
         Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí. V následujícím textu jsem se zaměřil na monolitické webové aplikace, ale podobné principy fungují i pro nasazení dílčích podpůrných služeb (\textit{microservices}), které mimo \HTTP rozhraní mohou nabízet například \glstext{gRPC}, Java \glstext{RMI}, nebo jakékoliv jiné textové nebo binární protokoly.
 
@@ -104,7 +102,7 @@
         Nasazování aplikace se kontejnerizací také usnadňuje. Na \CI se nějakým deterministickým způsobem vytvoří Docker obraz a nahraje se do registru. Webové servery se pak informují o nové verzi, obraz stáhnou a spustí novou verzi aplikace. Odpadají tak některé problémy s atomicitou nasazení, s postupným nahrazováním a případně mazáním souborů. Další výhodou je, že vývojáři mohou lokálně spustit produkční verzi aplikace -- například pro odlazení chyby.
 
     \section{Bezpečnost}
-        V následující kapitole budu porovnávat různé \CI nástroje. Jedním z kritérií na které se zaměřím bude bezpečnost.
+        V následující kapitole budu porovnávat různé \CI nástroje. Jedním z kritérií na které se zaměřím bude bezpečnost. Ani v rámci jedné organizace není žádoucí, aby všichni uživatelé viděli všechny ostatní testované projekty. Příklad z praxe jsou zaměstnanci bez podepsaného \glstext{NDA}.
         \todo{Co tim oecne myslim, proc je to dobre}\blind[1]
 
         Samostatná kategorie bezpečnosti \CI je izolace spuštěným jobů. Rozlišují se následující úrovně:
