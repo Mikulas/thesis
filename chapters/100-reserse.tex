@@ -6,7 +6,7 @@
     \section{Cloud}
         Na cloud se budu odkazovat v několika rovinách: jako platforma pro hostování \CI, spouštění jobů a hostování samotných aplikací, což má význam pro nasazení a tedy \CD.
 
-        Cloudem primárně uvažuji velké organizace, které mají desítky tisíc serverů v jednom regionu \cite{pier-cloud}. Kromě hlavní trojice \glstext{AWS}, \glstext{GCP} a Azure můžeme uvažovat i DigitalOcean, IBM Cloud, Linode a celou řadu dalších globálních poskytovatelů. Kromě virtuálních serverů patří typicky do nabídky managed varianty často používaných stavových služeb jako jsou databáze, kontrolní roviny orchestrátorů, síťové disky a další.
+        Cloudem primárně uvažuji velké organizace, které mají desítky tisíc serverů v jednom regionu \cite{pier-cloud}. Kromě hlavní trojice \glstext{AWS}, \glstext{GCP} a Azure můžeme uvažovat i DigitalOcean, IBM Cloud, Linode a celou řadu dalších globálních poskytovatelů. Kromě virtuálních serverů patří typicky do nabídky služeb managed varianty stavových aplikací jako jsou databáze, kontrolní roviny orchestrátorů, síťové disky a další. Drobnější a regionální poskytovatele cloudu, stejně tak jako on-premise cloudová řešení (OpenStack), nebudu v práci pod pojem cloud zahrnovat, protože mají jiné vlastnosti co se týče dostupnosti. Z českých hostingů nabízí „on-demand“ virtuální servery například Master Internet \cite{master-pricing}, ale jde o jiný model než velký cloud: servery se rezervují na měsíc a platí se za využitý výkon nad nějakou hranici. U jiných českých hostingových firem jsem jiné než fixní měsíční poplatky za server nenašel.
 
         Speciálně pro \CI je cloud vhodný cenou. Jelikož \CI má nárazové využití a to navíc ještě jenom přes pracovní hodiny, je u dedikovaných serverů výjimečně špatná utilizace. V cloudu je možné platit pouze za využité zdroje a zapínat je dynamicky. Při porovnávání \CI nástrojů budu zjišťovat, jestli a do jaké míry podporují cloud.
 
@@ -27,8 +27,15 @@
         Žádný z velkých poskytovatelů nenabízí \glstext{SLA} pro jednu instanci (virtuální stroj). Definují pouze $99,99$~\% dostupnost na celý region (\glstext{AWS} \cite{aws-sla}, \glstext{GCP} \cite{gcp-sla}, Azure \cite{azure-sla}). V rámci regionu může bez vlivu na \glstext{SLA} vypadnout několik datacenter (\textit{availability zones}). Při porušení \glstext{SLA} vrací poskytovatelé na požádaní část kreditů. Neexistuje tak prakticky žádná garance dostupnosti a aplikace musí \glstext{HA} zajistit distribuováním mezi datacentra.
 
     \section{Testování aplikací}
-        \todo{Definovat odlisnosti testování v cloud a self hosted testovani}\blind[2]
-        \todo{Popsat, jak lze snadno integrovat další služby jako například Messenger}\blind[1]
+        Ve vhodně zvoleném \CI nástroji je možné aplikaci testovat na všech úrovních: od jednotkových (\textit{unit}) přes integrační až po funkcionální testy. Jednotkové testy v kontextu webových aplikací se uvažují maximálně o velikosti jedné stránky \cite{testing-web-apps}. V případě dostatečné dekompozice (mj.~za správného použití návrhu \glstext{MVC}) budou testované jednotky především v modelové vrstvě (byznys logice). Takové testy budou využívat pouze zkompilovanou aplikaci a případně runtime a závislosti budou simulovat atrapami (\textit{Mock objects}) \cite{mocks}. Díky tomu jsou tyto testy jednoduše spustitelné na \CI.
+
+        Integrační testy seskupují funkctionalitu otestovanou jednotkově a ověřují, že propojení komponent dává smysl \cite{integration-tests}. Tyto testy mohou využívat externí závislosti, například databáze.
+
+        Nejucelenějším ověřením správnosti aplikace jsou funkcionální testy (také \textit{end-to-end} testy, e2e). Při nich se aplikace spustí s externími závislostmi, simulují se uživatelské akce a monitorují se odpovědi aplikace. Ve webovém prostředí to může být volání aplikace nástrojem \code{curl}, dedikovaný testovací nástroj Selenium, nebo moderní knihovna Puppeteer pro prohlížeč Google Chrome. Co se týče nasazení na \CI jsou funkcionální testy nejkomplikovanější, protože mají řadu závislostí. Cloud může jejich nasazení zjednodušit \cite{gcp-headless}.
+
+        %\todo{Popsat, jak lze snadno integrovat další služby jako například Messenger}\blind[1]
+
+        Testování bezpečnosti aplikací zmíním níže v sekci o \pfxref{SAST a DAST}{sast-dast}.
 
     \section{deployment}
         \todo{citovat nejaky whitepaper co je to deploy}\blind[1]
@@ -114,6 +121,7 @@
 
         Dále u \CI budu zmiňovat možnosti testování bezpečnosti aplikace. To se často rozděluje na dvě kategorie: \glstext{SAST} a \glstext{DAST}.
 
+        \label{sast-dast}
         \glstext{SAST} je statická analýza aplikačního kódu bez jeho spuštění \cite{sast}. Příkladem ve světě jazyka C je volání \code{printf(argv[1])}, které by mělo být nahrazeno za \code{printf("\%s", argv[1])}. Kvalitní kompilátory mají nějakou formu \glstext{SAST} zabudovanou. \glstext{LLVM} pro ukázkový \code{printf} vygeneruje \textit{warning: format string is not a string literal (potentially insecure)}. Pro většinu programovacích jazyků a frameworků existuje nějaký externí statický analyzér (pro \glstext{PHP} phpstan, pro bash shellcheck, pro Dockerfile hadolint, …).
 
-        \glstext{DAST} je testování bezpečnosti aplikace při jejím běhu \cite{dast}. Často skenují různé body ze seznamu \glstext{OWASP} Top 10. Přestože žádný scanner nemůže najít všechny chyby \cite{netsparker-scanner}, jsou tyto nástroje užitečné.
+        \glstext{DAST} je testování bezpečnosti aplikace při jejím běhu \cite{dast}. Často skenují různé body ze seznamu \glstext{OWASP} Top 10. Přestože žádný scanner nemůže najít všechny bezpečnostní chyby \cite{netsparker-scanner}, jsou tyto nástroje užitečné.
