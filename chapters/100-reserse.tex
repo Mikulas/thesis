@@ -1,6 +1,7 @@
 \chapter{Rešerše}
-    \todo{Obecne o resersi, proc jsem se zameril na nasledujici sekce a kam to míří.}
-    \blind[4]
+    \todo{co popisuju v teto kapitole}\blind[1]
+    \todo{proc jsem se na tyhle pojmy zameril}\blind[1]
+    \todo{Proc definuju dostupnost}\blind[1]
 
     \section{cloud}
         \todo{Definovat cloud a rozdíl oproti inhouse, proc je to vhodne pro CI/CD}
@@ -23,9 +24,8 @@
         \todo{můžu sem dát dostupnosti cloudových služeb a že je malá nebo neexistující garance}
 
     \section{testování}
-        \todo{Definovat testování v cloud}
-        \todo{Popsat, jak lze snadno integrovat další služby jako například Messenger}
-        \blind[4]
+        \todo{Definovat odlisnosti testování v cloud a self hosted testovani}\blind[2]
+        \todo{Popsat, jak lze snadno integrovat další služby jako například Messenger}\blind[1]
 
     \section{deployment}
         \todo{citovat nejaky whitepaper co je to deploy}\blind[1]
@@ -41,9 +41,9 @@
 
         \subsection{Jednorázový přeliv provozu mezi starou a novou aplikací}
             \label{deploy-v-jedne-instanci}
-            Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě \glstext{PHPFPM} při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update \glstext{PHPFPM} workerů). Ve světě Node.js lze využít \glstext{PM2}, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu load balanceru (\glstext{LB}): uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru \glstext{LB} je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) \glstext{LB} přeposílají \glstext{TCP} požadavky na základě cílové \glstext{IP} adresy a portu. Je definován i Layer 3 \glstext{LB}, který se rozhoduje pouze podle cílové \glstext{IP}, ale v literatuře se zahrnuje do L4. Layer 7 (aplikační vrstva) \glstext{LB} přeposílají celé \HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále L7LB musí řešit \glstext{HTTPS} (\glstext{TLS} termination) a musí tak dopředu vědět, jaké domény obsluhuje. L7 LB dále může reagovat i na získané \HTTP odpovědi. Díky \HTTP specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
+            Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě \glstext{PHPFPM} při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update \glstext{PHPFPM} workerů). Ve světě Node.js lze využít \glstext{PM2}, který abstrahuje spouštění a vypínání procesů aplikace. \todo{ještě jeden, třeba python}. Všechny tyto systémy pracují na principu load balanceru (\glstext{LB}): uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru \glstext{LB} je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) \glstext{LB} přeposílají \glstext{TCP} požadavky na základě cílové \glstext{IP} adresy a portu. Je definován i Layer 3 \glstext{LB}, který se rozhoduje pouze podle cílové \glstext{IP}, ale v literatuře se zahrnuje do \glstext{L4}. Layer 7 (aplikační vrstva) \glstext{LB} přeposílají celé \HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále \glstext{L7} \glstext{LB} musí řešit \glstext{HTTPS} (\glstext{TLS} termination) a musí tak dopředu vědět, jaké domény obsluhuje. \glstext{L7} \glstext{LB} dále může reagovat i na získané \HTTP odpovědi. Díky \HTTP specifikaci idempotentních metod (GET, HEAD, PUT, DELETE \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotate dočasně vyřadit \todo{cite}.
 
-            Jak L4 tak L7 \glstext{LB} často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní \glstext{IP} adresa uživatele. V případě čistého L7 load balancování lze původní \glstext{IP} vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého L4 load balancování o původní \glstext{IP} příjdeme bez PROXY protokolu úplně.
+            Jak \glstext{L4} tak \glstext{L7} \glstext{LB} často podporují \textit{PROXY protocol} \cite{tarreau-proxyprotocol}, který požadavek obalí vlastní hlavičkou, které je mj. původní \glstext{IP} adresa uživatele. V případě čistého \glstext{L7} load balancování lze původní \glstext{IP} vyčíst z problematické \cite{hansen-xforwardedfor} hlavičky X-Forwarded-For nebo z Forwarded rozšíření \cite{http-forwarded}. U čistého \glstext{L4} load balancování o původní \glstext{IP} příjdeme bez PROXY protokolu úplně.
 
             Je nutné uvažovat konzistenci napříč několika příchozími \HTTP requesty: uživatel může načíst \HTML z původní verze, ale následující \HTTP požadavek na kaskádové styly už může přijít na novou verzi aplikace.
 
@@ -85,14 +85,32 @@
     \section{Kontejnerizace}
         V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
 
-        Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v balíčku (\textit{docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}).
+        Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v obrazu (\textit{Docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}). Mezi další výhody patří zabudované automatické cachovaní kompilace vrstev Docker obrazu a snadná distribuce obrazů.
 
         Jeden z problémů, který při stavění kontejnerů budu muset řešit, je zanořování Dockeru. První vrstva je prostředí, ve kterém se spouští jednotlivé \CI joby. Kontejnerizace na této úrovni přináší lepší kontrolu závislostí a izolaci, ale není nutná. To je vesměs nezávislé na tom, jaké aplikace se budou na \CI stavět. Druhá vrstva, ve které se Docker může využívat, je stavění Docker obrazů v rámci konkrétního \CI jobu. Přístup k Dockeru na této úrovni nelze ničím nahradit. Jedna možnost zanořování se označuje \textit{Docker in Docker} (\glstext{DinD}), při které všechny kontejnery stále sdílí jedno linuxové jádro, ale vnitřní kontejner je řízen Docker démonem spuštěným uvnitř vnějšího kontejneru.
 
         \todo{diagram DinD v CI}
 
-        \todo{Popsat co to je a proc je to vhodne na testovani a deploy}
-        \blind[2]
+        Speciálně pro testování je kontejnerizace nelepší možné řešení. Testy je často potřeba spouštět na několika různých místech, minimálně na lokálních zařízeních všech vývojářů a na \CI. S kontejnery odpadá nutnost instalovat celé testovací prostředí, které se navíc ještě víc blíží tomu produkčnímu. Díky tomu, že vývojáři a \CI spouští testy (skoro) úplně stejně, odpadají z velké části problémy kde testy lokálně prochází, ale na \CI ne. Kontejnery také zjednodušují začleňování nových vývojářů, kteří místo instalace všech závislostí a komponent mohou rovnou upravovat a spustit aplikaci.
 
-   \section{TODO}
-        \todo{SAST vs DAST a pro gitlab je dobry ze umi delat review apps a poustet na nich DAST}
+        Nasazování aplikace se kontejnerizací také usnadňuje. Na \CI se nějakým deterministickým způsobem vytvoří Docker obraz a nahraje se do registru. Webové servery se pak informují o nové verzi, obraz stáhnou a spustí novou verzi aplikace. Odpadají tak některé problémy s atomicitou nasazení, s postupným nahrazováním a případně mazáním souborů. Další výhodou je, že vývojáři mohou lokálně spustit produkční verzi aplikace -- například pro odlazení chyby.
+
+    \section{Bezpečnost}
+        V následující kapitole budu porovnávat různé \CI nástroje. Jedním z kritérií na které se zaměřím bude bezpečnost.
+        \todo{Co tim oecne myslim, proc je to dobre}\blind[1]
+
+        Samostatná kategorie bezpečnosti \CI je izolace spuštěným jobů. Rozlišují se následující úrovně:
+        \begin{itemize}
+            \item Žádná izolace. Všechny joby se navzájem ovliňují. Globální závislosti jako jsou runtime, databáze atp.~jsou předinstalované.
+            \item Kontejnerizace. Všechny joby sdílí společný hardware, ale každý job běží ve vlastním kontejneru a není nijak ovlivněn ostatními joby, ani se navzájem nevidí.
+            \item Virtuální stroje (\glstext{VM}). Joby se spouští nad virtualizovaným hardware a odlišným jádrem. Není omezeno na Linux.
+            \item Serverová/fyzická izolace. Každý job běží na jiném fyzickém serveru. Toto je prakticky velmi těžko dosažitelné, ale do jisté míry se lze tomuto ideálu přiblížit v cloudu, kde jsou stovky fyzických serverů. Přes to že hardware je sdílený, je pro potenciálního útočníka prakticky nemožné zajistit si kolokaci v krátkém čase co job běží.
+        \end{itemize}
+
+        Kontejnerizace je praktická, ale nedostačující izolace pro sdílená \CI. Pokud se útočníkovi podaří utéct z kontejneru utéct, má plnou kontrolu nad hostitelským systémem a i všemi joby. Přesně taková zranitelnost byla nalezena v únoru 2019 v nástroji runc, který využívají Docker, Containerd, CRI-O a další a také orchestrační technologie nad nimi postavené: Kubernetes, Docker Swarm, … (CVE-2019-5736 \cite{CVE-2019-5736}). V rámci jedné organizace ale může být kontejnerizace dobrý kompromis mezi rychlostí, využitím zdrojů a bezpečností.
+
+        Dále u \CI budu zmiňovat možnosti testování bezpečnosti aplikace. To se často rozděluje na dvě kategorie: \glstext{SAST} a \glstext{DAST}.
+
+        \glstext{SAST} je statická analýza aplikačního kódu bez jeho spuštění \cite{sast}. Příkladem ve světě jazyka C je volání \code{printf(argv[1])}, které by mělo být nahrazeno za \code{printf("\%s", argv[1])}. Kvalitní kompilátory mají nějakou formu \glstext{SAST} zabudovanou. \glstext{LLVM} pro ukázkový \code{printf} vygeneruje \textit{warning: format string is not a string literal (potentially insecure)}. Pro většinu programovacích jazyků a frameworků existuje nějaký externí statický analyzér (pro \glstext{PHP} phpstan, pro bash shellcheck, pro Dockerfile hadolint, …).
+
+        \glstext{DAST} je testování bezpečnosti aplikace při jejím běhu \cite{dast}. Často skenují různé body ze seznamu \glstext{OWASP} Top 10. Přestože žádný scanner nemůže najít všechny chyby \cite{netsparker-scanner}, jsou tyto nástroje užitečné.
