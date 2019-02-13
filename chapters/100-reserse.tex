@@ -3,9 +3,12 @@
     \todo{proc jsem se na tyhle pojmy zameril}\blind[1]
     \todo{Proc definuju dostupnost}\blind[1]
 
-    \section{cloud}
-        \todo{Definovat cloud a rozdíl oproti inhouse, proc je to vhodne pro CI/CD}
-        \blind[2]
+    \section{Cloud}
+        Na cloud se budu odkazovat v několika rovinách: jako platforma pro hostování \CI, spouštění jobů a hostování samotných aplikací, což má význam pro nasazení a tedy \CD.
+
+        Cloudem primárně uvažuji velké organizace, které mají desítky tisíc serverů v jednom regionu \cite{pier-cloud}. Kromě hlavní trojice \glstext{AWS}, \glstext{GCP} a Azure můžeme uvažovat i DigitalOcean, IBM Cloud, Linode a celou řadu dalších globálních poskytovatelů. Kromě virtuálních serverů patří typicky do nabídky managed varianty často používaných stavových služeb jako jsou databáze, kontrolní roviny orchestrátorů, síťové disky a další.
+
+        Speciálně pro \CI je cloud vhodný cenou. Jelikož \CI má nárazové využití a to navíc ještě jenom přes pracovní hodiny, je u dedikovaných serverů výjimečně špatná utilizace. V cloudu je možné platit pouze za využité zdroje a zapínat je dynamicky. Při porovnávání \CI nástrojů budu zjišťovat, jestli a do jaké míry podporují cloud.
 
     \section{Dostupnost aplikace}
         Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akademické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
