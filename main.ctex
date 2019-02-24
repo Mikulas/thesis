@@ -41,8 +41,10 @@
 \usepackage{todonotes}
 \let\oldtodo\todo
 \renewcommand{\todo}[1]{
+#ifndef NOFIGURE
 #ifdef TODO
     \textcolor{red}{\oldtodo[noline]{#1}\textbf{[[#1]]}}
+#endif
 #endif
 }
 
