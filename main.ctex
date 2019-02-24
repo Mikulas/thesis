@@ -40,13 +40,17 @@
 \usepackage{xcolor}
 \usepackage{todonotes}
 \let\oldtodo\todo
-\renewcommand{\todo}[1]{
 #ifndef NOFIGURE
 #ifdef TODO
+\renewcommand{\todo}[1]{
     \textcolor{red}{\oldtodo[noline]{#1}\textbf{[[#1]]}}
-#endif
-#endif
 }
+#else
+\renewcommand{\todo}[1]{}
+#endif
+#else
+\renewcommand{\todo}[1]{}
+#endif
 
 \usepackage{blindtext}
 \newcommand{\blind}[1][1]{
@@ -128,6 +132,7 @@
 \printglossary[type=\acronymtype,style=acronyms]
 
 \input{medium.tex}
+
 \input{todo.tex}
 
 \end{document}
