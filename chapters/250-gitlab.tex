@@ -13,8 +13,14 @@
     \subsection{GitLab mikroslužby}
         GitLab začal oficiálně na konci roku 2018 podporovat také nasazení do Kubernetes přes Helm \cite{gitlab-helm-chart}. Kubernetes je distribuovaný orchestrátor kontejnerů a Helm je balíčkovací aplikace. Každá komponenta GitLabu byla oddělena do samostatného docker obrazu a v Helm balíčku (\textit{Helm chart}) je pomocí Kubernetes zdrojů popsáno jak se dané kontejnery mají spouštět a jak jsou provázané. Teoreticky je možné kontejnery spouštět i ručně v jiném systému než Kubernetes, ale není to oficiálně podporované a neexistuje k tomu dokumentace.
 
-        \todo{[obrazek] diagram}
-        \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura GitLab \label{pic:gitlab-architecture}}
+        \begin{iffigure}
+            \centering
+            \makebox[\textwidth][c]{
+                \includegraphics[width=1.0\textwidth]{media/gitlab-arch.pdf}
+            }
+            \caption{Architektura GitLab mikroslužeb a jejich propojení. Modře zvýrazněné komponenty jsou bezstavové, můžou běžet ve víc replikách a je před nimi nějaký load balancer. Zdvojené komponenty jsou workery a lze je horizontálně škálovat. Červeně jsou znázorněny \glstext{SPoF}, komponenty které ukládají stav a nelze je snadno distribuovat.}
+            \label{pic:gitlab-architecture}
+        \end{iffigure}
 
         Hlavní výhody nasazení GitLabu přes mikroslužby jsou:
         \begin{itemize}
@@ -29,10 +35,16 @@
     \subsection{GitLab \CI}
         \CI není přímo komponenta distribuovaná s GitLab, je ale dobře zaintegrovaná. Díky skvělému návrhu GitLab pouze vystavuje události na \glstext{API}. K API se může registrovat libovolné množství runnerů, které se periodicky \glstext{API} dotazují na nové práce ke spuštění \cite{gitlab-runner-registration}. Runner může běžet na stejném serveru jako GitLab, ale velkou výhodou je možnost spustit runner i na jiném vzdáleném serveru -- například pro mobilní aplikace se často používá Mac mini s macOS, které je pro kompilaci nezbytné. Při registraci runneru je možné ho přidělit pouze některým projektům podle tagu, nebo ho zveřejnit pro všechny projekty.
 
-        Runner při získání práce z \glstext{API} má k dispozici soubor s definicí (obsah souboru \code{.gitlab-ci.yml} \cite{gitlab-runner-yaml}) a přístupové údaje k repozitáři. Architektura GitLab \CI se skládá z tzv. \textit{stages} (etapy) a \textit{jobs} (kusy práce) (obrázek \ref{pic:gitlab-ci-architecture}). Jeden push do repozitáře typicky vygeneruje jednu \textit{pipeline}, což je sada \textit{stages} a \textit{jobs} popsaná konfigurací \CI v daném commitu.
+        Runner při získání práce z \glstext{API} má k dispozici soubor s definicí (obsah souboru \code{.gitlab-ci.yml} \cite{gitlab-runner-yaml}) a přístupové údaje k repozitáři. Architektura GitLab \CI se skládá z tzv. \textit{stages} (etapy) a \textit{jobs} (kusy práce), jak ilustruje \pfxref{diagram}{pic:gitlab-ci-architecture}. Jeden push do repozitáře typicky vygeneruje jednu \textit{pipeline}, což je sada \textit{stages} a \textit{jobs} popsaná konfigurací \CI v daném commitu.
 
-        \todo{[obrazek] diagram}
-        \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura GitLab \CI \label{pic:gitlab-ci-architecture}}
+        \begin{iffigure}
+            \centering
+            \makebox[\textwidth][c]{
+                \includegraphics[width=1.0\textwidth]{media/gitlab-arch-ci.pdf}
+            }
+            \caption{Architektura GitLab CI. Runnerů i pipeline může existovat mnoho. V rámci jedné \textit{pipeline} je několik \textit{stages}, uvnitř kterých je sada paralelně spuštěných \textit{jobs}.}
+            \label{pic:gitlab-ci-architecture}
+        \end{iffigure}
 
         V konfiguračním souboru lze nastavit celou řadu pokročilejších funkcí \cite{gitlab-runner-yaml}. Lze spouštět joby pouze pro určité kontexty podle kombinace proměnných prostředí a informace z verzovacího systému. Dále je možné joby provazovat podle závilostí a tím je serializovat. Toto ale není implementováno dokonale a všechny joby v rámci jedné stage běží najednou a čekají na doběhnutí všech jobů v předchozí stage. Celá pipeline tak může trvat delší dobu než je nutné.
 

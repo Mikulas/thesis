@@ -10,7 +10,7 @@
 
         \circleci naopak v roce 2018 zmigroval všechny uživatele z virtuální strojů (\circleci 1.0) na čistě kontejnerové prostředí (\circleci 2.0) \cite{circle-migration}. V specifikaci pipeline uživatel uvádí všechny kontejnery které chce spustit a jejich prolinkování/pořadí. Umí také spustit některé služby paralelně a na pozadí, což se používá například pro databáze a podobné závislosti.
 
-        \todo{diagram circleci workflows atd}
+        \todo{[obrazek] circleci workflows atd}
         \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura \label{pic:circle-architecture}}
 
         \semaphore kombinuje architekturu dvou předchozích řešení: jednotlivé joby běží ve virtuálních strojích, ale jsou provázané přes koncept bloků a data si předávají přes cache. Oproti \circleci chybí možnost zrychlit přípravu prostředí a předinstalaci závislostí Docker obrazem a přitom je na \semaphore definice pipeline výrazně složitější, než na \travis.
@@ -44,7 +44,7 @@
             Na rozdíl od ostatních nasazení jsem při testování \glstext{SaaS} neimplementovat celou \CI pipeline včetně nahrání na cílový server. Všechny systémy jsem zprovoznil v lokálním virtuálním prostředí na které není vhodné dělat vzdálený přístup. Místo \code{make deploy} je tak v definicích pouze job s hláškou, kde by se deploy spouštěl.
 
         \subsubsection{Projekt 2}
-            \todo{Popsat deploy projektu 2 z CircleCI, Semaphore, TravisCI}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z CircleCI, Semaphore, TravisCI}\blind[2]
 
         \subsubsection{Projekt 3}
-            \todo{Popsat deploy projektu 3 z CircleCI, Semaphore, TravisCI}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z CircleCI, Semaphore, TravisCI}\blind[2]

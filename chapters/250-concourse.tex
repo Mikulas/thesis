@@ -1,15 +1,13 @@
 \section{Concourse}
     Concourse je minimalistické \CI. Zjednodušeně řečeno obsahuje pouze tři základní koncepty: pipeline (projekt), job a přihlášení.
 
-    \todo{popsat že má skvělou dokumentaci PRO NASAZENí a popisují očekávaný disk, cpu, memory usage i high availability, ale NE PRO POUŽITI}
-
     \subsection{Architektura Concourse, možnosti konfigurace}
         Concourse využívá -- podobně jako Jenkins a GitLab -- architekturu kontrolerů (které nazývají \textit{web node}) a pracovních uzlů (\textit{worker node}). Na rozdíl od ostatních systémů ale má všechny části bezstavové. Data se persistují do externí PostgreSQL databáze. Díky tomu lze řídící rovinu libovolně škálovat a při provozu ve víc replikách má výbornou dostupnost.
 
         \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura Concourse \label{pic:concourse-architecture}}
-        \todo{\url{https://concourse-ci.org/concepts.html\#component-atc}}
+        \todo{[QUICK] \url{https://concourse-ci.org/concepts.html\#component-atc}}
 
-        Nasazení Concourse je skvěle zdokumentované. Podobně jako u dalších distribuovaných systémů je potřeba před spuštěním jednotlivých komponent vygenerovat celou řadu klíčů. Na podepisování uživatelských session a interní komunikaci, identifikátor pro \glstext{SSH} server a pro každý \textit{worker node} jeden klíč k registraci ke kontroleru. Další nastavení je volitelné \code{concourse-cluster}.
+        Nasazení Concourse je skvěle zdokumentované a průvodní texty dokonce popisují očekávané využití procesoru a paměti pro jednotlivé komponenty. Podobně jako u dalších distribuovaných systémů je potřeba před spuštěním jednotlivých komponent vygenerovat celou řadu klíčů. Na podepisování uživatelských session a interní komunikaci, identifikátor pro \glstext{SSH} server a pro každý \textit{worker node} jeden klíč k registraci ke kontroleru. Další nastavení je volitelné \code{concourse-cluster}.
 
         Pro rychlé otestování funkčnosti a drobné projekty nabízí Concourse zjednodušenou variantu spuštění. Jedním příkazem (\code{concourse quickstart}) se spustí kontroler a worker a automaticky se pro ně vygenerují a zaregistrují potřebné klíče.
 
@@ -63,7 +61,7 @@
             V ukázkových definicích jsem vědomě zapsal soukromé klíče přímo v plaintextu. Concourse podporuje různé systémy pro předávání tajemství a popisuji je \pfxref{v sekci}{subsec:concourse-security}. Nasazení těchto produktů a jejich použití bylo ale mimo rozsah této práce.
 
         \subsubsection{Projekt 2}
-            \todo{Popsat deploy projektu 2 z Concourse}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z Concourse}\blind[2]
 
         \subsubsection{Projekt 3}
-            \todo{Popsat deploy projektu 3 z Concourse}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z Concourse}\blind[2]

@@ -46,7 +46,7 @@
         Jenkins umožňuje upravit prakticky cokoliv. Na rozdíl od GitLabu, kde vývojář může konfigurovat pipeline a spouštět libovolné procesy, na Jenkins lze upravit samotné rozhraní. Šlo by například rozšířit Jenkins o stránku s přehledem nasazených prostředí, podobně jako má GitLab své Environments. Je pak ale na zvážení, jestli není praktičtější podobně velké úpravy vyčlenit do samostatné webové aplikace. Kromě toho existují rozšíření, které umožňují spouštět skripty v rámci jobů. Například \textit{Pipeline: Groovy} načte zdrojový kód umožňuje ho v jobu spustit. To bývá užitečné pro vyčlenění společné funkcionality napříč několika projekty a pro zpřehlednění pipeline.
 
     \subsection{Zabezpečení}
-        Stejným způsobem kterým Jenkins deleguje funkcionalitu na pluginy, přenáší zodpovědnost i za bezpečnost. Jádro Jenkins mělo za rok 2018 nahlášeno 53 \glstext{CVE}, rozšíření pro Jenkins skoro 100 \cite{cve-jenkins}. \todo{rozvést}
+        Stejným způsobem kterým Jenkins deleguje funkcionalitu na pluginy, přenáší zodpovědnost i za bezpečnost. Jádro Jenkins mělo za rok 2018 nahlášeno 53 \glstext{CVE}, rozšíření pro Jenkins skoro 100 \cite{cve-jenkins}. Čím víc rozšíření je do Jenkins nainstalováno, tím větší je plocha pro potenciální útočníky.
 
         Izolace klientů o něco horší než u GitLabu. Přestože oba systémy podporují různé úrovně izolace samotných jobů, nastavení práv pro webovou administraci Jenkins je velmi složité a nepřehledné. Tak jako všechno ostatní deleguje Jenkins i \glstext{ACL} na rozšíření. Základní rozřšíření \textit{Matrix-based security} umožňuje nastavit každému uživateli nebo skupině práva k nějaké akci. Jenom u zdroje \textit{Job} je ale 9 oprávnění a není dobře zdokumentované, co přesně umožňují. Některé integrace, například GitHub, podle dokumentace umožňují dynamicky přiřazovat práva podle uživatelů přiřazených k danému repozitáři. Tuto funkci se mi ale nepodařilo zprovoznit; buď byl projekt úplně veřejný, nebo úplně nedostupný.
 
@@ -68,7 +68,7 @@
 
         Jenkins je stavová aplikace persistující na disk. Není možné spustit víc replik a sdílet úložiště například přes \glstext{NFS}, protože Jenkins drží část informací jenom v paměti. Nejlepší dostupnosti lze dosáhnout použitím failoveru (\textit{cold standby}). Je nutné zajistit, aby aktivní proces byl nejprve ukončen a persistoval všechny stavy na disk a až poté je možné zapnout standby instanci \cite{jenkins-ha}. Ve výsledku tedy čekáme na vypnutí a zapnutí celé aplikace a doba výpadku je stejně dlouhá jako bez použití failoveru, ale infrastruktura pak není závislá na dostupnosti jednoho datacentra. Stojí za povšimnutí, že tuto formu failoveru získáme bez práce při použití libovolného orchestrátoru kontejnerů (Docker Swarm, Kubernetes, OpenShift, \ldots).
 
-        Pokud se Jenkins restartuje, běžící joby se ztratí. \todo{tohle otestovat} V administraci a v \glstext{API} je možnost \textit{safe restart}, která pozastaví frontu jobů, nechá už běžící joby doběhnout a poté systém restartuje. \todo{a přijde o joby v queue?}
+        Pokud se Jenkins restartuje, běžící joby se ztratí. V administraci a v \glstext{API} je možnost \textit{safe restart}, která pozastaví frontu jobů, nechá už běžící joby doběhnout a poté systém restartuje.
 
         \todo{popsat backup a restore proces}\blind[1]
 
@@ -85,8 +85,8 @@
             Samotná deklarativní pipeline není složitá. Uvedl jsem docker obraz, ve kterém se má kompilace provést. Dále jsem rozdělil práci na dvě stages: build a deploy. Stejně jako GitLab umí Jenkins opakovat jednu stage bez nutnosti spouštět znovu celou pipeline, což se hodí pro přechodné chyby, pro deploy, rollback a podobně. V samotných stages se pak spouští předpřipravené scripty, které využívám pro všechna testovaná \CICD prostředí.
 
         \subsubsection{Projekt 2}
-            \todo{Popsat deploy projektu 2 z Jenkins}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z Jenkins}\blind[2]
 
 
         \subsubsection{Projekt 3}
-            \todo{Popsat deploy projektu 3 z Jenkins}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z Jenkins}\blind[2]
