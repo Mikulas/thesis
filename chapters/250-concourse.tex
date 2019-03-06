@@ -4,8 +4,8 @@
     \subsection{Architektura Concourse, možnosti konfigurace}
         Concourse využívá -- podobně jako Jenkins a GitLab -- architekturu kontrolerů (které nazývají \textit{web node}) a pracovních uzlů (\textit{worker node}). Na rozdíl od ostatních systémů ale má všechny části bezstavové. Data se persistují do externí PostgreSQL databáze. Díky tomu lze řídící rovinu libovolně škálovat a při provozu ve víc replikách má výbornou dostupnost.
 
+        \todo{[obrazek] \url{https://concourse-ci.org/concepts.html\#component-atc}}
         \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura Concourse \label{pic:concourse-architecture}}
-        \todo{[QUICK] \url{https://concourse-ci.org/concepts.html\#component-atc}}
 
         Nasazení Concourse je skvěle zdokumentované a průvodní texty dokonce popisují očekávané využití procesoru a paměti pro jednotlivé komponenty. Podobně jako u dalších distribuovaných systémů je potřeba před spuštěním jednotlivých komponent vygenerovat celou řadu klíčů. Na podepisování uživatelských session a interní komunikaci, identifikátor pro \glstext{SSH} server a pro každý \textit{worker node} jeden klíč k registraci ke kontroleru. Další nastavení je volitelné \code{concourse-cluster}.
 
@@ -41,8 +41,8 @@
     \subsection{Dostupnost}
         Dostupnost Concourse za běžného provozu je perfektní. Díky oddělenému externímu úložišti a bezstavové kontrolní ploše lze Concourse provozovat ve vysoké dostupnosti a téměř libovolně škálovat. Ideální by bylo místo PostgreSQL používat nějakou distribuovanou \glstext{HA} databázi. V současném návrhu je databáze \glstext{SPoF} a nelze ji jednoduše ničím nahradit.
 
-        \todo{Otestovat restore z backupu}\blind[1]
-        \todo{Otestovat upgrade a říct jak stabilní concourse byl}\blind[1]
+        \todo{[PROGRAMOVANI] Otestovat restore z backupu}\blind[1]
+        \todo{[PROGRAMOVANI] Otestovat upgrade a říct jak stabilní concourse byl}\blind[1]
 
     \subsection{Praktické nasazení projektů}
         Navzdory skvělé dokumentaci pro nasazení Concourse clusteru bylo pro mě vytváření pipeline a jejich správa utrpení. Na rozdíl od ostatních \CI není kanonická verze pipeline v repozitáři, ale v Concourse. To souvisí s tím, že concourse je hodně abstraktní a nesoustředí se jenom na stavbu aplikací. Existují zdroje \cite{concourse-pipeline-res} které umožňují pipeline editovat, ale použití by reálně znamenalo vytvořit jednu pipeline která by byla „napevno“ nastavená v concourse a stahovala aktuální stav repozitáře, upravila by jinou pipeline podle specifikace a následně danou pipeline spustila. Výsledek je zbytečně komplikovaný a pomalý.

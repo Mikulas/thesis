@@ -105,7 +105,7 @@ build:
         Primární bod pro integraci s GitLabem jsou webhooky, které jsou vyvolané v reakci na systémové nebo projektové události \cite{gitlab-webhooks}. Alternativou jsou tzv.~pluginy, což jsou spustitelné soubory na disku aplikačního serveru, které přijímají identický vstup a události jako webhooky ~\cite{gitlab-plugins}. Obě varianty jsou pouhé informace pro externí aplikace a neumožňují nijak rozšiřovat zabudované funkce nebo \glstext{UI} GitLabu.
 
     \subsection{Zálohování}
-        \todo{Zálohování a restore}\blind[1]
+        \todo{[PROGRAMOVANI] Zálohování a restore}\blind[1]
 
     \subsection{Zabezpečení}
         Podle \glstext{CVE} Details měl GitLab nejvíc kritické problémy -- hodnocené podle podle \glstext{CVSS} -- zjištěné v posledním roce (2018) \cite{cve-gitlab}. To může souviset s exponenciálním růstem, který zažili díky \code{\#movingtogitlab} a akvicizi firmou Microsoft \cite{gitlab-growth}. Není zatím jasné, jestli dramatický nárůst počtu uživatelů přilákal bezpečnostní analytiky, nebo jestli bezpečnostní problémy jsou výsledkem zrychleného vývoje a zhoršení kvality produktu.

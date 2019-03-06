@@ -10,7 +10,7 @@
     \subsection{Architektura GitHub Actions, možnosti konfigurace}
         Workflow se konfigurují souborem \code{.github/main.workflow} ve formátu \glstext{HCL}. GitHub také nabízí grafický editor, který konfigurační soubor generuje a ukládá do repozitáře. Samotná konfigurace obsahuje právě jeden blok \code{workflow}, ve kterém se definuje \glstext{API} událost která má workflow spustit. Zatím není možné spustit pipeline v reakci na víc než jednu událost.
 
-        Zbytek workflow je acyklický graf docker kontejnerů (\code{action}) ke spuštění. Vývojář může změnit výchozí entrypoint a argumenty kontejneru, a definuje, na jaké jiné actions musí počkat. Kontejnery si mohou jednorázově předat informace souborem na disku. \todo{[QUICK] paralelni joby sdili nebo jak?}
+        Zbytek workflow je acyklický graf docker kontejnerů (\code{action}) ke spuštění. Vývojář může změnit výchozí entrypoint a argumenty kontejneru, a definuje, na jaké jiné actions musí počkat. Kontejnery si mohou předat informace souborem na disku. Z dokumentace není jasné, jestli mají souběžně běžící kontejnery přístup ke stejnému disku a musí případně řešit zamykání, nebo jestli se data předávají jednorázově a můžou vzniknout kolize \cite{ga-fs}.
 
         Kromě veřejných Docker obrazů dokáže GitHub kompilovat a spouštět i obrazy definované souborem Dockerfile v repozitáři. Navíc skvěle využívá koncept Docker štítků (\textit{labels}) pro definici metadat. Není tak potřeba jeden registr a Actions jsou úplně decentralizované \cite{ga-labels}. To dokonce umožňuje reimplementovat proprietární tenkou Workflow vrstvu, jako například vznikla v \code{nektos/act} \cite{nektos-act}.
 
@@ -21,4 +21,5 @@
         GitHub nedefinuje žádné \glstext{SLA} pro většinu placených plánů. Pro nejdražší korporátní plán nabízí \glstext{SLA} $99,95$ \%.
 
     \subsection{Praktické nasazení projektů}
-        GitHub Actions jsou v neveřejné beta verzi a neměl jsem možnost vytvořit pipeline pro ukázkové projekty. \todo{[QUICK] kdyžtak doplnit github actions pro ukázkové projekty}
+        GitHub Actions jsou v neveřejné beta verzi a neměl jsem možnost vytvořit pipeline pro ukázkové projekty.
+        %\todo{github actions pro ukázkové projekty}

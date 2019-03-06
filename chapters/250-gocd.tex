@@ -34,7 +34,7 @@
 
         Upgrade serveru na novější verzi vyžaduje restart a tím pádem nedostupnost celého prostředí. Navíc se při startu nové verze aplikace automaticky spustí databázové migrace, které na větších instancích podle dokumentace mohou trvat přes 10 minut \cite{gocd-upgrading}. Celkově je tak při rutinní aktualizaci potřeba počítat s výpadkem minimálně 15 minut.
 
-        \todo{Jak se dělá backup/restore? Jak stabilní to je?}\blind[1]
+        \todo{[PROGRAMOVANI] Jak se dělá backup/restore? Jak stabilní to je?}\blind[1]
 
     \subsection{Integrace}
         Lze propojit GoCD s dalšími nástroji; některé funkce -- především ty co mají vliv na \glstext{UI} -- jsou vestavěné. To je například odkazování na externí správu úkolů podle regulárního výrazu. Ostatní integrace jsou dostupná jako rozšíření, která je nutné doinstalovat: mezi ně patří například oznámení stavu na GitHub/Stash/Gerrit a podobně. Pro Bitbucket ani Gitlab podpora neexistuje. Lze ji ale doprogramovat jako nové rozšíření.
