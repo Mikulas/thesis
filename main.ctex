@@ -20,6 +20,8 @@
 
 \bibliography{library}
 
+\renewcommand{\thefootnote}{\ifcase\value{footnote}\or † \or ‡ ($\infty$)\fi}
+
 \usepackage{subcaption}
 \usepackage{afterpage}
 

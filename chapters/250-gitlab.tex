@@ -13,7 +13,7 @@
     \subsection{GitLab mikroslužby}
         GitLab začal oficiálně na konci roku 2018 podporovat také nasazení do Kubernetes přes Helm \cite{gitlab-helm-chart}. Kubernetes je distribuovaný orchestrátor kontejnerů a Helm je balíčkovací aplikace. Každá komponenta GitLabu byla oddělena do samostatného docker obrazu a v Helm balíčku (\textit{Helm chart}) je pomocí Kubernetes zdrojů popsáno jak se dané kontejnery mají spouštět a jak jsou provázané. Teoreticky je možné kontejnery spouštět i ručně v jiném systému než Kubernetes, ale není to oficiálně podporované a neexistuje k tomu dokumentace.
 
-        \todo{diagram}
+        \todo{[obrazek] diagram}
         \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura GitLab \label{pic:gitlab-architecture}}
 
         Hlavní výhody nasazení GitLabu přes mikroslužby jsou:
@@ -31,10 +31,10 @@
 
         Runner při získání práce z \glstext{API} má k dispozici soubor s definicí (obsah souboru \code{.gitlab-ci.yml} \cite{gitlab-runner-yaml}) a přístupové údaje k repozitáři. Architektura GitLab \CI se skládá z tzv. \textit{stages} (etapy) a \textit{jobs} (kusy práce) (obrázek \ref{pic:gitlab-ci-architecture}). Jeden push do repozitáře typicky vygeneruje jednu \textit{pipeline}, což je sada \textit{stages} a \textit{jobs} popsaná konfigurací \CI v daném commitu.
 
-        \todo{diagram}
+        \todo{[obrazek] diagram}
         \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura GitLab \CI \label{pic:gitlab-ci-architecture}}
 
-        \todo{rozepsat moznosti konfigurace: že to umi cache, dependencies z predchozich jobu, ze to jde vsechno pouze seriove a dependencies se nepouzivaji pro paralelizaci}\blind[1]
+        V konfiguračním souboru lze nastavit celou řadu pokročilejších funkcí \cite{gitlab-runner-yaml}. Lze spouštět joby pouze pro určité kontexty podle kombinace proměnných prostředí a informace z verzovacího systému. Dále je možné joby provazovat podle závilostí a tím je serializovat. Toto ale není implementováno dokonale a všechny joby v rámci jedné stage běží najednou a čekají na doběhnutí všech jobů v předchozí stage. Celá pipeline tak může trvat delší dobu než je nutné.
 
         V oficiální implementaci nabízí runner celou řadu možností, jak jednotlivé \textit{jobs} spouštět, tzv. \textit{executors} \cite{gitlab-runner-config}. Základní je \code{shell}, při kterém neexistuje prakticky žádná izolace procesů a čištění prostředí. Jakékoliv závislosti, které je potřeba instalovat do sytému, ovlivňují všechny ostatní procesy na stejném serveru. Procesy běží pod neprivilegovaným uživatelem \code{gitlab-runner}, takže je lepší potřebné závislosti nainstalovat předem administrátorem. Tento executor může bbýt vhodný pro dedikované prostředí pokud zajistíme, že tento server využívá pouze jeden projekt, případně pouze důvěryhodné nekolidující projekty. Velmi podobně funguje executor \code{ssh}, který místo na lokálním stroji spouští příkazy vzdáleně. Na cílovém stroji nejsou potřeba žádné závislosti (samozřejmě s výjimkou ssh serveru); v cloudovém prostředí může být praktické mít čisté virtuální stroje, na které se pak ssh runner připojuje. Dále lze ssh executor využít pro systémy, na kterých runner nemůže běžet lokálně. Velkou nevýhodou tohoto prostředí je nízká opakovatelnost. Jelikož se všechny joby mohou navzájem ovlivňovat a hostující systém se průběžně mění, starší joby které dřív končili úspěšně už nemusí fungovat. Ostatní executory tento problém do značné míry eliminují.
 
@@ -90,7 +90,7 @@ build:
         U jednoho úkolu do kterého jsem se víc zapojil trvalo rok a půl začlenit drobnou změnu. Na tyto změny čekalo několik desítek firem. Šest vývojářů poslalo nezávisle na sobě návrhy na změnu. Změny byly vesměs triviální, bez dopadu na ostatní části kódu, byly otestované a dobře zdokumentované. Po opakovaném urgováním přes oficiální kanál podpory se u úkolu vyjádřil zaměstnanec GitLab. Bohužel se pouze zeptal, kdo má tuto část kódu na starost a tím na dva měsíce úkol opět usnul. Když se po dalším urgování přes podporu úkolu někdo chopil, zadání vesměs nepochopil a snažil se protlačit nepoužitelné řešení. Nechal si naštěstí problém znovu vysvětlit a řešení přehodnotil. Nakonec byl celý problém vyřešen a změny jsou zařazeny do vydání 11.8, tedy skoro 2 roky po otevření úkolu. Celé vlákno je veřejně na GitLab Issue Trackeru \cite{gitlab-issue-slow}. Podobnou zkušenost mám i z několika dalších GitLab projektů, včetně aktivně vyvíjeného GitLab Helm Chart.
 
     \subsection{Rozšiřitelnost}
-        \todo{Má gitlab nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[1]
+        Primární bod pro integraci s GitLabem jsou webhooky, které jsou vyvolané v reakci na systémové nebo projektové události \cite{gitlab-webhooks}. Alternativou jsou tzv.~pluginy, což jsou spustitelné soubory na disku aplikačního serveru, které přijímají identický vstup a události jako webhooky ~\cite{gitlab-plugins}. Obě varianty jsou pouhé informace pro externí aplikace a neumožňují nijak rozšiřovat zabudované funkce nebo \glstext{UI} GitLabu.
 
     \subsection{Zálohování}
         \todo{Zálohování a restore}\blind[1]
@@ -98,7 +98,7 @@ build:
     \subsection{Zabezpečení}
         Podle \glstext{CVE} Details měl GitLab nejvíc kritické problémy -- hodnocené podle podle \glstext{CVSS} -- zjištěné v posledním roce (2018) \cite{cve-gitlab}. To může souviset s exponenciálním růstem, který zažili díky \code{\#movingtogitlab} a akvicizi firmou Microsoft \cite{gitlab-growth}. Není zatím jasné, jestli dramatický nárůst počtu uživatelů přilákal bezpečnostní analytiky, nebo jestli bezpečnostní problémy jsou výsledkem zrychleného vývoje a zhoršení kvality produktu.
 
-        \todo{Jak dlouho trvá gitlabu opravit cve a zverejnit fix?}
+        %\todo{Jak dlouho trvá gitlabu opravit cve a zverejnit security fix?}
 
         Správa problémů (\textit{issues}) u projektů na GitLabu má možnost vytvořit nový záznam v důvěrném režimu. Takové problémy jsou pak viditelné pouze pro správce repozitáře. To je vhodné pro \textit{responsible disclosure} (zodpovědné zveřejnění) bezpečnostních chyb. GitLab toto úspěšně používá i pro vlastní projekty.
 
