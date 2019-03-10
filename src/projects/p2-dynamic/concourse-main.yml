@@ -1,0 +1,114 @@
+resource_types:
+- name: rsync-resource
+  type: docker-image
+  source:
+    repository: mrsixw/concourse-rsync-resource
+    tag: latest
+
+resources:
+- name: repo
+  type: git
+  source:
+    uri: git@10.0.0.10:root/project-2.git
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAxhITMspSXxnpXoNRcVu2bvjPl3eNPnaXzMjsq6O6RNBncBIf
+      4k2r4byGQhAXqSgxKOhrOHRuC5VA7lbJQ+SCQv8+TGAiC0FvIMWIYklBI4HAz9OZ
+      n2rUoYJbl8FFdYg2oNJ5MlE/Tqt563NuRv77bQaRqBl933LmYww8VGK8jVAe2E7l
+      ixd4OzQ+zH/KlY42zH6Xk1TCzcXl1gUqG71AcTisUFxMuz+sHPhpew3nudrcRgK+
+      gb7Bba4BKVRGDl2nDh6ooZcKE4L5P4J8kvA0zjn/UH87syI+VdU8x2BOIytH4uLz
+      vDlSkHRaIxVp/HOvPa1y2DtNGsH+tR4wcVlMawIDAQABAoIBADLNJgFr5Q6hTbrB
+      AZ2KgVMbG9tkfWSc9DhA/HrVZowJy83xyB26ADDIssK07+yh82HjosR7EFKGOH4o
+      4jw4mrRmVOsv6OtsH/2OzHkxArUBrZtgUVGTC/BUx/s3RgJsKl67PPyL3CnoTz/1
+      fj5VXdVLzwYHa8Jo7PBQjhSyslun0oE743x20qutGb+ifbCB9M/kcLLFCnzFVbIA
+      /MuvxGiDWmIH6/Mmpfwe9xSavWozNjur0dUPZ2ntqk8l0vK3itT6Uz8XnC4FdZcR
+      kbKdiDZZcPgeo+ZbZdUxyitkXby/SUM4Fpd7FyeORFBrIKH/UN8QwIIOgpi0ewQO
+      suGl1+kCgYEA6BcI4CxEXV5cYxCotphZwWu8jgUfiX43gTNBO3NZ9+5DiF6+pJDg
+      d5U4YfgOGEeUQfPDaG9fwbRoAn6Vw2R6jMBNO88uu4GSlBPyp4r+1EIjfOtH7Yap
+      pxq4c0xHaFHS/eA9bRuoRDW7nsce6LV6epgfVOyrFd512qWskDue5ecCgYEA2nnW
+      0PV1j4Qxdv3jhBi+/DIW72rweNZzUomYWOQ7n4AslDaKufP2Ib1zniCKW1WSs0Ek
+      tOUqQBxfl7sNrJVZhbpf6bdce/3Jp/nRhb29N5xniwHJJZ3OxikZ5y0sOPiy3IO+
+      02Ce93BPrYE5TX5ZrI+4nWmyiLpHPbbuiu2qDN0CgYBoLubqEpUBwLkCM1k41jz8
+      SYuTyRL2GnV6BvMSZ96MICWqkrVLlElfBNoRiFNzbLZNwMoIGG7Iul4yOHasBm/I
+      vQ4uefuFak3NMQMtWIS57ZKWodtg8aE4hRMllqk7V/e5xS5tywuGywQU61ehqM15
+      OM5fxfmq0HjhFJvZBxp2IwKBgHpqBFyG/H0Ss+iZb47HktOaeVFjGSSL/IgFwtAj
+      6eiAF/pf6TEyKfpTveGfGAb/FrjLynZ1ZUwQ2dsZmxrVgBi3CiDZdb+fvwsYpjaK
+      zufHAhlYQc2K854Cz5nBrOKrLwTx6M1leQzp6Csumd366uIOkYHaBIgp39sLkfNU
+      IZEdAoGBAKB+uFZPICBneSvDHrLKJ44rBRs1JpTnNHhqgPQ1T97YaWOmVY08TmEZ
+      AA65hfmS2X5hAhArrXsiz4cBRQwYKpYJtLw56bSUaz1gLPkBmiKzDV00UnKKrkXM
+      5xX2b9f+59WC878k9PR7wTNeffblIURtOUu1+CaMcnrSjXPaSHp8
+      -----END RSA PRIVATE KEY-----
+    branch: master
+
+- name: webhost
+  type: rsync-resource
+  source:
+    server: 10.0.0.50
+    base_dir: /srv/p2
+    user: www-data
+    disable_version_path: true
+    private_key: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      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
+      -----END OPENSSH PRIVATE KEY-----
+
+
+
+
+jobs:
+- name: build
+  public: true
+  plan:
+  - get: repo
+    trigger: true
+  - task: hello-world
+    file: repo/concourse-task-build.yml
+  - put: webhost
+    params:
+      sync_dir: .

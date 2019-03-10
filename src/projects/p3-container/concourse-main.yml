@@ -1,0 +1,58 @@
+resource_types:
+- name: rsync-resource
+  type: docker-image
+  source:
+    repository: mrsixw/concourse-rsync-resource
+    tag: latest
+
+resources:
+- name: repo
+  type: git
+  source:
+    uri: git@10.0.0.10:root/project-3.git
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAxhITMspSXxnpXoNRcVu2bvjPl3eNPnaXzMjsq6O6RNBncBIf
+      4k2r4byGQhAXqSgxKOhrOHRuC5VA7lbJQ+SCQv8+TGAiC0FvIMWIYklBI4HAz9OZ
+      n2rUoYJbl8FFdYg2oNJ5MlE/Tqt563NuRv77bQaRqBl933LmYww8VGK8jVAe2E7l
+      ixd4OzQ+zH/KlY42zH6Xk1TCzcXl1gUqG71AcTisUFxMuz+sHPhpew3nudrcRgK+
+      gb7Bba4BKVRGDl2nDh6ooZcKE4L5P4J8kvA0zjn/UH87syI+VdU8x2BOIytH4uLz
+      vDlSkHRaIxVp/HOvPa1y2DtNGsH+tR4wcVlMawIDAQABAoIBADLNJgFr5Q6hTbrB
+      AZ2KgVMbG9tkfWSc9DhA/HrVZowJy83xyB26ADDIssK07+yh82HjosR7EFKGOH4o
+      4jw4mrRmVOsv6OtsH/2OzHkxArUBrZtgUVGTC/BUx/s3RgJsKl67PPyL3CnoTz/1
+      fj5VXdVLzwYHa8Jo7PBQjhSyslun0oE743x20qutGb+ifbCB9M/kcLLFCnzFVbIA
+      /MuvxGiDWmIH6/Mmpfwe9xSavWozNjur0dUPZ2ntqk8l0vK3itT6Uz8XnC4FdZcR
+      kbKdiDZZcPgeo+ZbZdUxyitkXby/SUM4Fpd7FyeORFBrIKH/UN8QwIIOgpi0ewQO
+      suGl1+kCgYEA6BcI4CxEXV5cYxCotphZwWu8jgUfiX43gTNBO3NZ9+5DiF6+pJDg
+      d5U4YfgOGEeUQfPDaG9fwbRoAn6Vw2R6jMBNO88uu4GSlBPyp4r+1EIjfOtH7Yap
+      pxq4c0xHaFHS/eA9bRuoRDW7nsce6LV6epgfVOyrFd512qWskDue5ecCgYEA2nnW
+      0PV1j4Qxdv3jhBi+/DIW72rweNZzUomYWOQ7n4AslDaKufP2Ib1zniCKW1WSs0Ek
+      tOUqQBxfl7sNrJVZhbpf6bdce/3Jp/nRhb29N5xniwHJJZ3OxikZ5y0sOPiy3IO+
+      02Ce93BPrYE5TX5ZrI+4nWmyiLpHPbbuiu2qDN0CgYBoLubqEpUBwLkCM1k41jz8
+      SYuTyRL2GnV6BvMSZ96MICWqkrVLlElfBNoRiFNzbLZNwMoIGG7Iul4yOHasBm/I
+      vQ4uefuFak3NMQMtWIS57ZKWodtg8aE4hRMllqk7V/e5xS5tywuGywQU61ehqM15
+      OM5fxfmq0HjhFJvZBxp2IwKBgHpqBFyG/H0Ss+iZb47HktOaeVFjGSSL/IgFwtAj
+      6eiAF/pf6TEyKfpTveGfGAb/FrjLynZ1ZUwQ2dsZmxrVgBi3CiDZdb+fvwsYpjaK
+      zufHAhlYQc2K854Cz5nBrOKrLwTx6M1leQzp6Csumd366uIOkYHaBIgp39sLkfNU
+      IZEdAoGBAKB+uFZPICBneSvDHrLKJ44rBRs1JpTnNHhqgPQ1T97YaWOmVY08TmEZ
+      AA65hfmS2X5hAhArrXsiz4cBRQwYKpYJtLw56bSUaz1gLPkBmiKzDV00UnKKrkXM
+      5xX2b9f+59WC878k9PR7wTNeffblIURtOUu1+CaMcnrSjXPaSHp8
+      -----END RSA PRIVATE KEY-----
+    branch: master
+
+- name: p3-image
+  type: docker-image
+  source:
+    username: root
+    password: CVUT_FIT
+    repository: 10.0.0.10:4567/root/project-3
+
+jobs:
+- name: build
+  public: true
+  plan:
+  - get: repo
+    trigger: true
+  - put: p3-image
+    params:
+      build: repo

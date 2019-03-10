@@ -47,8 +47,9 @@
     \subsection{Dostupnost}
         Dostupnost Concourse za běžného provozu je perfektní. Díky oddělenému externímu úložišti a bezstavové kontrolní ploše lze Concourse provozovat ve vysoké dostupnosti a téměř libovolně škálovat. Ideální by bylo místo PostgreSQL používat nějakou distribuovanou \glstext{HA} databázi. V současném návrhu je databáze \glstext{SPoF} a nelze ji jednoduše ničím nahradit.
 
-        \todo{[PROGRAMOVANI] Otestovat restore z backupu}\blind[1]
-        \todo{[PROGRAMOVANI] Otestovat upgrade a říct jak stabilní concourse byl}\blind[1]
+        Díky tomu, že Concourse má veškerý stav v Postgre, stačí zálohovat databázi. To lze dělat atomicky a často \cite{pg-backup}.
+
+        Concourse lze upgradovat na novější verze bez výpadku pomocí rolling update kontrolní roviny.
 
     \subsection{Praktické nasazení projektů}
         Navzdory skvělé dokumentaci pro nasazení Concourse clusteru bylo pro mě vytváření pipeline a jejich správa utrpení. Na rozdíl od ostatních \CI není kanonická verze pipeline v repozitáři, ale v Concourse. To souvisí s tím, že concourse je hodně abstraktní a nesoustředí se jenom na stavbu aplikací. Existují zdroje \cite{concourse-pipeline-res} které umožňují pipeline editovat, ale použití by reálně znamenalo vytvořit jednu pipeline která by byla „napevno“ nastavená v concourse a stahovala aktuální stav repozitáře, upravila by jinou pipeline podle specifikace a následně danou pipeline spustila. Výsledek je zbytečně komplikovaný a pomalý.
@@ -67,7 +68,7 @@
             V ukázkových definicích jsem vědomě zapsal soukromé klíče přímo v plaintextu. Concourse podporuje různé systémy pro předávání tajemství a popisuji je \pfxref{v sekci}{subsec:concourse-security}. Nasazení těchto produktů a jejich použití bylo ale mimo rozsah této práce.
 
         \subsubsection{Projekt 2}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z Concourse}\blind[2]
+            Ukázkový projekt 2 jsem bez obtíží a rychle nasadil. Pro testy vyžadující databázi bych využil integraci s Docker Compose~\cite{concourse-compose}, díky které lze v jednom jobu spustit několik navzájem síťově provázaných kontejnerů.
 
         \subsubsection{Projekt 3}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z Concourse}\blind[2]
+            Pro kontejnery má Concourse speciální typ zdroje, který pro uživatele kompletně abstrahuje interní implementaci \glstext{DinD}. Na rozdíl od předchozích dvou ukázek, které v pipeline načítaly soubor z repozitáře definující kroky pro kompilaci, pro kontejnery toto není potřeba. Všechny verze a kroky kopilace jsou uvedeny v \code{Dockerfile}. Na rozdíl od ostatních \CI (GitLab, Jenkins) je v Concourse kompilace Docker kontejnerů dokonce jednodušší, než ostatní typy operací.

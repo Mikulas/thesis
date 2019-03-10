@@ -1,0 +1,12 @@
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: composer
+    tag: 1.8
+inputs:
+  - name: repo
+outputs:
+  - name: vendor
+run:
+  path: composer install
