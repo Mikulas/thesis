@@ -90,6 +90,7 @@
 
         Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v obrazu (\textit{Docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}). Mezi další výhody patří zabudované automatické cachovaní kompilace vrstev Docker obrazu a snadná distribuce obrazů.
 
+        \label{sec:dind}
         Jeden z problémů, který při stavění kontejnerů budu muset řešit, je zanořování Dockeru. První vrstva je prostředí, ve kterém se spouští jednotlivé \CI joby. Kontejnerizace na této úrovni přináší lepší kontrolu závislostí a izolaci, ale není nutná. To je vesměs nezávislé na tom, jaké aplikace se budou na \CI stavět. Druhá vrstva, ve které se Docker může využívat, je stavění Docker obrazů v rámci konkrétního \CI jobu. Přístup k Dockeru na této úrovni nelze ničím nahradit. Jedna možnost zanořování se označuje \textit{Docker in Docker} (\glstext{DinD}, \pfxref{diagram}{fig:dind-ci}), při které všechny kontejnery stále sdílí jedno linuxové jádro, ale vnitřní kontejner je řízen Docker démonem spuštěným uvnitř vnějšího kontejneru.
 
         \begin{iffigure}

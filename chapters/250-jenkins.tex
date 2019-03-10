@@ -89,4 +89,4 @@
             Při použití vlastních Docker obrazů pro build je vhodné, aby se vystavovaly v \CI. V případě sdílení daného obrazu mezi více projekty může být úplně vyčleněn do samostatné pipeline.
 
         \subsubsection{Projekt 3}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z Jenkins}\blind[2]
+            Při nasazování kontejnerizovaného projektu jsem využil \glstext{DinD} (\pfxref{vizte sekci}{sec:dind}). Narazil jsem na bezpečnostní opatření, kvůli kterému se kontejnery spouští se stejným \glstext{UID} jako samotný Jenkins. To je na jednu stranu dobré, protože root může z kontejneru uniknout snadněji než neprivilegovaný uživatel, na druhou stranu to část kontejnerů rozbíjí, protože ve svém \code{/etc/passwd} nemají záznam pro dynamicky přidělené \glstext{UID}. Uživatelům ale nic nebrání v Jenkinsfile definovat pro Agenta \code{args '-u root:sudo'}, čímž tuto ochranu obejdou.

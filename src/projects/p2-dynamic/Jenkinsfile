@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Deploy') {
             agent {
-                docker 'ditemikuthesisdemo/p2-deploy:1.0'
+                docker 'ditemikuthesisdemo/deploy:1.0'
             }
             steps {
                 sh 'make deploy'
