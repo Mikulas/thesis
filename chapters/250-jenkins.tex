@@ -3,9 +3,9 @@
     Jenkins byl dřív známý jako Hudson a přejmenoval se po neshodě s Oracle \cite{jenkins-hudson}. Oba projekty pak nějakou dobu byly udržovány souběžně. Oracle svůj systém Hudson oficiálně nikdy nepřestal vyvíjet, ale poslední vydání je ze začátku roku 2016. V následujícím textu se budu věnovat pouze Jenkins, který je dodnes aktivně udržován a má velkou komunitu.
 
     Hlavní výsadou Jenkins oproti ostatním \CICD systémům je rozšiřitelnost pomocí pluginů.
-    \todo{popsat ze jenkins je jenom o pluginech}\blind[1]
+    %\todo{popsat ze jenkins je jenom o pluginech}\blind[1]
 
-    Architektura Jenkins je master+agents \cite{jenkins-architecture}. Stavová master instance poskytuje \glstext{API} a webové \glstext{GUI} a koordinuje práci jednotlivých bezstavových agentů (workerů).
+    Architektura Jenkins je master+agents \cite{jenkins-architecture}. Stavová master instance poskytuje \glstext{API} a webové \glstext{GUI} a koordinuje práci jednotlivých bezstavových agentů (workerů). Je zajímavé, že Jenkins nevyužívá tradiční relační databázi, ale persistuje data přímo na disk v formátu \glstext{XML}.
 
     \subsection{Instalace a konfigurace}
         Instalace Jenkins z oficiálního balíčku je přímočařá. Nejprve jsem zaregistroval Jenkins \glstext{APT} repozitář \code{pkg.jenkins.io} a aplikaci nainstaloval. Jenkins ale odmítal nastartovat, protože mu chyběl Java runtime. Očekával bych, že aplikační balíček bude mít nezbytné závislosti minimálně v \textit{suggested packages}. Jenkins v aktuální verzi podporuje pouze Java 8 \cite{jenkins-java}. To je \glstext{TLS} verze z března 2014, která má komerční podporu pouze do ledna 2019 \cite{oracle-eol}.
@@ -70,12 +70,12 @@
 
         Pokud se Jenkins restartuje, běžící joby se ztratí. V administraci a v \glstext{API} je možnost \textit{safe restart}, která pozastaví frontu jobů, nechá už běžící joby doběhnout a poté systém restartuje.
 
-        \todo{[PROGRAMOVANI] popsat backup a restore proces}\blind[1]
+        Jelikož Jenkins nevyužívá databázi a všechna data persistuje na disk, je dostačují pravidelně vytvářet snapshot souborového systému (typicky dat v \code{/var/lib/jenkins}).
 
     \subsection{Integrace}
-        \todo{Integrace Jenkins, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z Jenkins do cílového systému; k8s, sftp, openstack, \ldots}\blind[2]
-        \todo{Integrace s Kubernetes, docker v dockeru}\blind[1]
+        Jenkins lze používat s libovolným externím repozitářem (GitHub/GitLab/Bitbucket/\ldots) a pomocí vhodného rozšíření lze na danou službu i posílat oznámení o stavu. Jako jediný z porovnávaných systémů dokonce podporuje i jiné verzovací systémy (Mercurial, SVN, \ldots) a dokonce je možné vytvořit pipeline která není na žádný repozitář vázaná.
+
+        Nasazení na cílové servery je mimo kompetenci Jenkins. Existují rozšíření, která přidávají Groovy funkce použitelné v Jenkins Pipeline, ale v porovnání s GitLab Jenkins nijak \CD nepodporuje (v tom smyslu, že pokrývá pouze \CI).
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}

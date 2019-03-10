@@ -157,8 +157,7 @@ build:
 
         Integrace s externími službami má GitLab suverénně nejlepší ze všech testovaných systémů. V základu je zabudovaných přes 30 služeb, od chatovacích služeb po správy úkolů a některé ovlivňují i \glstext{UI}. Například \textit{External Wiki} přidává do panelu odkazů novou položku.
 
-        GitLab má zabudovanou podporu pro nasazování do Kubernetes a Knative.
-        \todo{rozepsat gitlab kubernetes a knative}\blind[2]
+        GitLab má zabudovanou podporu pro nasazování do Kubernetes. Authentikace je možná pouze přes token a nelze využít například certifikáty nebo externí authentikační službu. Po počáteční instalaci komunikuje GitLab s Kubernetes přes balíčkovací systém Helm. Deploy do Kubernetes může fungovat bez další konfigurace díky Auto DevOps~\cite{gitlab-auto-devops}. Dokonce v základu fungují i Review Apps~\cite{gitlab-review-apps}.
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}

@@ -4,8 +4,14 @@
     \subsection{Architektura Concourse, možnosti konfigurace}
         Concourse využívá -- podobně jako Jenkins a GitLab -- architekturu kontrolerů (které nazývají \textit{web node}) a pracovních uzlů (\textit{worker node}). Na rozdíl od ostatních systémů ale má všechny části bezstavové. Data se persistují do externí PostgreSQL databáze. Díky tomu lze řídící rovinu libovolně škálovat a při provozu ve víc replikách má výbornou dostupnost.
 
-        \todo{[obrazek] \url{https://concourse-ci.org/concepts.html\#component-atc}}
-        \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura Concourse \label{pic:concourse-architecture}}
+        \begin{iffigure}
+            \centering
+            \makebox[\textwidth][c]{
+                \includegraphics[width=1.0\textwidth]{media/concourse-arch.pdf}
+            }
+            \caption{Architektura Concourse je jednoduchá, přehledná a zároveň nabízí vysokou dostupnost. Červeně zvýrazněná PostgreSQL databáze je \glstext{SPoF}, ale díky dekompozici lze pomocí rolling update aktualizovat kontrolní rovinu bez výpadku.}
+            \label{pic:concourse-architecture}
+        \end{iffigure}
 
         Nasazení Concourse je skvěle zdokumentované a průvodní texty dokonce popisují očekávané využití procesoru a paměti pro jednotlivé komponenty. Podobně jako u dalších distribuovaných systémů je potřeba před spuštěním jednotlivých komponent vygenerovat celou řadu klíčů. Na podepisování uživatelských session a interní komunikaci, identifikátor pro \glstext{SSH} server a pro každý \textit{worker node} jeden klíč k registraci ke kontroleru. Další nastavení je volitelné \code{concourse-cluster}.
 
