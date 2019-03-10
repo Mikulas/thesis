@@ -105,7 +105,9 @@ build:
         Primární bod pro integraci s GitLabem jsou webhooky, které jsou vyvolané v reakci na systémové nebo projektové události \cite{gitlab-webhooks}. Alternativou jsou tzv.~pluginy, což jsou spustitelné soubory na disku aplikačního serveru, které přijímají identický vstup a události jako webhooky ~\cite{gitlab-plugins}. Obě varianty jsou pouhé informace pro externí aplikace a neumožňují nijak rozšiřovat zabudované funkce nebo \glstext{UI} GitLabu.
 
     \subsection{Zálohování}
-        \todo{[PROGRAMOVANI] Zálohování a restore}\blind[1]
+        GitLab nabízí nástroj, který zálohuje všechny komponenty: databázi, objektová úložiště (přílohy, výsledky \CICD, Docker Registry, Git \glstext{LFS}) a Git repozitáře. V Omnibus balíčku bez externích komponent je tedy zálohování snadné. Při rozdělení na mikroslužby se zodpovědnost za zálohování částečně přesouvá: u databáze a objektového úložiště (např.~\textit{AWS S3}) typicky na poskytovatele cloud řešení.
+
+        Záloha kterou GitLab vytváří není atomická. Databáze se sice zálohuje v jedné transakci, ale ostatní komponenty žádné snapshoty obecně nepodporují. To lze simulovat vypnutím aplikace a vytvořením záloh. Nicméně, díky tomu že GitLab nejprve zálohuje databázi a potom ostatní data, nejpravděpodobněji se stane to, že ve výsledném balíčku budou nahrána i data na která nic neodkazuje. Nemůže se např.~stát, že by komentář obsahoval neexistující obrázek.
 
     \subsection{Zabezpečení}
         Podle \glstext{CVE} Details měl GitLab nejvíc kritické problémy -- hodnocené podle podle \glstext{CVSS} -- zjištěné v posledním roce (2018) \cite{cve-gitlab}. To může souviset s exponenciálním růstem, který zažili díky \code{\#movingtogitlab} a akvicizi firmou Microsoft \cite{gitlab-growth}. Není zatím jasné, jestli dramatický nárůst počtu uživatelů přilákal bezpečnostní analytiky, nebo jestli bezpečnostní problémy jsou výsledkem zrychleného vývoje a zhoršení kvality produktu.
@@ -122,8 +124,6 @@ build:
             \caption{Cyklus kontroly kvality aplikace GitLab s integrovaným \glstext{DAST} \cite{gitlab-app-security}. Vývojář může vyhodnotit bezpečnostní problémy před začleněním změň do sdíleného kódu.}
             \label{fig:gitlab-review-cycle}
         \end{iffigure}
-
-        \todo{Jaké jsou historická CVE? Jaká je izolace klientů? Co aplikace potřebuje za přístupy?}\blind[1]
 
     \subsection{Dostupnost}
         S GitLabem mám praktické zkušenosti a provozuji ho pro přibližně 50 lidí. Zhruba 5 měsíců jsem používal balíček \textit{Omnibus} a s GitLab mikroslužbami pracuji podobně dlouho. Vyzkoušel jsem si i migraci z Omnibus na mikroslužby.
@@ -153,8 +153,12 @@ build:
             V oficiální distribuci má GitLab \glstext{SPoF} v Gitaly a při aktualizaci této komponenty je nedostupný. Při použití mikroslužeb s Gitaly nad \glstext{NFS} je GitLab bez výpadku dostupný pro použití i pro správu a dostupnost lze zvyšovat přidáním dalších replik.
 
     \subsection{Integrace}
-        \todo{Integrace gitlabu, oznámení na GitHub/GitLab/Bitbucket/\ldots}\blind[2]
-        \todo{Možnosti deploy z gitlabu do cílového systému; k8s, sftp, openstack, \ldots}\blind[5]
+        GitLab~\CI vyžaduje repozitáře na GitLab. Kromě celé řady variant importu z různých externích úložišť (včetně GitHub, Bitbucket a desítky dalších) lze také vytvořit mirror libovolného repozitáře. Lze tak de facto použít GitLab~\CI s jakýmkoliv repozitářem.
+
+        Integrace s externími službami má GitLab suverénně nejlepší ze všech testovaných systémů. V základu je zabudovaných přes 30 služeb, od chatovacích služeb po správy úkolů a některé ovlivňují i \glstext{UI}. Například \textit{External Wiki} přidává do panelu odkazů novou položku.
+
+        GitLab má zabudovanou podporu pro nasazování do Kubernetes a Knative.
+        \todo{rozepsat gitlab kubernetes a knative}\blind[2]
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
@@ -173,7 +177,7 @@ build:
             Review apps jsem navrhnul teoreticky, protože bez kontejnerů je implementace zbytečně složitá. U relační databáze (ve smyslu \glstext{RDBMS}) je potřeba vytvořit novou databázi, nakonfigurovat oprávnění pro nového uživatele aby nemohl ovlivnit ostatní (a hlavně produkční) databáze, nakonfigurovat aplikaci aby používala jiné databázové údaje a spustit migrace. Dále je potřeba po ukončení review app nějakým způsobem tuto databázi smazat. Velmi podobný postup je potřeba opakovat pro key-value storage, na které je aplikace také závislá.
 
         \subsubsection{Projekt 3}
-            Opět jsme použil úplně stejnou pipeline jako pro předchozí dva projekty. Pro sdílení vystavěného docker obrazu jsem použil GitLab Container Registry, což je vestavěná služba. Registr je automaticky založený při vytvoření GitLab projektu. V build scriptu jsem provedl authentikaci \code{docker login}. Heslo jsem hardcodoval rovnou do scriptu. Alternativně může být nastaveno ve webovém rozhraní GitLabu a předáno do jobu jako proměnná prostředí (\code{env}). To má smysl hlavně pro veřejné projekty, kde nechceme heslo zveřejňovat; pak je ale nutné ohlídat, aby \CI job nemohl kdokoliv škodlivě upravit, spustit, a nechat si vypsat heslo do logu.
+            Opět jsem použil úplně stejnou pipeline jako pro předchozí dva projekty. Pro sdílení vystavěného docker obrazu jsem použil GitLab Container Registry, což je vestavěná služba. Registr je automaticky založený při vytvoření GitLab projektu. V build scriptu jsem provedl authentikaci \code{docker login}. Heslo jsem hardcodoval rovnou do scriptu. Alternativně může být nastaveno ve webovém rozhraní GitLabu a předáno do jobu jako proměnná prostředí (\code{env}). To má smysl hlavně pro veřejné projekty, kde nechceme heslo zveřejňovat; pak je ale nutné ohlídat, aby \CI job nemohl kdokoliv škodlivě upravit, spustit, a nechat si vypsat heslo do logu.
 
             Pro build aplikace se používá hostitelský docker démon. Celou řadu výhod a nevýhod a alternativní řešení jsem rozepsal \pfxref{v sekci o Dockeru}{sec:gitlab-ci-docker}.
 
