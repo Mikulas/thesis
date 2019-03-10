@@ -16,7 +16,7 @@
         \semaphore kombinuje architekturu dvou předchozích řešení: jednotlivé joby běží ve virtuálních strojích, ale jsou provázané přes koncept bloků a data si předávají přes cache. Oproti \circleci chybí možnost zrychlit přípravu prostředí a předinstalaci závislostí Docker obrazem a přitom je na \semaphore definice pipeline výrazně složitější, než na \travis.
 
     \subsection{Rozšiřitelnost}
-        \todo{Má CircleCI, Semaphore, TravisCI nějaké pluginy, dá se pro to scriptovat, jak je to bezpečné a jednoduché?}\blind[2]
+        \todo{Má SaaS nějaké pluginy, dá se pro to scriptovat?}\blind[1]
 
     \subsection{Zabezpečení}
         Ani jeden z těchto \glstext{SaaS} \CI systémů nenabízí bug bounty. Pro \travis jsem našel jednu zprávu o bezpečnostní chybě z roku 2018 \cite{travis-db-drop}. Pro \circleci ani \semaphore jsem žádné zveřejněné incidenty nenašel.
@@ -44,7 +44,7 @@
             Na rozdíl od ostatních nasazení jsem při testování \glstext{SaaS} neimplementovat celou \CI pipeline včetně nahrání na cílový server. Všechny systémy jsem zprovoznil v lokálním virtuálním prostředí na které není vhodné dělat vzdálený přístup. Místo \code{make deploy} je tak v definicích pouze job s hláškou, kde by se deploy spouštěl.
 
         \subsubsection{Projekt 2}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z CircleCI, Semaphore, TravisCI}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z SaaS}\blind[2]
 
         \subsubsection{Projekt 3}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z CircleCI, Semaphore, TravisCI}\blind[2]
+            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z SaaS}\blind[2]
