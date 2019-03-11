@@ -35,8 +35,13 @@
 
 \setcounter{tocdepth}{1}
 
+\usepackage{geometry}
+
 % https://tex.stackexchange.com/questions/17489/change-caption-name-of-figures
 \usepackage[figurename=Fig.]{caption}
+
+% https://www.dickimaw-books.com/gallery/glossaries-styles/#mcol
+\usepackage{glossary-mcols}
 
 % from https://www.herout.net/blog/2017/03/pomalu-uz-pojdme-psat/
 \usepackage{xcolor}
@@ -131,7 +136,12 @@
 \input{chapters/700-jenkins-plugins.tex}
 
 \chapter{Použité zkratky}
-\printglossary[type=\acronymtype,style=acronyms]
+\singlespacing
+\newgeometry{left=2cm,right=2cm,bottom=3cm}
+    \begin{small}
+        \printglossary[type=\acronymtype,style=mcolindex]
+    \end{small}
+\restoregeometry
 
 \input{medium.tex}
 

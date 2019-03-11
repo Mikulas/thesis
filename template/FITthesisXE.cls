@@ -83,7 +83,7 @@
 \RequirePackage [protrusion=true] {microtype}
 
 % support for acronyms
-\RequirePackage [nopostdot,acronym,nonumberlist,sort=def] {glossaries}
+\RequirePackage [nopostdot,acronym,nonumberlist,sort=standard] {glossaries}
 
 % define new glossary style for list of acronyms
 \newglossarystyle {acronyms} {%
