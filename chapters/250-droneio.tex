@@ -45,7 +45,7 @@
             Přes všechny počáteční nesnáze je konfigurace Drone pipeline relativně snadná a přímočará. Především tomu pomáhá koncept \textit{Volumes}, což definuje složku souborů sdílející se mezi všemi joby. Ostatní \CI toto řeší mnohem složitěji, například přes read-only \textit{artifacts}.
 
         \subsubsection{Projekt 2}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z Drone}\blind[2]
+            Implementoval jsem opět dvoukrokovou pipeline: kompilaci a deploy. Narazil jsem na drobný problém při přejmenování použitého volume kterým se předávají data mezi jednotlivými kroky. Drone nijak nevaruje, když název mountu v kroku neodpovídá žádnému klíči name v poli volumes a pouze ho tiše vytvoří. Bylo by vhodné uživatele o chybě informovat, protože v lepším případě je definice pipeline nekonzistentní a v horším případě úplně nefunkční, což nastane když když dva kroky místo sdílení dat využívají chybně jiné disky.
 
         \subsubsection{Projekt 3}
             \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z Drone}\blind[2]
