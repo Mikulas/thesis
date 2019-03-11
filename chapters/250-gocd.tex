@@ -34,7 +34,7 @@
 
         Upgrade serveru na novější verzi vyžaduje restart a tím pádem nedostupnost celého prostředí. Navíc se při startu nové verze aplikace automaticky spustí databázové migrace, které na větších instancích podle dokumentace mohou trvat přes 10 minut \cite{gocd-upgrading}. Celkově je tak při rutinní aktualizaci potřeba počítat s výpadkem minimálně 15 minut.
 
-        \todo{[PROGRAMOVANI] Jak se dělá backup/restore? Jak stabilní to je?}\blind[1]
+        GoCD má jednoduchý proces pro vytvoření zálohy, který lze spustit buď z \glstext{UI} nebo z \glstext{API}~\cite{gocd-backup}. Záloha obsahuje dump databáze, vyklikané \glstext{XML} konfigurace aplikace a konfigurace repozitářů, nastavení webového serveru a klíče. Nejsou zálohovány historie a výstupy spuštěných úloh, ani nainstalovaná rozšíření! Proces vytváří archiv na disku aktuálního serveru, který je poté dobré zmigrovat na nějaké externí úložiště.
 
     \subsection{Integrace}
         Lze propojit GoCD s dalšími nástroji; některé funkce -- především ty co mají vliv na \glstext{UI} -- jsou vestavěné. To je například odkazování na externí správu úkolů podle regulárního výrazu. Ostatní integrace jsou dostupná jako rozšíření, která je nutné doinstalovat: mezi ně patří například oznámení stavu na GitHub/Stash/Gerrit a podobně. Pro Bitbucket ani Gitlab podpora neexistuje. Lze ji ale doprogramovat jako nové rozšíření.
