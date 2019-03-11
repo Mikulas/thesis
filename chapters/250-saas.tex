@@ -10,8 +10,14 @@
 
         \circleci naopak v roce 2018 zmigroval všechny uživatele z virtuální strojů (\circleci 1.0) na čistě kontejnerové prostředí (\circleci 2.0) \cite{circle-migration}. V specifikaci pipeline uživatel uvádí všechny kontejnery které chce spustit a jejich prolinkování/pořadí. Umí také spustit některé služby paralelně a na pozadí, což se používá například pro databáze a podobné závislosti.
 
-        \todo{[obrazek] circleci workflows atd}
-        \missingfigure[figwidth=\columnwidth,figheight=7cm]{Architektura \label{pic:circle-architecture}}
+         \begin{iffigure}
+            \centering
+            \makebox[\textwidth][c]{
+                \includegraphics[width=1.0\textwidth]{media/circleci-arch.pdf}
+            }
+            \caption{Architektura \circleci. Každý projekt může mít několik \textit{workflows}, uvnitř které je libovolný souvislý acyklický graf \textit{jobs}.}
+            \label{pic:circle-architecture}
+        \end{iffigure}
 
         \semaphore kombinuje architekturu dvou předchozích řešení: jednotlivé joby běží ve virtuálních strojích, ale jsou provázané přes koncept bloků a data si předávají přes cache. Oproti \circleci chybí možnost zrychlit přípravu prostředí a předinstalaci závislostí Docker obrazem a přitom je na \semaphore definice pipeline výrazně složitější, než na \travis.
 
