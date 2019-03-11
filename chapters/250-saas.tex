@@ -15,9 +15,6 @@
 
         \semaphore kombinuje architekturu dvou předchozích řešení: jednotlivé joby běží ve virtuálních strojích, ale jsou provázané přes koncept bloků a data si předávají přes cache. Oproti \circleci chybí možnost zrychlit přípravu prostředí a předinstalaci závislostí Docker obrazem a přitom je na \semaphore definice pipeline výrazně složitější, než na \travis.
 
-    \subsection{Rozšiřitelnost}
-        \todo{Má SaaS nějaké pluginy, dá se pro to scriptovat?}\blind[1]
-
     \subsection{Zabezpečení}
         Ani jeden z těchto \glstext{SaaS} \CI systémů nenabízí bug bounty. Pro \travis jsem našel jednu zprávu o bezpečnostní chybě z roku 2018 \cite{travis-db-drop}. Pro \circleci ani \semaphore jsem žádné zveřejněné incidenty nenašel.
 
@@ -25,6 +22,9 @@
         \circleci, \travis ani \semaphore nedefinují žádné \glstext{SLA}. Za posledních 12 měsíců měl \circleci uptime $99.90$~\%~\cite{circle-uptime}, \travis $99.93$~\%~\cite{travis-uptime}. \semaphore reportuje za poslední rok podezřele vysoký uptime $100$~\%~\cite{semaphore-uptime}.
 
         Kromě samotných \CI služeb jsou ale tyto služby závislé na dostupnosti úložišť kódu (GitHub, GitLab, Bitbucket, …).
+
+    \subsection{Rozšiřitelnost}
+        Pro \glstext{SaaS} řešení nelze uvažovat systémy pluginů a rozšíření. Veškerá funkcionalita služby musí být přímo integrovaná v systému. Tyto možnosti popisuji v následující podsekci.
 
     \subsection{Integrace}
         \travis lze používat pouze s repozitáři na GitHub, \circleci a \semaphore podporují kromě toho také Bitbucket. Nelze používat vlastní repozitáře a jiné systémy. Teoreticky lze vytvořit vlastní obálku nad cizím \glstext{API} a posílat webhooky ve formátu jako GitHub, ale nejde o oficiálně podporovanou variantu.
