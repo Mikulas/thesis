@@ -25,15 +25,16 @@
     \subsection{Dostupnost}
         Podobně jako ostatní \CI má Drone jeden stavový master, který není možné load balancovat. Jeden z autorů prohlásil, že na stabilním cloudu má Drone uptime $99,999$~\%~\cite{drone-ha}. Není ale možné, aby zahrnoval i aktualizace. Kromě toho s nástupem smýšlení \textit{Infrastructure as Code} není běžné udržovat dlouhožijící \textit{pet} servery.
 
-        \todo{[PROGRAMOVANI] Jak se dělá upgrade? Jak stabilní to je?}\blind[1]
-        \todo{[PROGRAMOVANI] Jak se dělá backup/restore}\blind[1]
+        Stejně jako Concourse persistuje i Drone data do databáze (rozdíl je v tom, že Concourse má master nestavový). Stačí tak zálohovat standardními prostředky které podporuje vybraný \glstext{RDBMS}. Podporované systémy jsou MySQL a Postgres \cite{drone-database}. Dále je nutné zálohovat objektové úložiště, které může být volitelně používáno pro ukládání výstupu pipeline.
+
+        Drone není dostatečně aktivně vyvíjený projekt a má teprve verzi 1.0. Roky existoval ve verzích 0.x a vznikl zatím nekompletní oficální nástroj na migraci databáze z původní verze 0.8 na aktuální 1.0 \cite{drone-mig}. Vzhledem k tomu, že Drone vývojáři kromě tohoto vydání databázové schéma neupravují, je možné rychle aktualizovat na minor a patch verze a případně i dělat rollback. Nelze ale udělat rolling update a je pro aktualizaci nutné akceptovat krátký výpadek služby.
 
     \subsection{Integrace}
         Drone podporuje jenom vybrané správce repozitářů: GitHub, Gitlab, Bitbucket, Gitea a Gogs. Důležité je, že neexistuje podpora pro obecný git remote.
 
         Ani přes úzkou integraci na repozitáře není ale výsledná integrace bezchybná. Například oznámení výsledku pipeline na GitHub (tzv. \textit{Commit Status} nebo novější \textit{Checks}) nejsou zabudované a je nutné použít plugin, což dále komplikuje pipeline kterou uživatel musí napsat a udržovat.
 
-        \todo{Možnosti deploy z Drone do cílového systému; k8s, sftp, openstack, \ldots}\blind[1]
+        %\todo{Možnosti deploy z Drone do cílového systému; k8s, sftp, openstack, \ldots}\blind[1]
 
     \subsection{Praktické nasazení projektů}
         \subsubsection{Projekt 1}
