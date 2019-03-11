@@ -30,7 +30,7 @@
     \subsection{Dostupnost}
         GoCD agenti jsou z principu stavové aplikace a stejně jako u všech ostatních \CI jejich výpadek přijdeme o spuštěné joby. Může jich ale běžet mnoho a pomocí rolling update je lze aktualizovat bez výpadku.
 
-        Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD prodává velmi drahý \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádnéoho requestu když vypadne primární replika.
+        Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD prodává velmi drahý \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádného požadavku když vypadne primární replika.
 
         Upgrade serveru na novější verzi vyžaduje restart a tím pádem nedostupnost celého prostředí. Navíc se při startu nové verze aplikace automaticky spustí databázové migrace, které na větších instancích podle dokumentace mohou trvat přes 10 minut \cite{gocd-upgrading}. Celkově je tak při rutinní aktualizaci potřeba počítat s výpadkem minimálně 15 minut.
 
@@ -46,7 +46,7 @@
             Nasazení GoCD pro statický projekt bylo vesměs stejné, jako u GitLab shell executoru: na server jsem předinstalovat Ruby a v rámci pipeline se pak pouze volá instalace Ruby gems a samotná kompilace. Narazil jsem na drobný problém při použití \glstext{RVM} (správce Ruby verzí), který dynamicky upravuje \code{\$PATH}, ale GoCD tato nastavení nerespektoval. Musel jsem tak ručně cestu k Ruby upravit v souboru \code{.profile} a restartovat GoCD agent aby se změny projevily.
 
         \subsubsection{Projekt 2}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z GoCD}\blind[2]
+            Pro druhý ukázkový projekt byla implementace v GoCD velmi jednoduchá, protože jsem závislosti předinstaloval při tvorbě prostředí. Pro víc projektů je to nepraktické řešení, ale pokud bude v systému vždy pouze jeden projekt využívající dané knihovny a podpůrný software, nenarazíme na skoro žádné problémy. Obtížnější az neřešitelné může být testování zároveň několika verzí závislostí (například současná stabilní verze a nejnovější nestabilní verze).
 
         \subsubsection{Projekt 3}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z GoCD}\blind[2]
+            Při implementaci \CI pro kontejnerizovaný projekt jsem narazil na to, že GoCD neinterpoluje proměnné prostředí. Je tak nutné explicitně volat \code{sh -c "\$CMD"}, což je zbytečná komplikace bez jasných výhod. Dále jsem se potýkal s tím, že GoCD nedefinuje běžné proměnné prostředí. Konkrétně \code{CI\_COMMIT\_SHA} je dostupné jen pod názvem \code{GO\_REVISION}. Přes tyto nedostatky poskytuje GoCD možnosti pro kompilaci a nasazení kontejnerizované apilkace.

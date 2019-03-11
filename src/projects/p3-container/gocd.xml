@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pipeline name="p3">
+  <materials>
+    <git url="file:///src/p3-container/" shallowClone="true" />
+  </materials>
+  <stage name="BuildStage">
+    <jobs>
+      <job name="BuildJob">
+        <tasks>
+          <exec command="sh">
+            <arg>-c</arg>
+            <arg>CI_COMMIT_SHA="$GO_REVISION" make build</arg>
+            <runif status="passed" />
+          </exec>
+          <exec command="make">
+            <arg>deploy</arg>
+            <runif status="passed" />
+          </exec>
+        </tasks>
+      </job>
+    </jobs>
+  </stage>
+</pipeline>

@@ -25,6 +25,9 @@ Vagrant.configure("2") do |config|
       },
       "deps-p1-build" => {
         "user" => "go"
+      },
+      "deps-p3-build" => {
+        "user" => "go"
       }
     }
 

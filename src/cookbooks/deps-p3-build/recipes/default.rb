@@ -19,6 +19,6 @@ end
 
 group 'docker' do
   action :modify
-  members 'gitlab-runner'
+  members node["deps-p3-build"]['user']
   append true
 end
