@@ -645,6 +645,12 @@ of works or by adapting the Work (including translation), and at the same time m
 	\abstractpage
 
 	\cleardoublepage
+	\thispagestyle{empty}
+	\begin{centering}
+		\includegraphics[width=1.0\textwidth]{media/cover.pdf}
+	\end{centering}
+
+	\cleardoublepage
 	\pagestyle{plain}
 	\pagenumbering{gobble}
 	\vspace*{-3cm}
