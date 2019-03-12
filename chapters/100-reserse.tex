@@ -1,14 +1,14 @@
 \chapter{Rešerše}
     V této kapitole upřesňuji termíny použité ve zbytku práce. Pro nadužívané pojmy s nejasným významem vyberu jednu konkrétní definici (\textit{cloud}, \textit{continuous deployment}). Popíšu některé technologie používané porovnávanými \CI nástroji (kontejnerizace, \glstext{SAST}/\glstext{DAST}). V rámci úvodu do problematiky \CICD uvedu možnosti nahrání aplikace na web server. Uvádím také definici dostupnosti webové aplikace, na kterou se později budu odkazovat při testování \CICD nástrojů.
 
-    \section{Cloud}
+    \section*{Cloud}
         Na cloud se budu odkazovat v několika rovinách: jako platforma pro hostování \CI, spouštění jobů a hostování samotných aplikací, což má význam pro nasazení a tedy \CD.
 
         Cloudem primárně uvažuji velké organizace, které mají desítky tisíc serverů v jednom regionu \cite{pier-cloud}. Kromě hlavní trojice \glstext{AWS}, \glstext{GCP} a Azure můžeme uvažovat i DigitalOcean, IBM Cloud, Linode a celou řadu dalších globálních poskytovatelů. Kromě virtuálních serverů patří typicky do nabídky služeb managed varianty stavových aplikací jako jsou databáze, kontrolní roviny orchestrátorů, síťové disky a další. Drobnější a regionální poskytovatele cloudu, stejně tak jako on-premise cloudová řešení (OpenStack), nebudu v práci pod pojem cloud zahrnovat, protože mají jiné vlastnosti co se týče dostupnosti. Z českých hostingů nabízí „on-demand“ virtuální servery například Master Internet \cite{master-pricing}, ale jde o jiný model než velký cloud: servery se rezervují na měsíc a platí se za využitý výkon nad nějakou hranici. U jiných českých hostingových firem jsem jiné než fixní měsíční poplatky za server nenašel.
 
         Speciálně pro \CI je cloud vhodný cenou. Jelikož \CI má nárazové využití a to navíc ještě jenom přes pracovní hodiny, je u dedikovaných serverů výjimečně špatná utilizace. V cloudu je možné platit pouze za využité zdroje a zapínat je dynamicky. Při porovnávání \CI nástrojů budu zjišťovat, jestli a do jaké míry podporují cloud.
 
-    \section{Dostupnost aplikací}
+    \section*{Dostupnost aplikací}
         Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akademické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
 
         Aplikaci v jedné instanci na jednom fyzickém serveru lze bez výpadku provozovat. Jedním takový příkladem je server Stratus s redundantním hardwarem, který měl v jednom případě rekordní uptime 24 let \cite{thibodeau-longest-uptime}. Celý systém běží na proprietárním operačním systému, který od let 2000 nebyl aktualizovaný. Tyto servery jsou ale fyzicky na jednom místě a při přírodní pohromě nebo delším výpadku elektřiny přestanou být dostupné.
@@ -24,7 +24,7 @@
 
         Žádný z velkých poskytovatelů nenabízí \glstext{SLA} pro jednu instanci (virtuální stroj). Definují pouze $99,99$~\% dostupnost na celý region (\glstext{AWS} \cite{aws-sla}, \glstext{GCP} \cite{gcp-sla}, Azure \cite{azure-sla}). V rámci regionu může bez vlivu na \glstext{SLA} vypadnout několik datacenter (\textit{availability zones}). Při porušení \glstext{SLA} vrací poskytovatelé na požádaní část kreditů. Neexistuje tak prakticky žádná garance dostupnosti a aplikace musí \glstext{HA} zajistit distribuováním mezi datacentra.
 
-    \section{Testování aplikací}
+    \section*{Testování aplikací}
         Ve vhodně zvoleném \CI nástroji je možné aplikaci testovat na všech úrovních: od jednotkových (\textit{unit}) přes integrační až po funkcionální testy. Jednotkové testy v kontextu webových aplikací se uvažují maximálně o velikosti jedné stránky \cite{testing-web-apps}. V případě dostatečné dekompozice (mj.~za správného použití návrhu \glstext{MVC}) budou testované jednotky především v modelové vrstvě (byznys logice). Takové testy budou využívat pouze zkompilovanou aplikaci a případně runtime a závislosti budou simulovat atrapami (\textit{Mock objects}) \cite{mocks}. Díky tomu jsou tyto testy jednoduše spustitelné na \CI.
 
         Integrační testy seskupují funkctionalitu otestovanou jednotkově a ověřují, že propojení komponent dává smysl \cite{integration-tests}. Tyto testy mohou využívat externí závislosti, například databáze.
@@ -35,17 +35,17 @@
 
         Testování bezpečnosti aplikací zmíním níže v sekci o \pfxref{SAST a DAST}{sast-dast}.
 
-    \section{Nasazení aplikace}
+    \section*{Nasazení aplikace}
         V této sekci popisuji varianty nasazení nové verze aplikace s vysokou dostupností. U porovnávaných \CICD systémů budu později zkoumat, jaké varianty nasazení podporují, případně jak obtížné je jednotlivé varianty implementovat.
 
         Konceptuálně je nasazení webového sofware přímočaré: vystavěný balíček aplikace se nějakým způsobem nahraje na jeden nebo více serverů a následně se spustí. Detaily se liší podle použitého prostředí. V následujícím textu jsem se zaměřil na monolitické webové aplikace, ale podobné principy fungují i pro nasazení dílčích podpůrných služeb (\textit{microservices}), které mimo \HTTP rozhraní mohou nabízet například \glstext{gRPC}, Java \glstext{RMI}, nebo jakékoliv jiné textové nebo binární protokoly.
 
         Komplexita nasazení drasticky narůstá, pokud vyžadujeme kontinuální dostupnost aplikace \cite{beyer2016site}. V ideálním případě by aplikace měla při nasazování změn úspěšně obsloužit všechny příchozí požadavky. Pokud neuvažujeme continuous deployment a nasazování probíhá výjimečně, může nasazení nové verze spočívat v zastavení původní verze, výpadku, a nasazení nové verze. Toto dodnes některé firmy praktikují. Například všichni tři velcí telefonní operátoři měli v roce 2018 minimálně jednu několikahodinovou odstávku webových služeb (T-Mobile \cite{tmobile-odstavka}, O2 \cite{o2-odstavka}, Vodafone 2. května 2018 a tiskovou zprávu z webu smazal). V následujícím textu se zaměřím pouze na nasazování bez výpadku dostupnosti aplikace.
 
-        \subsection{Hot swapping}
+        \subsection*{Hot swapping}
             Jedna varianta kontinuální dostupnosti je hot-swapping, při kterém se aplikace může upravit bez nutnosti ji vypnout. Toto je ale dostupné pouze v prostředí s \glstext{JVM} a dále například v -- na webu málo používaných -- Lisp, Erlang, Smalltalk a Elm. Při použití hot-swapping může aplikace běžet pouze v jedné instanci a nasazení nové verze aplikace tak můžeme udělat atomicky. Tím se vyhneme celé řadě problémů popsaných níže, na druhou stranu ale výrazně zhoršujeme praktickou dostupnost: server na kterém aplikace běží musí být vždy dostupný.
 
-        \subsection{Jednorázový přeliv provozu mezi starou a novou aplikací}
+        \subsection*{Jednorázový přeliv provozu mezi starou a novou aplikací}
             \label{deploy-v-jedne-instanci}
             Alternativní řešení je spustit novou verzi aplikace souběžně s původní verzí a následně přesunout provoz ze staré instance na novou. V případě \glstext{PHPFPM} při zapnuté OPcache například můžeme přepsat soubory na disku a novou verzi aplikace nasadit smazáním OPcache (což se dělá pomocí rolling update \glstext{PHPFPM} workerů). Ve světě Node.js lze využít \glstext{PM2}, který abstrahuje spouštění a vypínání procesů aplikace, v Python prostředí existuje \code{pman}. Všechny tyto systémy pracují na principu load balanceru (\glstext{LB}): uživatelské požadavky chodí na jeden vedoucí proces, který si ukládá informace o běžících aplikacích na pozadí a požadavky na ně přeposílá. Tento princip je implementovatelný pro libovolnou aplikaci. Pro load balancing můžeme použít celou řadu software: PFSense, HAProxy, Nginx, Varnish, v pokročilejších infrastrukturách Envoy \textit{service mesh}, \ldots Důležité rozhodnutí při výběru \glstext{LB} je balancovaná komunikační vrstva. Layer 4 (transportní vrtva OSI modelu) \glstext{LB} přeposílají \glstext{TCP} požadavky na základě cílové \glstext{IP} adresy a portu. Je definován i Layer 3 \glstext{LB}, který se rozhoduje pouze podle cílové \glstext{IP}, ale v literatuře se zahrnuje do \glstext{L4}. Layer 7 (aplikační vrstva) \glstext{LB} přeposílají celé \HTTP požadavky. Z vyššího protokolu vyčtou víc informací, například doménu nebo jiné hlavičky, a při přeposílání požadavku tak mohou vybrat ze celé skupiny různých serverů ty, kde daná aplikace běží. Dále \glstext{L7} \glstext{LB} musí řešit \glstext{HTTPS} (\glstext{TLS} termination) a musí tak dopředu vědět, jaké domény obsluhuje. \glstext{L7} \glstext{LB} dále může reagovat i na získané \HTTP odpovědi. Díky \HTTP specifikaci idempotentních metod (\textsc{get}, \textsc{head}, \textsc{put}, \textsc{delete} \cite{http-idempotent}) lze některé požadavky zkusit znovu na jiném serveru a to bez toho, aby se původní chyba vrátila uživateli. Load balancer může u každého serveru na pozadí měřit chybovost a rozbité servery z rotace dočasně vyřadit \cite{nginx-circuit-breaker}.
 
@@ -55,7 +55,7 @@
 
             Tento postup můžeme aplikovat i na aplikace běžící ve víc než jedné replice. Spustíme novou verzi aplikace souběžně se startou verzí a atomicky aktualizujeme na load balanceru cíle na novou skupinu serverů. Stále ale nemusíme řešit většinu problémů, které by přinesl distribuovaný systém.
 
-        \subsection{Distribuovaná aplikace}
+        \subsection*{Distribuovaná aplikace}
             \label{distributed-apps}
             Postup z předchozí sekce vyžaduje atomickou změnu konfigurace load balanceru. Té je těžké docílit, pokud máme více než jednu instanci load balanceru\footnote{Pokud si pod pojmem \textit{atomická změna} představíme, že po žádném požadavku zpracovávaného novou verzí konfigurace nesmí být žádný požadavek zpracováván starou konfigurací, je možných několik implementací. Jedna z nich je vyřazení všech kromě jednoho z load balancerů, což nemusí byt triviální a rychlé, pokud jsou load balancery první síťový prvek v naší infrastruktuře a nemůžeme je například snadno vyřadit z \glstext{DNS}. Další možností je změny udělat dvoukrokově: nejprve všechny kromě jednoho primárního load balanceru překonfigurovat tak, aby přeposílali všechny požadavky na tento primární load balancer. Potom lze atomicky změnit konfiguraci nejprve primárního a následně všech ostatních load balancerů.}. Další nevýhodou je, že při nasazování nové verze aplikace se po nějakou dobu zdvojnásobí nutné výpočetní zdroje (musí běžet současně $n$ starých a $n$ nových instancí aplikace). Při continuous deployment to může být velmi často, což se prodraží na nezbytné infrastruktuře. Praktický problém tohoto řešení je i samotná jednorázovost přelivu uživatelů: pokud je část aplikace rozbitá, je rozbitá pro 100 \% uživatelů.
 
@@ -70,8 +70,8 @@
             Za těchto podmínek nemůžeme nasazovat libovolnou aplikaci. Obecně musí být aplikace zpětně nebo dopředně kompatibilní. To komplikuje databázové migrace, nebo jinou změnu formátu na sdílených (především persistentních) úložištích. Některé změny je tak nutné nasazovat dvoufázově: první nasadíme úpravu, která zajistí dopřednou kompatibilitu, a poté samotné (původně nekompatibilní) změny.
 
 
-    \section{Definice CI/CD}
-        \subsection{Continuous integration, CI}
+    \section*{Definice CI/CD}
+        \subsection*{Continuous integration, CI}
             Nejstarší zmínka o \CI je projekt \textit{Infuse} z roku 1989 \cite{kaiser-infuse}. Jde o návrh systému testování komplexních modulárních projektů, který podle hierarchie spouští postupně jednotkové, integrační a akceptační testy.
 
             Fowler v článku z roku 2000 \cite{fowler-ci-original} definuje \CI jako praktiku, při které vývojáři změny začleňují do sdíleného kódu jednou denně nebo častěji. Logická funkčnost (ale ne nutně úplnost byznysových funkcí) je pak po každé změně otestována automatickými testy. Pokud testy selžou, vývojář jehož změny zapříčinily při testování problémy je informován a očekává se, že chyby opraví.
@@ -80,12 +80,12 @@
 
             Pro potřeby této práce je \CI server nástroj, který od vývojářů přijímá zdrojový kód, rozhodne jestli je akceptovatelný a vrátí booleovskou odpověď. Je vhodné -- ale ne nutné -- aby \CI server byl úzce integrovaný s nástrojem na správu repozitářů, kde po testování můžou být otestované změny přímo zařazeny do společného kódu.
 
-        \subsection{Continuous delivery vs Continuous deployment, CD}
+        \subsection*{Continuous delivery vs Continuous deployment, CD}
             Přestože se pojmy \textit{delivery} a \textit{deployment} zkratce \CD zaměňují, mají jeden podstatný rozdíl. Při continuous delivery je kód stále udržován v nasaditelném stavu, ale samotné spouštění nasazení je manuální~\cite{cd-delivery}. Continuous deployment je rozšíření této praktiky, které nasazuje veškerý integrovaný kód automaticky~\cite{cd-versus}.
 
             Chad Wathington vymezuje continuous integration jako podmnožinu \CD~\cite{fowler-go}.
 
-    \section{Kontejnerizace}
+    \section*{Kontejnerizace}
         V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
 
         Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v obrazu (\textit{Docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}). Mezi další výhody patří zabudované automatické cachovaní kompilace vrstev Docker obrazu a snadná distribuce obrazů.
@@ -104,7 +104,7 @@
 
         Nasazování aplikace se kontejnerizací také usnadňuje. Na \CI se nějakým deterministickým způsobem vytvoří Docker obraz a nahraje se do registru. Webové servery se pak informují o nové verzi, obraz stáhnou a spustí novou verzi aplikace. Odpadají tak některé problémy s atomicitou nasazení, s postupným nahrazováním a případně mazáním souborů. Další výhodou je, že vývojáři mohou lokálně spustit produkční verzi aplikace -- například pro odlazení chyby.
 
-    \section{Bezpečnost}
+    \section*{Bezpečnost}
         V následující kapitole budu porovnávat různé \CI nástroje a jedním z kritérií na které se zaměřím je bezpečnost. V rámci jedné organizace není žádoucí, aby všichni uživatelé viděli všechny ostatní testované projekty. Příklad z praxe jsou zaměstnanci bez podepsaného \glstext{NDA} nebo ve zkušební době.
 
         Samostatná kategorie bezpečnosti \CI je izolace spuštěným jobů. Rozlišují se následující úrovně:
@@ -124,7 +124,7 @@
 
         \glstext{DAST} je testování bezpečnosti aplikace při jejím běhu \cite{dast}. Často skenují různé body ze seznamu \glstext{OWASP} Top 10. Přestože žádný scanner nemůže najít všechny bezpečnostní chyby~\cite{netsparker-scanner}, jsou tyto nástroje užitečné.
 
-    \section{Verzování závilostí}
+    \section*{Verzování závilostí}
         Uchovávání knihoven třetích stran (tzv.~\textit{vendoring}) je kontroverzní: někdo rozvážně nepreferuje ani jednu variantu~\cite{copes-commit-npm}, ale oba přístupy mají svoje problémy. Toto rozhodnutí částečně souvisí s \CI, protože potřebujeme buď stahovat externí závislosti, nebo kontrolovat jejich aktuálnost.
 
         %(například JavaScriptové \glstext{NPM} \todo{abbr} moduly)

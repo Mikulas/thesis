@@ -17,7 +17,7 @@
         \begin{iffigure}
             \centering
             \makebox[\textwidth][c]{
-                \includegraphics[width=1.4\textwidth]{media/static-deploy-changes.pdf}
+                \includegraphics[width=1.2\textwidth]{media/static-deploy-changes.pdf}
             }
             \caption{Časový diagram znázorňující požadavky od dvou různých uživatelů ve dvou fázích nasazení nové verze statické aplikace. Uživatel 1 ilustruje nutnost nahrát nejprve na všechny servery sdílené assety. \HTML musíme nahrát až v druhé fázi, aby bylo garantované, že uživatelé co načtou novou verzi \HTML budou mít možnost ze všech serverů stáhnout odkazované zdroje. Uživatel 2 znázorňuje, proč je nutné uchovávat na serveru i starší verze zdrojů. Ty můžeme smazat až po nějaké delší době. Čas plyne odshora dolů, červené dvojité čáry reprezentují synchronizační bariéru.}
             \label{fig:static-deploy}
@@ -28,7 +28,7 @@
         \begin{iffigure}
             \centering
             \makebox[\textwidth][c]{
-                \includegraphics[width=1.4\textwidth]{media/static-deploy-kontejnery.pdf}
+                \includegraphics[width=1.2\textwidth]{media/static-deploy-kontejnery.pdf}
             }
             \caption{Časový diagram pro nasazení nové verze statické aplikace za použití kontejnerů. Pokud není praktické v nové verzi kontejneru uchovávat i starší verze zdrojů, je nutné implementovat nějakou komponentu (zde pojmenovanou \textit{ingress controller}), která při obdržení odpovědi s \glstext{HTTP} kódem 404 přepošle požadavek na starší verze aplikace. Toto chování je pro uživatele transparentní a projevuje se pouze lehce zvýšenou latencí.}
             \label{fig:static-deploy-container}

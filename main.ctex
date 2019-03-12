@@ -35,8 +35,6 @@
 
 \setcounter{tocdepth}{1}
 
-\usepackage[a4paper]{geometry}
-
 % https://tex.stackexchange.com/questions/17489/change-caption-name-of-figures
 \usepackage[figurename=Fig.]{caption}
 

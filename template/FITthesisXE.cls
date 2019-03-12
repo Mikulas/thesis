@@ -73,6 +73,7 @@
 \RequirePackage {nameref}
 \RequirePackage {amssymb}		% \nexist
 \RequirePackage {pdfpages}		% \includepdf
+\RequirePackage [a4paper]{geometry}
 
 % symbol footnotes to prevent collision with citations
 \RequirePackage [symbol] {footmisc}
@@ -596,6 +597,7 @@ of works or by adapting the Work (including translation), and at the same time m
 		\thispagestyle{empty}
 		%~
 		%\vfill
+		\vspace*{-5cm}
 		\pdfbookmark[0]{Abstrakt}{abstract}
 	    \chapterstyletitle{Abstrakt}\theabstractcs
 	\else
@@ -645,6 +647,7 @@ of works or by adapting the Work (including translation), and at the same time m
 	\cleardoublepage
 	\pagestyle{plain}
 	\pagenumbering{gobble}
+	\vspace*{-3cm}
 	\tableofcontents*
 
 	%\cleardoublepage
