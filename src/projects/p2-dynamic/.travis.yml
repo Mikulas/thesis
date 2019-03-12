@@ -1,0 +1,7 @@
+language: php
+php:
+ - "7.2"
+
+script:
+- make build
+- echo "Deploy step would be here"

@@ -50,7 +50,7 @@
             Na rozdíl od ostatních nasazení jsem při testování \glstext{SaaS} neimplementovat celou \CI pipeline včetně nahrání na cílový server. Všechny systémy jsem zprovoznil v lokálním virtuálním prostředí na které není vhodné dělat vzdálený přístup. Místo \code{make deploy} je tak v definicích pouze job s hláškou, kde by se deploy spouštěl.
 
         \subsubsection{Projekt 2}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 2 z SaaS}\blind[2]
+            Pro druhý ukázkový projekt jsem upravil konfigurace vytvořené pro statickou aplikaci. Pro \circleci a \travis jsem finální funkční pipeline vytvořil na první pokus. Pro \semaphore bylo z dokumentace nutné nastudovat, jaké obrazy pro \glstext{VM} jsou dostupné a případně jaké jsou poskytované nástroje jsou instalaci a konfiguraci závislostí. Konkrétně pro \glstext{PHP} je předinstalován nástroj phpbrew. Dále jsem musel ladit nastavení cache složky \code{vendor} ve které jsou závislosti nainstalované nástrojem \code{composer}, především aby fungovalo sdílení dat mezi krokem pro kompilaci a pro nasazení.
 
         \subsubsection{Projekt 3}
-            \todo{[PROGRAMOVANI] Popsat deploy projektu 3 z SaaS}\blind[2]
+            Kompilace Docker obrazu byla snadná na všech třech testovaných \glstext{SaaS} \CI. Ve všech případech byla konfigurace krátká a výstižná. \travis a \semaphore, které jsou založené na virtuálních strojích, byly stejně jednoduché na konfiguraci jako \circleci, který je založény na kontejnerech a konfiguruje externí Docker daemon.

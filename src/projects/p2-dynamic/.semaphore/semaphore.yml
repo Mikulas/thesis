@@ -1,0 +1,29 @@
+version: v1.0
+name: P2 Build and Deploy
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: composer
+          commands:
+          - checkout
+          - phpbrew switch php-7.1
+          - phpbrew ext install iconv
+          - sudo apt-get install -y --no-install-recommends composer
+          - cache restore vendor-$SEMAPHORE_GIT_BRANCH-$(checksum composer.lock),vendor-$SEMAPHORE_GIT_BRANCH-,vendor-master-
+          - make build
+          - cache store vendor-$SEMAPHORE_GIT_BRANCH-$(checksum composer.lock) vendor
+
+  - name: Deploy
+    task:
+      jobs:
+        - name: deploy
+          commands:
+            - checkout
+            - cache restore vendor-$SEMAPHORE_GIT_BRANCH-$(checksum composer.lock),vendor-$SEMAPHORE_GIT_BRANCH-,vendor-master-
+            - echo "Deploy step would be here"

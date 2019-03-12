@@ -1,0 +1,23 @@
+version: v1.0
+name: P3 Build and Deploy
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: build
+          commands:
+          - checkout
+          - CI_COMMIT_SHA="$REVISION" make build
+
+  - name: Deploy
+    task:
+      jobs:
+        - name: deploy
+          commands:
+            - checkout
+            - echo "Deploy step would be here"
