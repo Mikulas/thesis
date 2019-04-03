@@ -8,7 +8,7 @@
     Architektura Jenkins je master+agents \cite{jenkins-architecture}. Stavová master instance poskytuje \glstext{API} a webové \glstext{GUI} a koordinuje práci jednotlivých bezstavových agentů (workerů). Je zajímavé, že Jenkins nevyužívá tradiční relační databázi, ale persistuje data přímo na disk v formátu \glstext{XML}.
 
     \subsection{Instalace a konfigurace}
-        Instalace Jenkins z oficiálního balíčku je přímočařá. Nejprve jsem zaregistroval Jenkins \glstext{APT} repozitář \code{pkg.jenkins.io} a aplikaci nainstaloval. Jenkins ale odmítal nastartovat, protože mu chyběl Java runtime. Očekával bych, že aplikační balíček bude mít nezbytné závislosti minimálně v \textit{suggested packages}. Jenkins v aktuální verzi podporuje pouze Java 8 \cite{jenkins-java}. To je \glstext{TLS} verze z března 2014, která má komerční podporu pouze do ledna 2019 \cite{oracle-eol}.
+        Instalace Jenkins z oficiálního balíčku je přímočařá. Nejprve jsem zaregistroval Jenkins \glstext{APT} repozitář \code{pkg.jenkins.io} a aplikaci nainstaloval. Jenkins ale odmítal nastartovat, protože mu chyběl Java runtime. Očekával bych, že aplikační balíček bude mít nezbytné závislosti minimálně v \textit{suggested packages}. Jenkins v aktuální verzi podporuje pouze Java 8 \cite{jenkins-java}. To je \glstext{LTS} verze z března 2014, která má komerční podporu pouze do ledna 2019 \cite{oracle-eol}.
 
         Při prvním zobrazení webového rozhraní se provádí konfigurace a volitelná instalace rozšíření. Na rozdíl od např. GitLabu nebo Wordpressu vyžaduje Jenkins výchozí administrátorské heslo, které vygeneroval na disk.
 

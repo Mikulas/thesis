@@ -28,7 +28,7 @@
         Na webu \glstext{CVE} Details jsem pro GoCD nenašel žádná historická \glstext{CVE}. Projekt ale využívá platformu HackerOne, kde za poslední tři roky zpracovali 39 nahlášených chyb \cite{gocd-hackerone}. Ze zveřejněných reportů je vidět, že správci reagují rychle a bezpečnostní chyby opravují v co nejkratším možném termínu.
 
     \subsection{Dostupnost}
-        GoCD agenti jsou z principu stavové aplikace a stejně jako u všech ostatních \CI jejich výpadek přijdeme o spuštěné joby. Může jich ale běžet mnoho a pomocí rolling update je lze aktualizovat bez výpadku.
+        GoCD agenti jsou z principu stavové aplikace a stejně jako u všech ostatních \CI jejich výpadek způsobí, že přijdeme o spuštěné joby. Může jich ale běžet mnoho a pomocí rolling update je lze aktualizovat bez výpadku.
 
         Server je bohužel také stavový a může běžet pouze v jedné replice. GoCD prodává velmi drahý \textit{Business Continuity Addon}, který dokáže udržovat standby repliku \cite{gocd-ha}. Failover proces ale není nijak automatizovaný a povýšení na primární repliku vyžaduje restart GoCD serveru. U GoCD nelze udělat perfektní HA bez ztráty žádného požadavku když vypadne primární replika.
 

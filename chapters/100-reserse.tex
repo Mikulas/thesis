@@ -1,4 +1,4 @@
-\chapter{Rešerše}
+\chapter{Definice pojmů}
     V této kapitole upřesňuji termíny použité ve zbytku práce. Pro nadužívané pojmy s nejasným významem vyberu jednu konkrétní definici (\textit{cloud}, \textit{continuous deployment}). Popíšu některé technologie používané porovnávanými \CI nástroji (kontejnerizace, \glstext{SAST}/\glstext{DAST}). V rámci úvodu do problematiky \CICD uvedu možnosti nahrání aplikace na web server. Uvádím také definici dostupnosti webové aplikace, na kterou se později budu odkazovat při testování \CICD nástrojů.
 
     \section*{Cloud}
@@ -27,7 +27,7 @@
     \section*{Testování aplikací}
         Ve vhodně zvoleném \CI nástroji je možné aplikaci testovat na všech úrovních: od jednotkových (\textit{unit}) přes integrační až po funkcionální testy. Jednotkové testy v kontextu webových aplikací se uvažují maximálně o velikosti jedné stránky \cite{testing-web-apps}. V případě dostatečné dekompozice (mj.~za správného použití návrhu \glstext{MVC}) budou testované jednotky především v modelové vrstvě (byznys logice). Takové testy budou využívat pouze zkompilovanou aplikaci a případně runtime a závislosti budou simulovat atrapami (\textit{Mock objects}) \cite{mocks}. Díky tomu jsou tyto testy jednoduše spustitelné na \CI.
 
-        Integrační testy seskupují funkctionalitu otestovanou jednotkově a ověřují, že propojení komponent dává smysl \cite{integration-tests}. Tyto testy mohou využívat externí závislosti, například databáze.
+        Integrační testy se spouští nad moduly otestovanými jednotkově \cite{ould1986testing} a ověřují, že výsledné propojení komponent je funkční \cite{integration-tests}. Tyto testy mohou využívat externí závislosti, například databáze.
 
         Nejucelenějším ověřením správnosti aplikace jsou funkcionální testy (také \textit{end-to-end} testy, e2e). Při nich se aplikace spustí s externími závislostmi, simulují se uživatelské akce a monitorují se odpovědi aplikace. Ve webovém prostředí to může být volání aplikace nástrojem \code{curl}, dedikovaný testovací nástroj Selenium, nebo moderní knihovna Puppeteer pro prohlížeč Google Chrome. Co se týče nasazení na \CI jsou funkcionální testy nejkomplikovanější, protože mají řadu závislostí. Cloud může jejich nasazení zjednodušit \cite{gcp-headless}.
 
@@ -86,7 +86,7 @@
             Chad Wathington vymezuje continuous integration jako podmnožinu \CD~\cite{fowler-go}.
 
     \section*{Kontejnerizace}
-        V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \HTTP aplikací to může být problém, protože stará verze aplikace si uzdme systémový port a nová verze aplikace se nezapne. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
+        V \hyperref[deploy-v-jedne-instanci]{sekci \ref*{deploy-v-jedne-instanci} o nasazení aplikace v jedné instanci} zmiňuji nutnost spustit novou a starou verzi aplikace souběžně. V kontextu \HTTP aplikací to může být problém, protože stará verze aplikace blokuje systémový port a nová verze aplikace se kvůli tomu nemůže na stejném portu zapnout. Jedno z řešení je nastavovat aplikační port při startu, což ale dále komplikuje nastavení load balanceru. Snadněji a hlavně bez úpravy aplikace lze v moderních operačních systémech využít kontejnerizace. Za použití primitiv z \glstext{LXC} (\textit{Linux Containers}) nebo abstrakce jako jsou Docker, rkt nebo containerd můžeme aplikaci spustit v izolovaném prostředí a pod známým portem. Pro jiné než Linuxové systémy existují různé alternativy, například Solaris má vlastní \textit{Solaris Containers}.
 
         Kontejnerizace má celou řadu dalších výhod. Díky tomu, že v obrazu (\textit{Docker image}) jsou kromě samotné aplikace i všechny nezbytné systémové závislosti; typicky knihovny vyžadované k dynamickému linkování, nebo runtime pro interpretované jazyky (například \glstext{JRE}). Mezi další výhody patří zabudované automatické cachovaní kompilace vrstev Docker obrazu a snadná distribuce obrazů.
 
@@ -100,7 +100,7 @@
             \label{fig:dind-ci}
         \end{iffigure}
 
-        Speciálně pro testování je kontejnerizace nelepší možné řešení. Testy je často potřeba spouštět na několika různých místech, minimálně na lokálních zařízeních všech vývojářů a na \CI. S kontejnery odpadá nutnost instalovat celé testovací prostředí, které se navíc ještě víc blíží tomu produkčnímu. Díky tomu, že vývojáři a \CI spouští testy (skoro) úplně stejně, odpadají z velké části problémy kde testy lokálně prochází, ale na \CI ne. Kontejnery také zjednodušují začleňování nových vývojářů, kteří místo instalace všech závislostí a komponent mohou rovnou upravovat a spustit aplikaci.
+        Speciálně pro testování je kontejnerizace nejlepší možné řešení. Testy je často potřeba spouštět na několika různých místech, minimálně na lokálních zařízeních všech vývojářů a na \CI. S kontejnery odpadá nutnost instalovat celé testovací prostředí, které se navíc ještě víc blíží tomu produkčnímu. Díky tomu, že vývojáři a \CI spouští testy (skoro) úplně stejně, odpadají z velké části problémy kde testy lokálně prochází, ale na \CI ne. Kontejnery také zjednodušují začleňování nových vývojářů, kteří místo instalace všech závislostí a komponent mohou rovnou upravovat a spustit aplikaci.
 
         Nasazování aplikace se kontejnerizací také usnadňuje. Na \CI se nějakým deterministickým způsobem vytvoří Docker obraz a nahraje se do registru. Webové servery se pak informují o nové verzi, obraz stáhnou a spustí novou verzi aplikace. Odpadají tak některé problémy s atomicitou nasazení, s postupným nahrazováním a případně mazáním souborů. Další výhodou je, že vývojáři mohou lokálně spustit produkční verzi aplikace -- například pro odlazení chyby.
 
@@ -115,9 +115,9 @@
             \item Serverová/fyzická izolace. Každý job běží na jiném fyzickém serveru. Toto je prakticky velmi těžko dosažitelné, ale do jisté míry se lze tomuto ideálu přiblížit v cloudu, kde jsou stovky fyzických serverů. Přes to že hardware je sdílený, je pro potenciálního útočníka prakticky nemožné zajistit si kolokaci v krátkém čase co job běží.
         \end{itemize}
 
-        Kontejnerizace je praktická, ale nedostačující izolace pro sdílená \CI. Pokud se útočníkovi podaří utéct z kontejneru utéct, má plnou kontrolu nad hostitelským systémem a i všemi joby. Přesně taková zranitelnost byla nalezena v únoru 2019 v nástroji runc, který využívají Docker, Containerd, CRI-O a další a také orchestrační technologie nad nimi postavené: Kubernetes, Docker Swarm, … (CVE-2019-5736~\cite{CVE-2019-5736}). V rámci jedné organizace ale může být kontejnerizace dobrý kompromis mezi rychlostí, využitím zdrojů a bezpečností.
+        Kontejnerizace je praktická, ale nedostačující izolace pro sdílená \CI. Pokud se útočníkovi podaří z kontejneru utéct, má plnou kontrolu nad hostitelským systémem a i všemi joby. Přesně taková zranitelnost byla nalezena v únoru 2019 v nástroji runc, který využívají Docker, Containerd, CRI-O a další a také orchestrační technologie nad nimi postavené: Kubernetes, Docker Swarm, … (CVE-2019-5736~\cite{CVE-2019-5736}). V rámci jedné organizace ale může být kontejnerizace dobrý kompromis mezi rychlostí, využitím zdrojů a bezpečností.
 
-        Dále u \CI budu zmiňovat možnosti testování bezpečnosti aplikace. To se často rozděluje na dvě kategorie: \glstext{SAST} a \glstext{DAST}.
+        Dále u \CI budu zmiňovat možnosti testování bezpečnosti aplikace. To lze rozdělit na dvě kategorie: statická analýza (\glstext{SAST}) a dynamická analýza (\glstext{DAST}). Rozdíly obou přístupů popisují následující odstavce.
 
         \label{sast-dast}
         \glstext{SAST} je statická analýza aplikačního kódu bez jeho spuštění~\cite{sast}. Příkladem ve světě jazyka C je volání \code{printf(argv[1])}, které by mělo být nahrazeno za \code{printf("\%s", argv[1])}. Kvalitní kompilátory mají nějakou formu \glstext{SAST} zabudovanou. \glstext{LLVM} pro ukázkový \code{printf} vygeneruje \textit{warning: format string is not a string literal (potentially insecure)}. Pro většinu programovacích jazyků a frameworků existuje nějaký externí statický analyzér (pro \glstext{PHP} phpstan, pro bash shellcheck, pro Dockerfile hadolint, …).
