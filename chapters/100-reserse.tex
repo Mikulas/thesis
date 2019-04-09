@@ -1,13 +1,6 @@
 \chapter{Definice pojmů}
     V této kapitole upřesňuji termíny použité ve zbytku práce. Pro nadužívané pojmy s nejasným významem vyberu jednu konkrétní definici (\textit{cloud}, \textit{continuous deployment}). Popíšu některé technologie používané porovnávanými \CI nástroji (kontejnerizace, \glstext{SAST}/\glstext{DAST}). V rámci úvodu do problematiky \CICD uvedu možnosti nahrání aplikace na web server. Uvádím také definici dostupnosti webové aplikace, na kterou se později budu odkazovat při testování \CICD nástrojů.
 
-    \section*{Cloud}
-        Na cloud se budu odkazovat v několika rovinách: jako platforma pro hostování \CI, spouštění jobů a hostování samotných aplikací, což má význam pro nasazení a tedy \CD.
-
-        Cloudem primárně uvažuji velké organizace, které mají desítky tisíc serverů v jednom regionu \cite{pier-cloud}. Kromě hlavní trojice \glstext{AWS}, \glstext{GCP} a Azure můžeme uvažovat i DigitalOcean, IBM Cloud, Linode a celou řadu dalších globálních poskytovatelů. Kromě virtuálních serverů patří typicky do nabídky služeb managed varianty stavových aplikací jako jsou databáze, kontrolní roviny orchestrátorů, síťové disky a další. Drobnější a regionální poskytovatele cloudu, stejně tak jako on-premise cloudová řešení (OpenStack), nebudu v práci pod pojem cloud zahrnovat, protože mají jiné vlastnosti co se týče dostupnosti. Z českých hostingů nabízí „on-demand“ virtuální servery například Master Internet \cite{master-pricing}, ale jde o jiný model než velký cloud: servery se rezervují na měsíc a platí se za využitý výkon nad nějakou hranici. U jiných českých hostingových firem jsem jiné než fixní měsíční poplatky za server nenašel.
-
-        Speciálně pro \CI je cloud vhodný cenou. Jelikož \CI má nárazové využití a to navíc ještě jenom přes pracovní hodiny, je u dedikovaných serverů výjimečně špatná utilizace. V cloudu je možné platit pouze za využité zdroje a zapínat je dynamicky. Při porovnávání \CI nástrojů budu zjišťovat, jestli a do jaké míry podporují cloud.
-
     \section*{Dostupnost aplikací}
         Fishman (Sun Microsystems Inc.) definuje dostupnost jako vztah mezi střední čas mezi výpadky (\glstext{MTBF}) a dobou zotavení z výpadku (\glstext{MTTR}) \cite{fishman-availability}. Dostupnost se často vulgarizuje na „počet devítek“ (99,999 \% dostupnost odpovídá pěti devítkám, což je kolem 5 minut nedostupnosti ročně). Cílem je teoretickou dostupnost maximalizovat. B.~Wilson z firmy Backblaze ale trefně dodává, že od 8. devítky jsou jakékoliv odhady čistě akademické a aplikace s větší pravděpodobností nebude fungovat kvůli ozbrojenému konfliktu \cite{backblaze-availability}.
 
@@ -34,6 +27,13 @@
         %\todo{Popsat, jak lze snadno integrovat další služby jako například Messenger}\blind[1]
 
         Testování bezpečnosti aplikací zmíním níže v sekci o \pfxref{SAST a DAST}{sast-dast}.
+
+    \section*{Cloud}
+        Na cloud se budu odkazovat v několika rovinách: jako platforma pro hostování \CI, spouštění jobů a hostování samotných aplikací, což má význam pro nasazení a tedy \CD.
+
+        Cloudem primárně uvažuji velké organizace, které mají desítky tisíc serverů v jednom regionu \cite{pier-cloud}. Kromě hlavní trojice \glstext{AWS}, \glstext{GCP} a Azure můžeme uvažovat i DigitalOcean, IBM Cloud, Linode a celou řadu dalších globálních poskytovatelů. Kromě virtuálních serverů patří typicky do nabídky služeb managed varianty stavových aplikací jako jsou databáze, kontrolní roviny orchestrátorů, síťové disky a další. Drobnější a regionální poskytovatele cloudu, stejně tak jako on-premise cloudová řešení (OpenStack), nebudu v práci pod pojem cloud zahrnovat, protože mají jiné vlastnosti co se týče dostupnosti. Z českých hostingů nabízí „on-demand“ virtuální servery například Master Internet \cite{master-pricing}, ale jde o jiný model než velký cloud: servery se rezervují na měsíc a platí se za využitý výkon nad nějakou hranici. U jiných českých hostingových firem jsem jiné než fixní měsíční poplatky za server nenašel.
+
+        Speciálně pro \CI je cloud vhodný cenou. Jelikož \CI má nárazové využití a to navíc ještě jenom přes pracovní hodiny, je u dedikovaných serverů výjimečně špatná utilizace. V cloudu je možné platit pouze za využité zdroje a zapínat je dynamicky. Při porovnávání \CI nástrojů budu zjišťovat, jestli a do jaké míry podporují cloud.
 
     \section*{Nasazení aplikace}
         V této sekci popisuji varianty nasazení nové verze aplikace s vysokou dostupností. U porovnávaných \CICD systémů budu později zkoumat, jaké varianty nasazení podporují, případně jak obtížné je jednotlivé varianty implementovat.
