@@ -146,6 +146,4 @@
 
 \input{medium.tex}
 
-\input{todo.tex}
-
 \end{document}
