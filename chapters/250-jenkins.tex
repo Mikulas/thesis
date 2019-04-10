@@ -32,7 +32,7 @@
 
                 \begin{subfigure}[b]{\textwidth}
                     \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/jenkins-plugins-update.pdf}
-                    \caption{Rozdělení podle poslední aktualizace. Skoro 30~\% byla aktualizována v posledním půl roce. 40~\% rožšíření mělo alespoň jednu aktualizaci za poslední rok.}
+                    \caption{Rozdělení podle poslední aktualizace. Skoro 30~\% byla aktualizována v posledním půl roce. 40~\% rozšíření mělo alespoň jednu aktualizaci za poslední rok.}
                     \label{fig:jenkins-plugins-update}
                 \end{subfigure}
 
@@ -48,7 +48,7 @@
     \subsection{Zabezpečení}
         Stejným způsobem kterým Jenkins deleguje funkcionalitu na pluginy, přenáší zodpovědnost i za bezpečnost. Jádro Jenkins mělo za rok 2018 nahlášeno 53 \glstext{CVE}, rozšíření pro Jenkins skoro 100~\cite{cve-jenkins}. Čím víc rozšíření je do Jenkins nainstalováno, tím větší je plocha pro potenciální útočníky.
 
-        Izolace klientů o něco horší než u GitLabu. Přestože oba systémy podporují různé úrovně izolace samotných jobů, nastavení práv pro webovou administraci Jenkins je velmi složité a nepřehledné. Tak jako všechno ostatní deleguje Jenkins i \glstext{ACL} na rozšíření. Základní rozřšíření \textit{Matrix-based security} umožňuje nastavit každému uživateli nebo skupině práva k nějaké akci. Jenom u zdroje \textit{Job} je ale 9 oprávnění a není dobře zdokumentované, co přesně umožňují. Některé integrace, například GitHub, podle dokumentace umožňují dynamicky přiřazovat práva podle uživatelů přiřazených k danému repozitáři. Tuto funkci se mi ale nepodařilo zprovoznit; buď byl projekt úplně veřejný, nebo úplně nedostupný.
+        Izolace klientů o něco horší než u GitLabu. Přestože oba systémy podporují různé úrovně izolace samotných jobů, nastavení práv pro webovou administraci Jenkins je velmi složité a nepřehledné. Tak jako všechno ostatní deleguje Jenkins i \glstext{ACL} na rozšíření. Základní rozšíření \textit{Matrix-based security} umožňuje nastavit každému uživateli nebo skupině práva k nějaké akci. Jenom u zdroje \textit{Job} je ale 9 oprávnění a není dobře zdokumentované, co přesně umožňují. Některé integrace, například GitHub, podle dokumentace umožňují dynamicky přiřazovat práva podle uživatelů přiřazených k danému repozitáři. Tuto funkci se mi ale nepodařilo zprovoznit; buď byl projekt úplně veřejný, nebo úplně nedostupný.
 
         Izolace v rámci samotných agentů/workerů může být perfektní. Je dokonce i možné dynamicky reagovat na využití a zapínat a vypínat agenty v cloudu. Některá rozšíření umožňují využívat i krátkožijící virtuální stroje v cloudu jako je \glstext{AWS} CodeBuild~\cite{jenkins-codebuild}.
 
@@ -62,7 +62,7 @@
         \end{iffigure}
 
     \subsection{Dostupnost}
-        Tím že Jenkins je výhradně ke spouštění jobů, dostupnost neřeší. Myšlenka je taková, že Jenkins periodicky skenuje různé repozitáře a při detekci změny začne nový job. V případě výpadku se pouze job zpozdí. Na rozdíl od GitLabu neposkytuje další vývojářům další funkce jako je repozitář verzovacího systému, správa úkolů a podobně. Přesto je výpadek Jenkins problematický i při každodenním užívání: projekty nemůžou využívat spouštění jobů z \glstext{API} a vyvojáři nemůžou zobrazovat logy a využívat artifacts.
+        Tím že Jenkins je výhradně ke spouštění jobů, dostupnost neřeší. Myšlenka je taková, že Jenkins periodicky skenuje různé repozitáře a při detekci změny začne nový job. V případě výpadku se pouze job zpozdí. Na rozdíl od GitLabu neposkytuje další vývojářům další funkce jako je repozitář verzovacího systému, správa úkolů a podobně. Přesto je výpadek Jenkins problematický i při každodenním užívání: projekty nemůžou využívat spouštění jobů z \glstext{API} a vývojáři nemůžou zobrazovat logy a využívat artifacts.
 
         Při instalaci ale i při aktualizaci rozšíření vyžaduje Jenkins restart. Některá rozšíření lze nainstalovat i bez restartu, ale pro upgrade je vyžadován~\cite{jenkins-norestart}. Nabízí možnost restartovat po dokončení všech právě běžících jobů, nebo manuální restart. V mém testovacím prostředí trvá restart přes 30 vteřin. Stejně tak je nutný restart při upgrade celého jádra.
 
@@ -84,7 +84,7 @@
             Samotná deklarativní pipeline není složitá. Uvedl jsem docker obraz, ve kterém se má kompilace provést. Dále jsem rozdělil práci na dvě stages: build a deploy. Stejně jako GitLab umí Jenkins opakovat jednu stage bez nutnosti spouštět znovu celou pipeline, což se hodí pro přechodné chyby, pro deploy, rollback a podobně. V samotných stages se pak spouští předpřipravené scripty, které využívám pro všechna testovaná \CICD prostředí.
 
         \subsubsection{Projekt 2}
-            Pro toto nasazení jsem rozdělil Jenkins Pipeline na samostatné kontejnery: ke každé stage je přiřazen odlišný Docker Agent, který použivá přesně daný image. Tím jsou zamknuty externí závislosti, jednotlivé projekty se navzájem neovlivňují a není potřeba žádné knihovny a podpůrný software předinstalovávat na testovací server.
+            Pro toto nasazení jsem rozdělil Jenkins Pipeline na samostatné kontejnery: ke každé stage je přiřazen odlišný Docker Agent, který používá přesně daný image. Tím jsou zamknuty externí závislosti, jednotlivé projekty se navzájem neovlivňují a není potřeba žádné knihovny a podpůrný software předinstalovávat na testovací server.
 
             Při použití vlastních Docker obrazů pro build je vhodné, aby se vystavovaly v \CI. V případě sdílení daného obrazu mezi více projekty může být úplně vyčleněn do samostatné pipeline.
 

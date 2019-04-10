@@ -16,14 +16,14 @@
         \begin{iffigure}
             \centering
             \includegraphics[width=\textwidth,height=9cm,keepaspectratio]{media/go-plugins-update.pdf}
-            \caption{Rozdělení podle poslední aktualizace. Pouze 17 rozšíření (20 \%) bylo aktualizováno v posledním půl roce. Pouhých 30~\% rožšíření mělo alespoň jednu aktualizaci za poslední rok. Přibližně 20 \% rozšíření nemá žádné stabilní vydání. Zdroj: data vytěžena z GitHub repozitářů, dostupná na přiloženém mediu v \code{appendix/gocd-plugins.csv}.}
+            \caption{Rozdělení podle poslední aktualizace. Pouze 17 rozšíření (20 \%) bylo aktualizováno v posledním půl roce. Pouhých 30~\% rozšíření mělo alespoň jednu aktualizaci za poslední rok. Přibližně 20 \% rozšíření nemá žádné stabilní vydání. Zdroj: data vytěžena z GitHub repozitářů, dostupná na přiloženém mediu v \code{appendix/gocd-plugins.csv}.}
             \label{fig:jenkins-plugins}
         \end{iffigure}
 
     \subsection{Zabezpečení}
         Po instalaci serveru je v základu celá administrace dostupná pro všechny, bez autorizace. Lze zapnout zabudovaná rozšíření, která zprovozní přihlášení heslem a nebo přes \glstext{LDAP}. Nic v \glstext{UI} k tomu ale správce nenabádá. Velmi překvapivě ale není v Shodan databázi žádná nezabezpečená instance GoCD na výchozím portu \cite{shodan-gocd}.
 
-        Izolace klientů závisí na použítých agentech. Klasický agent používá sdílené prostředí a zdroje, ale GoCD podporuje tzv.~\textit{Elastic Agent}, které se zapínají a vypínají dynamicky podle poptávky. Lze je využít pro zapnutí nového prostředí v Dockeru, Kubernetes, OpenStacku a několika dalších. Tato jednorázová prostředí nabízí lepší izolaci. Nenašel jsem rozšíření, které by dokázalo spravovat Elastic Agents pro VMware nebo jiný virtualizační nástroj, který by měl ještě lepší izolaci klientů.
+        Izolace klientů závisí na použitých agentech. Klasický agent používá sdílené prostředí a zdroje, ale GoCD podporuje tzv.~\textit{Elastic Agent}, které se zapínají a vypínají dynamicky podle poptávky. Lze je využít pro zapnutí nového prostředí v Dockeru, Kubernetes, OpenStacku a několika dalších. Tato jednorázová prostředí nabízí lepší izolaci. Nenašel jsem rozšíření, které by dokázalo spravovat Elastic Agents pro VMware nebo jiný virtualizační nástroj, který by měl ještě lepší izolaci klientů.
 
         Na webu \glstext{CVE} Details jsem pro GoCD nenašel žádná historická \glstext{CVE}. Projekt ale využívá platformu HackerOne, kde za poslední tři roky zpracovali 39 nahlášených chyb \cite{gocd-hackerone}. Ze zveřejněných reportů je vidět, že správci reagují rychle a bezpečnostní chyby opravují v co nejkratším možném termínu.
 
@@ -49,4 +49,4 @@
             Pro druhý ukázkový projekt byla implementace v GoCD velmi jednoduchá, protože jsem závislosti předinstaloval při tvorbě prostředí. Pro víc projektů je to nepraktické řešení, ale pokud bude v systému vždy pouze jeden projekt využívající dané knihovny a podpůrný software, nenarazíme na skoro žádné problémy. Obtížnější az neřešitelné může být testování zároveň několika verzí závislostí (například současná stabilní verze a nejnovější nestabilní verze).
 
         \subsubsection{Projekt 3}
-            Při implementaci \CI pro kontejnerizovaný projekt jsem narazil na to, že GoCD neinterpoluje proměnné prostředí. Je tak nutné explicitně volat \code{sh -c "\$CMD"}, což je zbytečná komplikace bez jasných výhod. Dále jsem se potýkal s tím, že GoCD nedefinuje běžné proměnné prostředí. Konkrétně \code{CI\_COMMIT\_SHA} je dostupné jen pod názvem \code{GO\_REVISION}. Přes tyto nedostatky poskytuje GoCD možnosti pro kompilaci a nasazení kontejnerizované apilkace.
+            Při implementaci \CI pro kontejnerizovaný projekt jsem narazil na to, že GoCD neinterpoluje proměnné prostředí. Je tak nutné explicitně volat \code{sh -c "\$CMD"}, což je zbytečná komplikace bez jasných výhod. Dále jsem se potýkal s tím, že GoCD nedefinuje běžné proměnné prostředí. Konkrétně \code{CI\_COMMIT\_SHA} je dostupné jen pod názvem \code{GO\_REVISION}. Přes tyto nedostatky poskytuje GoCD možnosti pro kompilaci a nasazení kontejnerizované aplikace.
