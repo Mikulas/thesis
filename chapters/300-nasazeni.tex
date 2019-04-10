@@ -6,8 +6,7 @@
         \item Prostředí testů musí být kvalitně izolované. Aplikace se musí stavět s původními verzemi závislostí, tak jak mají uvedeno v repozitáři.
         \item Systém musí mít dobrou integraci s Kubernetes clustery provozovanými v AWS, na kterých se provozují beta i produkční verze všech aplikací.
         \item Uživatelské rozhraní musí být přehledné a naprosto jasné i pro juniory. S předchozím systémem měla firma často problém, že vývojáři nepoznali, zda integrace a potažmo vydání nové verze aplikace skončilo úspěšně, nebo chybou.
-        \item \CICD systém musí být dobře dostupný. Je nutné počítat s tím, že vývojáři mohou pracovat do noci. Několik programátorů je delší dobu v cizině
-, s časovým posunem +6 hodin oproti ČR.
+        \item \CICD systém musí být dobře dostupný. Je nutné počítat s tím, že vývojáři mohou pracovat do noci. Několik programátorů je delší dobu v cizině, s časovým posunem +6 hodin oproti ČR\@.
     \end{itemize}
 
     Na základě \pfxref{porovnání v předchozí kapitole}{overview} jsem se rozhodl nasadit \CICD systém GitLab, konkrétně tedy kombinaci GitLab pro správu repozitářů a GitLab Runner využívající Docker executor (jak je popsáno v \pfxref{v sekci}{gitlab-executor}). Kontejnerizace umožňuje izolaci a lze tak každou aplikaci stavět s potřebnými verzemi závislostí. Jenkins jsem po důkladnějším testování zavrhl, protože výstup nebyl pro uživatele dostatečně přehledný a vývojáři měli problém se v rozhraní orientovat. CircleCI, Travis CI, Semaphore CI a Drone jsme po diskuzi s vlastníky firmy zavrhli kvůli ceně.
