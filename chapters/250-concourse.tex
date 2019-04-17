@@ -13,6 +13,63 @@
             \label{pic:concourse-architecture}
         \end{iffigure}
 
+
+        \begin{figure}[H]
+            \centering
+                \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+resource_types:
+- name: rsync-resource
+  type: docker-image
+  source:
+    repository: mrsixw/concourse-rsync-resource
+    tag: latest
+
+resources:
+- name: repo
+  type: git
+  source:
+    uri: "git@10.0.0.10:root/project-2.git"
+    branch: master
+
+- name: webhost
+  type: rsync-resource
+  source:
+    server: 10.0.0.50
+    base_dir: "/srv/p2"
+    user: www-data
+    disable_version_path: true
+
+
+jobs:
+- name: build
+  public: true
+  plan:
+  - get: repo
+    trigger: true
+  - task: hello-world
+    file: repo/concourse-task-build.yml
+  - put: webhost
+    params:
+      sync_dir: .
+                \end{minted}
+                \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: composer
+    tag: 1.8
+inputs:
+  - name: repo
+outputs:
+  - name: vendor
+run:
+  path: composer install
+\end{minted}
+            \caption{Ukázka definice pipeline v Concourse. První soubor je nutné ručně nahrávat na server. Druhý soubor je definice konkrétního tasku a lze ho verzovat v aplikačním repozitáři.}
+        \end{figure}
+
+        \newpage
         Nasazení Concourse je skvěle zdokumentované a průvodní texty dokonce popisují očekávané využití procesoru a paměti pro jednotlivé komponenty. Podobně jako u~dalších distribuovaných systémů je potřeba před spuštěním jednotlivých komponent vygenerovat celou řadu klíčů. Na podepisování uživatelských session a interní komunikaci, identifikátor pro \glstext{SSH} server a pro každý \textit{worker node} jeden klíč k~registraci ke kontroleru. Další nastavení je volitelné \code{concourse-cluster}.
 
         Pro rychlé otestování funkčnosti a drobné projekty nabízí Concourse zjednodušenou variantu spuštění. Jedním příkazem (\code{concourse quickstart}) se spustí kontroler a worker a automaticky se pro ně vygenerují a zaregistrují potřebné klíče.

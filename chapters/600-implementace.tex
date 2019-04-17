@@ -31,10 +31,10 @@ V~ukázkových projektech jsem potřebovat využít samostatné git repozitáře
 \section{Jednoduchý webserver}
     Pro nasazení ukázkových projektů jsem vytvořil nový čistý virtuální stroj. Abych mohl provozovat na \HTTP portu více aplikací rozlišených podle host, nainstaloval jsem na server nginx. Pro statický projekt jsem pouze nakonfiguroval cestu k~veřejnému adresáři. Deploy probíhá dvoufázově: nejprve se na server nahrají statické zdroje (javascripty, kaskádové styly, \ldots) a poté se přepíší \glstext{HTML} soubory které na ně odkazují. Dynamické review apps jsem na straně web serveru implementoval proměnným názvem serveru:
 
-        \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+    \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
 server_name "~^(?<domain>[\w-]+)\.p1\.ditemiku\.local$";
 root /srv/p1-$domain;
-        \end{minted}
+    \end{minted}
 
     Pro druhý ukázkový projekt jsem nainstaloval PHP-FPM a nechal uživatelské požadavky přeposílat přes fastcgi. Deploy jsem implementoval podobně jako u~statického webu. Díky tomu, že PHP používá opcache -- tzn. nečte a neparsuje při každém požadavku zdrojové soubory znovu -- stačí nahrát všechny soubory a pak opcache smazat. Toho se nejsnadněji docílí reloadem PHP-FPM masteru, který postupně vypne staré workery a zapne nové.
 

@@ -99,7 +99,7 @@
     \end{figure}
 }
 
-\newcommand{\pfxref}[2]{ \hyperref[#2]{#1~\ref{#2}}\xspace}
+\newcommand{\pfxref}[2]{\xspace{}\hyperref[#2]{#1~\ref{#2}}\xspace}
 
 \newcommand{\CI}{\xspace{}\glstext{CI}\xspace}
 \newcommand{\CICD}{\xspace{}\glstext{CICD}\xspace}

@@ -14,6 +14,36 @@
 
         V~roce 2018 přišel Jenkins s~možností nahradit ruční klikání konfigurace ve webovém rozhraní kódem (\glstext{CasC})~\cite{jenkins-casc}. Některá klíčová nastavení, konkrétně třeba správa rozšíření, je zatím nestabilní. Dále je nahlášena celá řada nekompatibilit s~různými rozšířeními \code{jenkins-casc-compat}.
 
+        \begin{iffigure}
+            \centering
+                \begin{minted}[frame=lines,framesep=2mm,linenos]{python}
+pipeline {
+    agent none
+    stages {
+        stage('Jekyll Build') {
+            agent {
+                docker 'composer:1.8'
+            }
+            steps {
+                checkout scm
+                sh 'make build'
+            }
+        }
+        stage('Deploy') {
+            agent {
+                docker 'ditemikuthesisdemo/deploy:1.0'
+            }
+            steps {
+                sh 'make deploy'
+            }
+        }
+    }
+}
+                \end{minted}
+            \caption{Ukázka definice deklarativní pipeline v \code{Jenkinsfile}. Pro správu závislostí se využívají se předpřipravané Docker obrazy. V prvním kroku se používá oficiální univerzální obraz, v kroku s nasazením je obraz vytvořený pro tento projekt.}
+        \end{iffigure}
+
+
         Každý projekt je na Jenkins nutné založit a nakonfigurovat ručně. Některá rozšíření tento problém řeší, například \code{GitHub Branch Source Plugin}~\cite{jenkins-plugins-gbs} sleduje všechny repozitáře vybraných GitLab uživatelů a pokud v~nich najde \code{Jenkinsfile}, založí pro repozitář nový projekt na Jenkins. Původně byly Jenkins projekty konfigurovatelné jenom z~webového rozhraní a \glstext{API}. V~roce 2014 byla publikován \code{Pipeline Plugin}, který umožňuje popsat konfiguraci projektu skriptem. Na to v~roce 2016 navázalo rozšíření \code{Pipeline Model Definition Plugin}, které přináší podporu pro deklarativní popis pipeline, kde Jenkins říkáme co se má stát, ale ne nutně \textit{jak}. Deklarativní pipeline je doporučený způsob nastavení Jenkins projektů~\cite{jenkins-best-practices}.
 
         Problém Jenkins je uživatelské rozhraní. Ve výchozím stavu má \glstext{UI} celou řadu velmi problematických částí: několika-úrovňové menu, které vyžaduje přesný pohyb myší; nesjednocené symboly, navíc často nekonvenční (například modrá koule u~úspěšného jobu místo klasické zelené); konfigurace a všechny formuláře jsou složité a běžně obsahují 100+ vstupů. Rozšíření Blue Ocean nabízí alternativní \glstext{UI} pro zobrazení průběhu a výsledků buildů~\cite{jenkins-plugin-blueocean}. Bohužel nemodernizuje zbytek Jenkins, administraci. Pokud uživatelé konfigurují projekty výhradně přes \code{Jenkinsfile}, nemusí do původního rozhraní vůbec přistupovat. Osobně mi rozhraní přišlo hezké, ale oproti konkurenčním \CICD pomalé.

@@ -40,6 +40,36 @@
     \subsection{Integrace}
         Lze propojit GoCD s~dalšími nástroji; některé funkce -- především ty co mají vliv na \glstext{UI} -- jsou vestavěné. To je například odkazování na externí správu úkolů podle regulárního výrazu. Ostatní integrace jsou dostupná jako rozšíření, která je nutné doinstalovat: mezi ně patří například oznámení stavu na GitHub/Stash/Gerrit a podobně. Pro Bitbucket ani Gitlab podpora neexistuje. Lze ji ale doprogramovat jako nové rozšíření.
 
+    \begin{figure}[H]
+        \centering
+        \begin{minted}[frame=lines,framesep=2mm,linenos]{xml}
+<?xml version="1.0" encoding="utf-8"?>
+<pipeline name="p2">
+  <materials>
+    <git url="file:///src/p2-dynamic/" shallowClone="true" />
+  </materials>
+  <stage name="BuildStage">
+    <jobs>
+      <job name="BuildJob">
+        <tasks>
+          <exec command="make">
+            <arg>build</arg>
+            <runif status="passed" />
+          </exec>
+          <exec command="make">
+            <arg>deploy</arg>
+            <runif status="passed" />
+          </exec>
+        </tasks>
+      </job>
+    </jobs>
+  </stage>
+</pipeline>
+        \end{minted}
+        \caption{Přestože GoCD je primárně určeno ke konfiguraci z \glstext{GUI}, lze editovat přímo konfigurační \glstext{XML} soubory. Vzhledem k chybějící izolaci úkonů v tomto \CI byla tato pipeline navržena jako prosté spuštění dvou příkazů.}
+    \end{figure}
+
+
         Navzdory svému jménu nenabízí GoCD žádnou podporu pro continuous deployment. Ve webovém rozhraní (ani jinde) není možnost spravovat nasazená prostředí a verze aplikací, podpora pro ručně potvrzené kroky je velmi limitovaná, a integrace s~Kubernetes/OpenShift nebo jiným  nebo neexistuje.
 
     \subsection{Praktické nasazení projektů}

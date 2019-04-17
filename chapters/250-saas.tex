@@ -32,6 +32,53 @@
     \subsection{Rozšiřitelnost}
         Pro \glstext{SaaS} řešení nelze uvažovat systémy pluginů a rozšíření. Veškerá funkcionalita služby musí být přímo integrovaná v~systému. Tyto možnosti popisuji v~následující podsekci.
 
+
+    \begin{figure}[H]
+        \centering
+        \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+language: php
+php:
+ - "7.2"
+
+script:
+- make build
+- make deploy
+        \end{minted}
+        \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+version: v1.0
+name: P2 Build and Deploy
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: composer
+          commands:
+          - checkout
+          - phpbrew switch php-7.1
+          - phpbrew ext install iconv
+          - sudo apt-get install -y --no-install-recommends composer
+          - cache restore "vendor-$SEMAPHORE_GIT_BRANCH"
+          - make build
+          - cache store "vendor-$SEMAPHORE_GIT_BRANCH"
+
+  - name: Deploy
+    task:
+      jobs:
+        - name: deploy
+          commands:
+            - checkout
+            - cache restore "vendor-$SEMAPHORE_GIT_BRANC"
+            - make deploy
+        \end{minted}
+        \caption{Porovnání funkčně identického \travis (první soubor) a \semaphore (druhý soubor). Přestože oba systémy nabízí stejné funkce a izolaci, je konfigurace \travis podstatně jednodušší.}
+    \end{figure}
+
+    \newpage
     \subsection{Integrace}
         \travis lze používat pouze s~repozitáři na GitHub, \circleci a \semaphore podporují kromě toho také Bitbucket. Nelze používat vlastní repozitáře a jiné systémy. Teoreticky lze vytvořit vlastní obálku nad cizím \glstext{API} a posílat webhooky ve formátu jako GitHub, ale nejde o~oficiálně podporovanou variantu.
 

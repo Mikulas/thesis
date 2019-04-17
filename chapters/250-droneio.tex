@@ -8,6 +8,51 @@
 
         Stejně jako ostatní \CI se Drone skládá z~jednoho masteru a agentů. Master persistuje data do sqlite databáze, ale některá data o~frontě požadavků udržuje pouze v~paměti~\cite{drone-ha}. Nemá žádné externí závislosti.
 
+    \begin{figure}[H]
+        \centering
+        \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+kind: pipeline
+name: default
+
+steps:
+- name: build
+  image: composer:1.8
+  volumes:
+  - name: vendor
+    path: "/drone/src/vendor"
+  commands:
+  - make build
+
+- name: deploy
+  image: eeacms/rsync:1.2
+  environment:
+    SSH_KEY:
+      from_secret: deploy-ssh-key
+  volumes:
+  - name: vendor
+    path: "/drone/src/vendor"
+  commands:
+  - mkdir -p "/root/.ssh"
+  - echo "$SSH_KEY" | base64 -d > "/root/.ssh/id_rsa"
+  - chmod go-rwx "/root/.ssh/id_rsa"
+  - apk add --no-cache bash make
+  - ssh www-data@webserver-plain whoami
+  - make deploy
+
+volumes:
+- name: vendor
+  temp: {}
+
+---
+kind: secret
+
+# cat src/cookbooks/ssh-ring/files/id_rsa | base64 | xargs drone encrypt root/project-1
+data:
+  deploy-ssh-key: 1psu0UpA...zkráceno
+        \end{minted}
+        \caption{Ukázka definice pipeline v \code{.drone.yml}. Opět jsou definovány dva lineární kroky: kompilace a nasazení. Oproti jiným \CI se zde artefakty předávají explicitně definovaným \code{volume}. V druhém dokumentu je definován privátní klíč, který by se v ideálním případě měl načítat z externího úložiště, například HashiCorp Vault.}
+    \end{figure}
+
     \subsection{Rozšiřitelnost}
         Drone rozlišuje dva koncepty. První jsou \textit{pipeline plugins}, což jsou obyčejné kontejnery spuštěné v~pipeline. Jediný rozdíl je drobné syntaktické zjednodušení, které umožňuje v~konfiguraci pipeline psát místo \code{environment[PLUGIN\_KEY]=x} jenom \code{settings.key=x}. Kdyby Drone tuto funkci neměl, byla by tvorba pluginů transparentnější a přístupnější i těm nejméně zkušeným uživatelům.
 

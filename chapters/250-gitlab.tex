@@ -36,6 +36,37 @@
     \subsection{GitLab \CI}
         \CI není přímo komponenta distribuovaná s~GitLab, je ale dobře zaintegrovaná. Díky skvělému návrhu GitLab pouze vystavuje události na \glstext{API}. K~API se může registrovat libovolné množství runnerů, které se periodicky \glstext{API} dotazují na nové práce ke spuštění~\cite{gitlab-runner-registration}. Runner může běžet na stejném serveru jako GitLab, ale velkou výhodou je možnost spustit runner i na jiném vzdáleném serveru -- například pro mobilní aplikace se často používá Mac mini s~macOS, které je pro kompilaci nezbytné. Při registraci runneru je možné ho přidělit pouze některým projektům podle tagu, nebo ho zveřejnit pro všechny projekty.
 
+    \begin{iffigure}
+        \centering
+            \begin{minted}[frame=lines,framesep=2mm,linenos]{ruby}
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  artifacts:
+    paths:
+      - vendor/
+  script:
+    - make build
+
+deploy:
+  stage: deploy
+  only:
+    refs:
+      - "deploy/prod"
+  dependencies:
+    - build
+  script:
+    - make deploy
+  environment:
+    name: prod
+    url: "http://p2.ditemiku.local"
+            \end{minted}
+        \caption{Zjednodušená ukázka konfigurace GitLab \CI pomocí souborem \code{.gitlab-ci.yml}. Tento útržek definuje dvě stage, z nichž každá obsahuje jeden job. Samotná logika spuštění kompilace a nasazení na servery je delegována na \code{Makefile} v repozitáři.}
+    \end{iffigure}
+
         Runner při získání práce z~\glstext{API} má k~dispozici soubor s~definicí (obsah souboru \code{.gitlab-ci.yml}~\cite{gitlab-runner-yaml}) a přístupové údaje k~repozitáři. Architektura GitLab \CI se skládá z~tzv. \textit{stages} (etapy) a \textit{jobs} (kusy práce), jak ilustruje \pfxref{diagram}{pic:gitlab-ci-architecture}. Jeden push do repozitáře typicky vygeneruje jednu \textit{pipeline}, což je sada \textit{stages} a \textit{jobs} popsaná konfigurací \CI v~daném commitu.
 
         \begin{iffigure}
