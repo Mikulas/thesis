@@ -19,8 +19,13 @@
 \documentclass[thesis=M,czech,hidelinks]{template/FITthesisXE}
 
 \bibliography{library}
+\setcounter{tocdepth}{1}
 
 \renewcommand{\thefootnote}{\ifcase\value{footnote}\or † \or ‡ ($\infty$)\fi}
+
+% Decimal comma
+%https://latex.org/forum/viewtopic.php?t=26588
+\usepackage{icomma}
 
 \usepackage{subcaption}
 \usepackage{afterpage}
@@ -79,6 +84,8 @@
 \newenvironment{iffigure}{\begin{figure}[hbt!]}{\end{figure}}
 #endif
 
+\usepackage{widows-and-orphans}
+
 \newcommand{\importsvg}[1]{
     \def\svgwidth{\columnwidth}
     \import{media/svg/}{#1.pdf_tex}
@@ -133,17 +140,16 @@
 \printbibliography[]
 
 \appendix
-\input{chapters/600-implementace.tex}
-\input{chapters/700-jenkins-plugins.tex}
-
-\chapter{Použité zkratky}
 \singlespacing
+\renewcommand{\glossarysection}[2][]{}
 \newgeometry{left=2cm,right=2cm,bottom=3cm}
     \begin{small}
+        \chapter{Použité zkratky}
         \printglossary[type=\acronymtype,style=mcolindex]
     \end{small}
 \restoregeometry
 
+\input{chapters/600-implementace.tex}
 \input{medium.tex}
 
 \end{document}

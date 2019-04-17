@@ -172,6 +172,7 @@ build:
 
             Při použití \code{docker} executoru je pipeline stejně jednoduchá, ale odpadá nutnost předem nastavit prostředí a není nutné řešit kolize závislostí napříč projekty. GitLab dokáže artifacts ukládat z kontejneru stejně jako v \code{shell} executoru.
 
+        \newpage
         \subsubsection{Projekt 2}
             Pipeline pro dynamický komplexní projekt je překvapivě podobná, jako u statického projektu. Opět jsem vytvořil dvě hlavní stage: build a deploy. Hlavní rozdíl je v samotných příkazech pro sestavení, které jsem abstrahoval do \code{Makefile}. Protože využívám \code{shell} executor, předinstaloval jsem \glstext{PHP}, balíčkovací systém composer a další. To je bohužel správa kterou je potřeba dělat mimo konfiguraci pipeline.
 

@@ -13,7 +13,7 @@ cat main.blg | \
 echo ""
 echo "Tex:"
 awk '/^File: assignment\.pdf/ { found = 1 } found { print }' main.log | \
-    egrep "Warning|Error|Emergency|Undefined control sequence|Illegal parameter|<argument>" | \
+    egrep "Warning|Error|Emergency|Undefined control sequence|Illegal parameter|<argument>|Orphan on page|Widow on page" | \
     grep -v 'glossarystyle' | \
     grep -v 'Token not allowed in a PDF' | \
     grep -v 'Some font shapes were not available' | \

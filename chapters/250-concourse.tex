@@ -19,7 +19,7 @@
 
         Concourse neřeší balancování Web instancí. Je možné -- a dokonce doporučené -- mít víc než jednu repliku kontroleru, ale je na administrátorovi aby příchozí požadavky nějakým způsobem směroval, Concourse pouze na každé Web instanci vystavuje \glstext{HTTP} \code{concourse-cluster}. V Kubernetes, OpenShift nebo podobném orchestrátoru můžeme přímo využít vestavěné služby, pro jiné systémy se ale nasazení Concourse komplikuje přidáním dalšího software pro load balancing.
 
-        Worker instance musí být spuštěné pod root uživatelem. Podle firmy DigitalOcean je to proto, že worker potřebuje spravovat kontejnery \code{concourse-do}. To může v základním nastavení Dockeru ale libovolný linuxový uživatel v \code{docker} skupině. \code{docker-postinstall}. I s přístupem k Dockeru ale Concourse worker odmítal nastartovat a stále vyžadovat root uživatele.
+        Worker instance musí být spuštěné pod root uživatelem. Podle firmy DigitalOcean je to proto, že worker potřebuje spravovat kontejnery \code{concourse-do}. To může v základním nastavení Dockeru ale libovolný linuxový uživatel v \code{docker} skupině~\cite{docker-postinstall}. I s přístupem k Dockeru ale Concourse worker odmítal nastartovat a stále vyžadoval root uživatele.
 
     \subsection{Rozšiřitelnost}
         Oproti Jenkins, kde se instalují pluginy, přistupuje Concourse k rozšiřitelnosti obráceně. Poskytuje několik základních zdrojů (pipeline, job) a \glstext{API}. Uživatelé můžou v rámci spuštěných kontejnerů volat cokoliv potřebují. Alternativní rozhraní a podobně je možné implementovat jako externí aplikaci. Concourse se snaží dělat jednu věc a dělat jí dobře.
@@ -56,7 +56,9 @@
 
         Pipeline se tak zakládají a upravují z konzole, ne úpravou konfigurace v repozitáři a pushnutí, takže systém nenutí vývojáře specifikaci pipeline verzovat.
 
-        Pro mě nejvíc zmatená část Concourse je koncept \textit{task}. Tasky umožňují spustit část pipeline ze staženého resource (což může být repozitář, ale i cokoliv jiného). Lze tak drobnou část pipeline editovat jenom s přístupem k repozitáři, ale v tasku nelze nastavit definici resources, jejich stažení ani jejich nahrání. Tasky mají vstup a výstup, ale jejich integrace do pipeline se řeší mimo. Po praktické zkušenosti s nasazením všech tří projektů mi toto řešení přijde míň vhodné, než mít kompletní definici pipeline v jednom souboru spravovaném přes konzoli.
+        Pro mě nejvíc zmatená část Concourse je koncept \textit{task}. Tasky umožňují spustit část pipeline ze staženého resource (což může být repozitář, ale i cokoliv jiného). Lze tak drobnou část pipeline editovat jenom s přístupem k repozitáři, ale v tasku nelze nastavit definici resources, jejich stažení ani jejich nahrání. Tasky mají vstup a výstup, ale jejich integrace do pipeline se řeší mimo.
+
+        Po praktické zkušenosti s nasazením všech tří projektů mi toto řešení přijde míň vhodné, než mít kompletní definici pipeline v jednom souboru spravovaném přes konzoli.
 
         %\todo{že při vytvoření pipeline to bylo pauznuté a nešlo to z UI vyřešit a musel jsem hledat command}
 

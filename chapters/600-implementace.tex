@@ -39,3 +39,22 @@ root /srv/p1-$domain;
     Pro druhý ukázkový projekt jsem nainstaloval PHP-FPM a nechal uživatelské požadavky přeposílat přes fastcgi. Deploy jsem implementoval podobně jako u statického webu. Díky tomu, že PHP používá opcache -- tzn. nečte a neparsuje při každém požadavku zdrojové soubory znovu -- stačí nahrát všechny soubory a pak opcache smazat. Toho se nejsnadněji docílí reloadem PHP-FPM masteru, který postupně vypne staré workery a zapne nové.
 
     Třetí projekt -- aplikaci v kontejneru -- jsem nasadil pomocí Docker Swarm, kde jsem z webserveru udělal jednouzlový server. Oproti čistému dockeru Swarm nabízí snažší správu závislostí pomocí \code{docker-compose.yml} a částečně umí udělat tzv. rolling update bez výpadku. V \CI systému se staví samotný docker image a nahraje se do sdíleného registru (Docker Registry) pod dvěma tagy: \code{latest} a \code{\$CI\_COMMIT\_SHA}. To je hash z verzovacího systému, který právě \CI systém staví. Díky otagování každé verze pak máme snažší správu: víme v jaké verzi aplikace zrovna běží a můžeme případně udělat rychlý rollback na starší verze. V případě že bychom pouze používali tag \code{latest}, tuto informaci bychom neměli a při rollbacku bychom museli spustit znova celou \CI pipeline.
+
+\newpage
+\section{Použitá Jenkins rozšíření}
+\label{ch:jenkins-plugins}
+
+Následující seznam jsou všechna rozšíření, která jsem použil při testování \CICD \pfxref{systému Jenkins}{sec:jenkins}. Nevypisuji nutná rozšíření distribuovaná s Jenkins a závislosti daných rozšíření.
+
+\begin{itemize}
+    \item \code{Build Timeout 1.19}
+    \item \code{Configuration as Code 1.4}
+    \item \code{Docker 1.1.5}
+    \item \code{Email Extension Plugin 2.63}
+    \item \code{Git plugin 3.9.1}
+    \item \code{Matrix Authorization Strategy Plugin 2.3}
+    \item \code{OWASP Markup Formatter Plugin 1.5}
+    \item \code{Pipeline 2.6}
+    \item \code{Timestamper 1.8.10}
+    \item \code{Workspace Cleanup Plugin 0.37}
+\end{itemize}

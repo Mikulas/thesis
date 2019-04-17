@@ -25,7 +25,9 @@
     \subsection{Dostupnost}
         Podobně jako ostatní \CI má Drone jeden stavový master, který není možné load balancovat. Jeden z autorů prohlásil, že na stabilním cloudu má Drone dostupnost $99,999$~\%~\cite{drone-ha}. Není ale možné, aby zahrnoval i aktualizace. Kromě toho s nástupem smýšlení \textit{Infrastructure as Code} není běžné udržovat dlouhožijící \textit{pet} servery.
 
-        Stejně jako Concourse persistuje i Drone data do databáze (rozdíl je v tom, že Concourse má master nestavový). Stačí tak zálohovat standardními prostředky které podporuje vybraný \glstext{RDBMS}. Podporované systémy jsou MySQL a Postgres~\cite{drone-database}. Dále je nutné zálohovat objektové úložiště, které může být volitelně používáno pro ukládání výstupu pipeline.
+        Stejně jako Concourse persistuje i Drone data do databáze (rozdíl je v tom, že Concourse má master nestavový). Stačí tak zálohovat standardními prostředky které podporuje vybraný \glstext{RDBMS}. Podporované systémy jsou MySQL a Postgres~\cite{drone-database}.
+
+        Dále je nutné zálohovat objektové úložiště, které může být volitelně používáno pro ukládání výstupu pipeline.
 
         Drone není dostatečně aktivně vyvíjený projekt a má teprve verzi 1.0. Roky existoval ve verzích 0.x a vznikl zatím nekompletní oficiální nástroj na migraci databáze z původní verze 0.8 na aktuální 1.0~\cite{drone-mig}. Vzhledem k tomu, že Drone vývojáři kromě tohoto vydání databázové schéma neupravují, je možné rychle aktualizovat na minor a patch verze a případně i dělat rollback. Nelze ale udělat rolling update a je pro aktualizaci nutné akceptovat krátký výpadek služby.
 

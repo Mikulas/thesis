@@ -1,4 +1,4 @@
-\section{Metodika porovnávání \CICD systémů}
+\section{Metodika porovnávání}
     U každého systému se nejprve seznámím s aktuální dokumentací. \CICD systémy provozované pouze jako \glstext{SaaS} (\textit{Software as a Service}) budu muset testovat v cloudu. Pokud systém nabízí self-hosted variantu, zprovozním ji na lokálním virtuálním serveru. Pro systémy s oficiálním kontejnerem budu systém spouštět v Dockeru. V případě, že systém má několik oficiálních variant instalace a nabízí jinou funkcionalitu (to je případ GitLabu), nainstaluji a otestuji systém několikrát. Všechny instalace budou nascriptované a opakovatelné. Technickou část práce netýkající se přímo daných \CICD systémů popisuji \pfxref{v příloze}{ch:implementace}.
 
     Na instalovaných systémech pak provedu základní nezbytné nastavení: to bude pravděpodobně konfigurace veřejné \glstext{URL}, případně portů. Dále bude nutná konfigurace vzdálené správy repozitářů, pokud ho \CICD nástroj nemá přímo zabudovaný. Bez dalšího nastavení zhodnotím zvlášť aplikační dostupnost za provozu a za správcovských úkonů: samostatně pro pro aktualizace \CI systému a pro rekonfiguraci. Tím se dozvím, jestli se lze spolehnout na výchozí nastavení dodavatele. Dostupnost budu měřit nástrojem \code{siege}~\cite{fulmer-siege}. Jde o podobný nástroj jako je Apache \code{ab}~\cite{apache-ab}, který navíc umí parsovat přijaté \glstext{HTML} a odesílat další požadavky na odkázané javascripty, kaskádové styly a další zdroje. Simuluje tak lépe chování uživatelů s webovým prohlížečem. Dostupnost budu testovat kontinuálními požadavky bez prodlev (volba \code{--benchmark}) s 10 uživateli (\code{--concurrent=10}). Výsledkem testu je počet selhaných požadavků, měřených podle \HTTP kódu odpovědi. Ideální výsledek je 0 selhaných požadavků. Dostupnost za klasického provozu aplikace budu měřit po dobu 15 minut. U administrátorských úkonů budu dostupnost měřit po celou dobu úkonu, která se bude lišit.
@@ -34,6 +34,7 @@
             \label{fig:static-deploy-container}
         \end{iffigure}
 
+    \newpage
     \subsection{P2: Komplexní aplikace}
         V této kategorii uvažuji komplexní aplikace vyžadující relační databázi, případně další závislosti jako můžou být fronta, key-value storage, mailer, služba na zpracování obrázků nebo generování faktur, nebo platební brána. Na rozdíl od statických webů se tyto aplikace testují obtížně.
         U databáze například stačí spustit pro testy nový databázový stoj a spustit migrace. V případě platební brány která může od aplikace požadovat veřejně dostupnou url pro webhooks to může znamenat, že už samotný test vyžaduje nějakou úroveň nasazení aplikace.
