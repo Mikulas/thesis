@@ -4,23 +4,38 @@
   \ifodd\value{page}\hbox{}\newpage\fi
 }
 
+\definecolor{tgreen}{rgb}{0.02,0.40,0.16}
+\definecolor{tred}{rgb}{0.77,0.22,0.16}
+
+\definecolor{green}{rgb}{0.78,0.91,0.85}
+\definecolor{red}{rgb}{0.95,0.75,0.73}
+
+\newcommand{\Cg}{\cellcolor{green}}
+\newcommand{\CgA}{\cellcolor{green!100}}
+\newcommand{\CgB}{\cellcolor{green!70}}
+\newcommand{\CgC}{\cellcolor{green!40}}
+\newcommand{\Cr}{\cellcolor{red}}
+\newcommand{\CrA}{\cellcolor{red!100}}
+\newcommand{\CrB}{\cellcolor{red!70}}
+\newcommand{\CrC}{\cellcolor{red!40}}
+
 \cleartoleftpage
 \section{Souhrn}
     \label{overview}
 
     \begin{adjustwidth}{-2cm}{}
-        \begin{tabular}{|r||p{3.2cm}|p{3.2cm}|p{2cm}|p{2cm}|p{2cm}|}\hline
+        \begin{tabular}{|r||p{3.2cm}|p{3.2cm}|p{2cm}|p{2cm}|p{2cm}}\hline
             & \textbf{GitLab 11.7} & \textbf{Jenkins 2.150} & \textbf{GoCD 19.1} & \textbf{Drone 1.0.0-rc.5} & \textbf{Concourse 4.2.2} \\\hline\hline
             \textbf{Homepage} & \url{about.gitlab.com} & \url{jenkins.io} & \url{gocd.org} & \url{drone.io} & \url{concourse-ci.org} \\\hline
-            \textbf{SaaS} & zdarma, placené & třetí strany (CloudBees) & ne & zdarma & ne \\\hline
-            \textbf{Self-hosted} & zdarma, placené & zdarma & zdarma & zdarma, placené & zdarma \\\hline
-            \textbf{Dostupnost masteru} & SPoF (může existovat víc masterů) & SPoF & SPoF & SPoF & HA \\\hline
-            \textbf{Možnosti izolace} & \multicolumn{3}{c|}{ žádná, kontejner, VM, fyzická } & kontejner, fyzická & kontejner, fyzická \\\hline
-            \textbf{Joby} & host, kontejner (podle executoru) & host, kontejner (podle pipeline) & host & kontejner & kontejner  \\\hline
-            \textbf{Rozšiřitelnost} & ne & všechno, včetně UI & vybraná místa & \multicolumn{2}{c|}{ minimální (na úrovni jobů) } \\\hline
-            \textbf{Složitost pipeline} & 2 & 8 & 5 & 2 & 7 \\\hline
-            \textbf{UX} & 1 & 8 & 7 & 4 & 9  \\\hline
-            \textbf{Integrace} & GitLab, vestavěné & z~rozšíření & z~rozšíření & \multicolumn{2}{c|}{ ne (řeší na úrovni jobů) } \\\hline
+            \textbf{SaaS} & \Cg zdarma, placené & třetí strany (CloudBees) & \textcolor{tred}{ne} & \textcolor{tgreen}{zdarma} & \textcolor{tred}{ne} \\\hline
+            \textbf{Self-hosted} & \textcolor{tgreen}{zdarma, placené} & \Cg zdarma & \Cg zdarma & \textcolor{tgreen}{zdarma, placené} & \Cg zdarma \\\hline
+            \textbf{Dostupnost masteru} & SPoF (může existovat víc masterů) & \textcolor{tred}{SPoF} & \textcolor{tred}{SPoF} & \textcolor{tred}{SPoF} & \Cg HA \\\hline
+            \textbf{Možnosti izolace} & \multicolumn{3}{c|}{ \Cg žádná, kontejner, VM, fyzická } & kontejner, fyzická & kontejner, fyzická \\\hline
+            \textbf{Joby} & \Cg host, kontejner (podle executoru) & \Cg host, kontejner (podle pipeline) & host & kontejner & kontejner  \\\hline
+            \textbf{Rozšiřitelnost} & \textcolor{tred}{ne} & \Cg všechno, včetně UI & vybraná místa & \multicolumn{2}{c}{ minimální (na úrovni jobů) } \\\hline
+            \textbf{Složitost pipeline} & \CgB 2 & \CrB 8 & 5 & \CgB 2 & \CrA 7 \\\hline
+            \textbf{UX} & \CgA 1 & \CrB 8 & \CrC 7 & 4 & \CrA 9  \\\hline
+            \textbf{Integrace} & GitLab, vestavěné & \multicolumn{2}{c|}{ \Cg z~rozšíření } & \multicolumn{2}{c}{ ne (řeší na úrovni jobů) } \\\hline
         \end{tabular}
     \end{adjustwidth}
     \vspace*{0.8cm}
@@ -34,17 +49,17 @@
     \newpage
     \vspace*{-0.3cm}
     \begin{adjustwidth}{-2cm}{}
-        \begin{tabular}{|r||p{3.2cm}|p{2.7cm}|p{2.9cm}|p{3.2cm}|}\hline
+        \begin{tabular}{r||p{3.2cm}|p{2.7cm}|p{2.9cm}|p{3.2cm}|}\hline
             & \textbf{CircleCI 2.0} & \textbf{Travis CI} & \textbf{SemaphoreCI} & \textbf{GitHub Actions beta} \\\hline\hline
             \textbf{Homepage} & \url{circleci.com} & \url{travis-ci.org} & \url{semaphoreci.com} & \url{github.com/actions} \\\hline
-            \textbf{SaaS} & zdarma, placené & zdarma opensource, placené & zdarma, placené & zdarma (GitHub tarif) \\\hline
-            \textbf{Self-Hosted} & ne & ne & ne & ne (jen komunitní implementace) \\\hline
+            \textbf{SaaS} & \Cg zdarma, placené & zdarma opensource, placené & \Cg zdarma, placené & zdarma (GitHub tarif) \\\hline
+            \textbf{Self-Hosted} & \textcolor{tred}{ne} & \textcolor{tred}{ne} & \textcolor{tred}{ne} & ne (jen komunitní implementace) \\\hline
             \textbf{Dostupnost masteru} & 99.90\% & 99.93\% & 100\% & zatím neaplikovatelné \\\hline
             \textbf{Možnosti izolace} & kontejner (mezi organizacemi VM) & VM & VM & kontejner (mezi organizacemi VM) \\\hline
             \textbf{Joby} & kontejner & host & host & kontejner\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \\\hline
-            \textbf{Rozšiřitelnost} & ne & ne & ne & ne\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \\\hline
-            \textbf{Složitost pipeline} & 9 & 1 & 6 & 4 \\\hline
-            \textbf{UX} & 2 & 2 & 3 & 4 \\\hline
+            \textbf{Rozšiřitelnost} & \textcolor{tred}{ne} & \textcolor{tred}{ne} & \textcolor{tred}{ne} & \textcolor{tred}{ne}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \\\hline
+            \textbf{Složitost pipeline} & \CrA 9 & \CgA 1 & \CrC 6 & 4 \\\hline
+            \textbf{UX} & \CgB 2 & \CgB 2 & \CgC 3 & 4 \\\hline
             \textbf{Integrace} & GitHub, Bitbucket & GitHub & GitHub & GitHub \\\hline
         \end{tabular}
     \end{adjustwidth}

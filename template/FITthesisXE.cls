@@ -60,6 +60,8 @@
 \setsecnumdepth {subsubsection}
 \chapterstyle {madsen}
 
+\usepackage[table]{xcolor}
+
 \let \newfloat \relax			% use floatrow package instead of float
 \RequirePackage {floatrow}		% ...so we can force caption position
 
