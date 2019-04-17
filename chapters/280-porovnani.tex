@@ -1,4 +1,10 @@
-\clearpage
+%https://tex.stackexchange.com/a/11709
+\newcommand*\cleartoleftpage{%
+  \clearpage
+  \ifodd\value{page}\hbox{}\newpage\fi
+}
+
+\cleartoleftpage
 \section{Souhrn}
     \label{overview}
 
