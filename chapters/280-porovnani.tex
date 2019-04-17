@@ -14,16 +14,16 @@
             \textbf{Rozšiřitelnost} & ne & všechno, včetně UI & vybraná místa & \multicolumn{2}{c|}{ minimální (na úrovni jobů) } \\\hline
             \textbf{Složitost pipeline} & 2 & 8 & 5 & 2 & 7 \\\hline
             \textbf{UX} & 1 & 8 & 7 & 4 & 9  \\\hline
-            \textbf{Integrace} & GitLab, vestavěné & z rozšíření & z rozšíření & \multicolumn{2}{c|}{ ne (řeší na úrovni jobů) } \\\hline
+            \textbf{Integrace} & GitLab, vestavěné & z~rozšíření & z~rozšíření & \multicolumn{2}{c|}{ ne (řeší na úrovni jobů) } \\\hline
         \end{tabular}
     \end{adjustwidth}
     \vspace*{0.8cm}
 
     Tabulka na této dvojstraně vizualizuje silné a slabé stránky porovnávaných \CI nástrojů. Zeleně podbarvené buňky reprezentují nejlepší hodnoty.
 
-    S výjimkou GitLab jsou všechna \CI buď proprietární \glstext{SaaS} nebo zdarma, open-source a self-hosted. GitLab má odlišnou strategii a prodává licence i pro self-hosted variantu (GitLab \glstext{EE}).
+    S~výjimkou GitLab jsou všechna \CI buď proprietární \glstext{SaaS} nebo zdarma, open-source a self-hosted. GitLab má odlišnou strategii a prodává licence i pro self-hosted variantu (GitLab \glstext{EE}).
 
-    Dostupnost kontrolních serverů ma suverénně nejlepší Concourse, který umožňuje provozovat více masterů. GitLab může mít zaregistrováno více masterů (runnerů), ale každý se stará o svoji skupinu pipeline. Dostupnost agentů není uvedena. U všech \CI jsou joby stavové a z principu není možné je replikovat.
+    Dostupnost kontrolních serverů ma suverénně nejlepší Concourse, který umožňuje provozovat více masterů. GitLab může mít zaregistrováno více masterů (runnerů), ale každý se stará o~svoji skupinu pipeline. Dostupnost agentů není uvedena. U~všech \CI jsou joby stavové a z~principu není možné je replikovat.
 
     \newpage
     \vspace*{-0.3cm}
@@ -44,23 +44,23 @@
     \end{adjustwidth}
     \vspace*{0.3cm}
 
-    Dále jsou \CI klasifikované podle úrovně izolace. Všechny self-hosted řešení nabízí izolaci kontejnery (ať už je přímo zabudovaná, je k dispozici pomocí rozšíření, nebo ji lze implementovat na úrovni samotného jobu). Díky master+agent architektuře lze také dosáhnout fyzické izolace, kde různí agenti běží na odlišných serverech. U \CI která nejsou postavená čistě na kontejnerech lze dosáhnout i žádné izolace. GitLab, Jenkins a GoCD ještě umožňují vytvářet dynamicky \glstext{VM}. U \glstext{SaaS} řešení která staví na kontejnerech není úplně jasné, jakou izolaci nabízí, a není to veřejně dostupná informace. Dá se ale očekávat, že uživatelé/organizace budou na oddělené \glstext{VM}.
+    Dále jsou \CI klasifikované podle úrovně izolace. Všechny self-hosted řešení nabízí izolaci kontejnery (ať už je přímo zabudovaná, je k~dispozici pomocí rozšíření, nebo ji lze implementovat na úrovni samotného jobu). Díky master+agent architektuře lze také dosáhnout fyzické izolace, kde různí agenti běží na odlišných serverech. U~\CI která nejsou postavená čistě na kontejnerech lze dosáhnout i žádné izolace. GitLab, Jenkins a GoCD ještě umožňují vytvářet dynamicky \glstext{VM}. U~\glstext{SaaS} řešení která staví na kontejnerech není úplně jasné, jakou izolaci nabízí, a není to veřejně dostupná informace. Dá se ale očekávat, že uživatelé/organizace budou na oddělené \glstext{VM}.
 
-    V řádku \textit{Joby} jsou porovnány možnosti konfigurace. U možnosti \textit{host} běží všechny příkazy na jedné \glstext{VM} a typicky nelze opakovat jenom části pipeline, ale konfigurace bývá intuitivnější. Oproti tomu varianta \textit{kontejner} označuje \CI, která rozdělují pipeline na různé části, kde každá se spouští v předem vytvořeném Docker kontejneru.
+    V~řádku \textit{Joby} jsou porovnány možnosti konfigurace. U~možnosti \textit{host} běží všechny příkazy na jedné \glstext{VM} a typicky nelze opakovat jenom části pipeline, ale konfigurace bývá intuitivnější. Oproti tomu varianta \textit{kontejner} označuje \CI, která rozdělují pipeline na různé části, kde každá se spouští v~předem vytvořeném Docker kontejneru.
 
-    Přestože jsem do metodiky zahrnul rigorózní testování dostupnosti, byly získané výsledky binární: aplikace jsou buď navrženy distribuovaně a mají tedy pro všechny úkony během správy perfektní dostupnost, nebo je nutné je vypnout a jsou tedy kompletně nedostupné. Při měření času nedostupnosti bych tak pouze porovnával jak dlouho aplikace startují. Místo toho jsem naměřené výsledky promítnul v tabulce jako \textit{Dostupnost masteru}.
+    Přestože jsem do metodiky zahrnul rigorózní testování dostupnosti, byly získané výsledky binární: aplikace jsou buď navrženy distribuovaně a mají tedy pro všechny úkony během správy perfektní dostupnost, nebo je nutné je vypnout a jsou tedy kompletně nedostupné. Při měření času nedostupnosti bych tak pouze porovnával jak dlouho aplikace startují. Místo toho jsem naměřené výsledky promítnul v~tabulce jako \textit{Dostupnost masteru}.
 
     Složitost pipeline a \glstext{UX} jsou čistě subjektivní relativní hodnocení. Škála je od 1 do 9, kde 1 je nejlepší skóre.
 
     \subsection{Použití jednotlivých \CI}
         \begin{description}
-            \item[GitLab] Skvělé \CI. Podporuje jen repozitáře na GitLab. Dobrá podpora \CD díky integraci s Kubernetes.
-            \item[Jenkins] Nejobecnější \CI s nejhorším \glstext{UX}. Použil bych až jako poslední možnost, pokud narazím na limitace jiných \CI.
+            \item[GitLab] Skvělé \CI. Podporuje jen repozitáře na GitLab. Dobrá podpora \CD díky integraci s~Kubernetes.
+            \item[Jenkins] Nejobecnější \CI s~nejhorším \glstext{UX}. Použil bych až jako poslední možnost, pokud narazím na limitace jiných \CI.
             \item[GoCD] Funkčně stejné nebo horší než Jenkins, má menší komunitu, není tak udržovaný. Má nevýznamně lepší \glstext{UX}.
-            \item[Drone] Minimalistické \CI. Cena stejná jako u GitLab, za řádově míň funkcí. Využil bych pro cloud-ready organizace, které pracují výhradně s kontejnery a mají repozitáře jinde než na GitLab.
+            \item[Drone] Minimalistické \CI. Cena stejná jako u~GitLab, za řádově míň funkcí. Využil bych pro cloud-ready organizace, které pracují výhradně s~kontejnery a mají repozitáře jinde než na GitLab.
             \item[Concourse] Alternativa ke Drone, má výrazně složitější konfiguraci a horší \glstext{UX}. Největší výhoda Concourse je vynikající dostupnost kontrolní roviny a cena.
-            \item[CircleCI] \glstext{SaaS} varianta Drone. Limitující faktor je cena. V rozhodování můžou hrát roli izolace a rychlost.
+            \item[CircleCI] \glstext{SaaS} varianta Drone. Limitující faktor je cena. V~rozhodování můžou hrát roli izolace a rychlost.
             \item[Travis CI] \glstext{SaaS} varianta \CI nezaloženého na kontejnerech.
-            \item[Semaphore CI] Alternativa k Travis~CI s komplikovanější konfigurací, ale za lepší cenu.
-            \item[GitHub Actions] Novinka, pravděpodobně bude používané jako doplněk k dalším \CI.
+            \item[Semaphore CI] Alternativa k~Travis~CI s~komplikovanější konfigurací, ale za lepší cenu.
+            \item[GitHub Actions] Novinka, pravděpodobně bude používané jako doplněk k~dalším \CI.
         \end{description}
