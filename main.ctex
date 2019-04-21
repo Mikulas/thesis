@@ -41,7 +41,9 @@
 \setcounter{tocdepth}{1}
 
 % https://tex.stackexchange.com/questions/17489/change-caption-name-of-figures
-\usepackage[figurename=Fig.]{caption}
+% https://tex.stackexchange.com/a/132616
+\definecolor{ocre}{RGB}{93,93,93}
+\usepackage[font={color=ocre,it},figurename=Fig.,labelfont={it}]{caption}
 
 % https://www.dickimaw-books.com/gallery/glossaries-styles/#mcol
 \usepackage{glossary-mcols}

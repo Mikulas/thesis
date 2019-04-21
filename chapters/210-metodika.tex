@@ -23,7 +23,7 @@
             \label{fig:static-deploy}
         \end{iffigure}
 
-        Při použití kontejnerů nelze snadno dosáhnout toho, aby v~kontejneru byly nové a současně staré zdroje. Místo toho se problém přesune na nějakou vyšší vrstvu, například ingress controller. Ten může podle \HTTP kódu odpovědi rozhodnout, jestli se pokusí přeposlat požadavek na jiný kontejner. Pokud uživatel stáhne \HTML z~nové verze aplikace, ale request na \glstext{CSS} přijde na starý container a vrátí kód \textit{404 Not Found}, může ingress controller GET požadavek přeposlat na nový kontejner, kde soubor existuje. Alternativou je použití session affinity, například pomocí cookies nebo \glstext{IP} adresy. Nebo lze mezi ingress controller a kontejnery umístit nějakou cachující \HTTP vrstvu (HAProxy, Varnish), která prakticky v~základním nastavení načte a uloží do paměti zdroje z~obou verzí. Je pouze nutné ošetřit, aby HTML ze starých kontejnerů nepřepsalo \HTML z~kontejnerů nových, což může rozhodnout například podle hlavičky \code{Last-Modified-At}. Tento proces je vizualizován \pfxref{na diagramu}{fig:static-deploy-container}.
+        Při použití kontejnerů nelze snadno dosáhnout toho, aby v~kontejneru byly nové a současně staré zdroje. Místo toho se problém přesune na nějakou vyšší vrstvu, například ingress controller. Ten může podle \HTTP kódu odpovědi rozhodnout, jestli se pokusí přeposlat požadavek na jiný kontejner. Pokud uživatel stáhne \HTML z~nové verze aplikace, ale request na \glstext{CSS} přijde na starý container a vrátí kód \textit{404 Not Found}, může ingress controller \textsc{get} požadavek přeposlat na nový kontejner, kde soubor existuje. Alternativou je použití session affinity, například pomocí cookies nebo \glstext{IP} adresy. Nebo lze mezi ingress controller a kontejnery umístit nějakou cachující \HTTP vrstvu (HAProxy, Varnish), která prakticky v~základním nastavení načte a uloží do paměti zdroje z~obou verzí. Je pouze nutné ošetřit, aby HTML ze starých kontejnerů nepřepsalo \HTML z~kontejnerů nových, což může rozhodnout například podle hlavičky \code{Last-Modified-At}. Tento proces je vizualizován \pfxref{na diagramu}{fig:static-deploy-container}.
 
         \begin{iffigure}
             \centering
@@ -36,8 +36,9 @@
 
     \newpage
     \subsection{P2: Komplexní aplikace}
-        V~této kategorii uvažuji komplexní aplikace vyžadující relační databázi, případně další závislosti jako můžou být fronta, key-value storage, mailer, služba na zpracování obrázků nebo generování faktur, nebo platební brána. Na rozdíl od statických webů se tyto aplikace testují obtížně.
-        U~databáze například stačí spustit pro testy nový databázový stoj a spustit migrace. V~případě platební brány která může od aplikace požadovat veřejně dostupnou url pro webhooks to může znamenat, že už samotný test vyžaduje nějakou úroveň nasazení aplikace.
+        V~této kategorii uvažuji komplexní aplikace vyžadující relační databázi, případně další závislosti jako můžou být fronta, key-value storage, mailer, služba na zpracování obrázků nebo generování faktur, nebo platební brána. Na rozdíl od statických webů se tyto aplikace testují obtížně. U~databáze například stačí spustit pro testy nový databázový stoj a spustit migrace.
+
+        V~případě platební brány která může od aplikace požadovat veřejně dostupnou url pro webhooks to může znamenat, že už samotný test vyžaduje nějakou úroveň nasazení aplikace.
 
         Pro testování jsem implementoval blog v~PHP, konkrétně za použití frameworku Symfony~\cite{symfony}. Aplikace při zpracování každého požadavku posílá dotazy na články do externí MySQL databáze. Dále komunikuje s~key-value serverem Redis, kde spravuje session. Třetí závislost je API třetí strany: \code{mailgun.com}, které se používá pro posílání transakčních emailů.
 

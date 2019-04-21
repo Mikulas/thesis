@@ -5,7 +5,7 @@
 
     V~době psaní práce (první čtvrtletí 2019) jsou Actions v~beta verzi a zuřivě se vyvíjí. Nebudu zkoumat konkrétní detaily, ale zaměřím se hlavně na vysokoúrovňový pohled a jak Actions zapadají do stávajícího ekosystému.
 
-    Actions mohly úplně nahradit služby třetích stran jako jsou Travis, CircleCI, Semaphore a další. Spíš se ale dá očekávat, že se budou Actions s~dalšími \CI nějakým způsobem kombinovat. Testy jednoúčelové a aplikovatelné na libovolný repozitář jsou pro Actions vhodné. Například statické otestování bash skriptů pomocí shellcheck \cite{ga-shellcheck}. Naopak aplikační testy na byznys logiku bude jednodušší spravovat v~komplexnějším \CI.
+    Actions mohly úplně nahradit služby třetích stran jako jsou Travis, CircleCI, Semaphore a další. Spíš se ale dá očekávat, že se budou Actions s~dalšími \CI nějakým způsobem kombinovat. Testy jednoúčelové a aplikovatelné na libovolný repozitář jsou pro Actions vhodné. Například statické otestování bash skriptů pomocí shellcheck~\cite{ga-shellcheck}. Aplikační testy na byznys logiku bude jednodušší spravovat v~komplexnějším \CI.
 
     \subsection{Architektura GitHub Actions, možnosti konfigurace}
         Workflow se konfigurují souborem \code{.github/main.workflow} ve formátu \glstext{HCL}. GitHub také nabízí grafický editor, který konfigurační soubor generuje a ukládá do repozitáře. Samotná konfigurace obsahuje právě jeden blok \code{workflow}, ve kterém se definuje \glstext{API} událost která má workflow spustit. Zatím není možné spustit pipeline v~reakci na víc než jednu událost.
